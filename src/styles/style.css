@@ -1,0 +1,33 @@
+/* Общие стили */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  background-color: #f5efed;
+  /*#fff;*/
+  color: #f5efed;
+  /*#333;*/
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Фиолетовые акценты */
+:root {
+  --purple: #330036;
+  /*#6a0dad;#815dac;#ffd6e2;#f0d3f7;*/
+  --purple-light: #dcd0ff;
+}
+
+/* Контейнер для фильтров и основного контента */
+.container {
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 20px;
+  gap: 20px;
+}

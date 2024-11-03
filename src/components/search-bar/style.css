@@ -1,0 +1,20 @@
+/* Поисковая строка */
+.search-bar {
+    width: 100%;
+    max-width: 800px;
+    margin: 20px 0;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 10px 15px;
+    font-size: 1rem;
+    border: 1px solid var(--purple-light);
+    border-radius: 25px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.search-bar input:focus {
+    border-color: var(--purple);
+}
