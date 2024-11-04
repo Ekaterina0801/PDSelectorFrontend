@@ -1,11 +1,14 @@
 /* Блок с фильтрами */
 .filter-section {
-    width: 250px;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 15px;
-    background-color: #f9f9f9;
-    flex-shrink: 0;
+    width: 250px;                
+    padding: 20px;              
+    border: 1px solid #ddd;      
+    border-radius: 15px;        
+    background-color: #f9f9f9;  
+    flex-shrink: 0;              
+    box-sizing: border-box;      
+    display: flex;             
+    flex-direction: column;     
 }
 
 .filter-section h2 {

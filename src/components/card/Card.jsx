@@ -1,10 +1,11 @@
 import React from 'react';
 import './style.css';
 
-const Card = ({ name, resume, tags }) => {
+const Card = ({ name, type, resume, tags }) => {
   return (
     <div className="card">
       <div className="card-name">{name}</div>
+      <div className="card-type">{type}</div>
       <div className="card-resume">{resume}</div>
       <div className="card-tags">
         {tags.map((tag, index) => (

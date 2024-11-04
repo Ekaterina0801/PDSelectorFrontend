@@ -2,7 +2,8 @@
 .search-bar {
     width: 100%;
     max-width: 800px;
-    margin: 20px 0;
+    margin: 20px auto;
+    justify-content: center;
 }
 
 .search-bar input {

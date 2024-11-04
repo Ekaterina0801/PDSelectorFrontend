@@ -30,10 +30,11 @@ const productData = [
   },
 ];
 
-const MainContent = () => {
+const MainContent = ({ children }) => {
   return (
     <div className="main-content">
-      <div className="cards">
+        {children}
+      {/* <div className="cards">
         {productData.map((product) => (
           <Card 
             key={product.id} 
@@ -42,7 +43,7 @@ const MainContent = () => {
             tags={product.tags} 
           />
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };

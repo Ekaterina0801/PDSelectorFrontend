@@ -1,5 +1,6 @@
 .main-content {
     flex: 1;
+    align-items:flex-start;
 }
 
 .cards {
