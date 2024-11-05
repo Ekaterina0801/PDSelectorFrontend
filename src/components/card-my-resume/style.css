@@ -1,0 +1,55 @@
+.card-my-resume {
+    width: calc(100% - 40px);
+    max-width: 800px;
+    background-color: #f9f9f9;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    text-align: left;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid var(--purple-light);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card-my-resume:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-my-resume-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--purple);
+    margin-bottom: 10px;
+}
+
+.card-my-resume-resume {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.card-my-resume-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.card-my-resume-tag {
+    background-color: var(--purple-light);
+    color: var(--purple);
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+}
+
+.resume-card {
+    background-color: var(--purple-light);
+    color: var(--purple);
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    margin-top: 10px;
+    float: right;
+}
