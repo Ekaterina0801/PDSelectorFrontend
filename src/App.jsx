@@ -22,7 +22,7 @@ function App() {
               <Route path="/teams" element={<TeamsPage />} /> 
               <Route path="/profile" element={<ProfilePage />} /> 
               <Route path="/admin" element={<AdminPage />} /> 
-              <Route path="/teams/{id}" element={<TeamProfilePage />} /> 
+              <Route path="/teams/1" element={<TeamProfilePage />} /> 
               <Route path="/students" element={<StudentsPage />} /> 
             </Routes>
         </Router>

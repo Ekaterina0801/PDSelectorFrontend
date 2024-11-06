@@ -8,29 +8,6 @@ import MainContent from "../components/main-section/MainSection";
 import FilterYear from "../components/forms/FilterYear"
 
 import React, { useState } from "react";
-/*
-const ProfilePage = () => {
-  return (
-    <>
-      <Navbar />
-      <div className="container">
-        <Sidebar />
-        <MainContent>
-          <div className="cards">
-            <Card
-              key={"1"}
-              name={"Oleg"}
-              type={"team"}
-              resume={"team"}
-              tags={["team"]}
-            />
-          </div>
-        </MainContent>
-      </div>
-    </>
-  );
-};
-*/
 
 const teamsData = [
   {

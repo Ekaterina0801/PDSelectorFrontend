@@ -28,7 +28,14 @@
     font-size: 1rem;
     color: #555;
     margin-bottom: 10px;
+    display: -webkit-box; /* Устанавливает тип отображения для обрезки текста */
+    -webkit-box-orient: vertical; /* Устанавливает направление для обрезки текста */
+    -webkit-line-clamp: 2; /* Ограничивает количество строк до 2 */
+    line-clamp: 2;
+    overflow: hidden; /* Скрывает переполняющий текст */
+    text-overflow: ellipsis; /* Добавляет троеточие */
 }
+
 
 .card-tags {
     display: flex;
@@ -43,3 +50,28 @@
     border-radius: 15px;
     font-size: 0.8rem;
 }
+
+.card-actions {
+    margin-top: 10px;
+    align-items: center;
+  }
+  
+  .action-button {
+    background-color: var(--purple);
+    color: #fff;
+    border: none;
+    border-radius: 8px; /* Увеличиваем радиус закругления */
+    padding: 8px 12px;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s; /* Добавлены переходы для объема */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Добавляем тень для объема */
+  }
+  
+  .action-button:hover {
+    background-color: darken(var(--purple), 10%);
+    transform: translateY(-2px); /* Добавляем эффект поднятия при наведении */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Увеличиваем тень при наведении */
+  }
+  
+  

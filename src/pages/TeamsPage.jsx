@@ -11,21 +11,24 @@ const teamsData = [
       name: 'Название какое то ',
       resume: 'Делаем красивое веб приложение',
       type:"Веб-приложение",
-      tags: ['JavaScript', 'React', 'Node.js']
+      tags: ['JavaScript', 'React', 'Node.js'],
+      profileLink:"/teams/1"
     },
     {
       id: 2,
       name: 'Какое то название',
       type:'Игра',
       resume: 'Делаем красивую игру в славянском сеттинге',
-      tags: [ 'Unity', 'C#']
+      tags: [ 'Unity', 'C#'],
+      profileLink:"/teams/1"
     },
     {
       id: 3,
       name: 'Название то какое!',
       type:"Мобильное приложение", 
       resume: 'Делаем крутое мобильное приложение',
-      tags: ['Java', 'Kotlin']
+      tags: ['Java', 'Kotlin'],
+      profileLink:"/teams/1"
     },
   ];
 const TeamsPage = () => {
@@ -34,8 +37,10 @@ const TeamsPage = () => {
         <Navbar />
         <SearchBar />
         <div className="container">
+
         <Filter/>
           <MainContent>
+          <h1>Команды</h1>
             <div className="cards">
               {teamsData.map((team) => (
                 <Card
@@ -44,6 +49,7 @@ const TeamsPage = () => {
                   type={team.type}
                   resume={team.resume}
                   tags={team.tags}
+                  profileLink={team.profileLink}
                 />
               ))}
             </div>
