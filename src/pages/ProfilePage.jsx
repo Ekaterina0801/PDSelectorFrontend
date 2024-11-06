@@ -1,7 +1,9 @@
 import Navbar from "../components/navbar/Navbar";
 import Sidebar from "../components/sidebar/Sidebar";
 import Card from "../components/card-my-resume/CardMyResume";
-import Resume from "../components/resume/Resume";
+import TextFieldEdit from "../components/text-field-edit/TextFieldEdit";
+import CreatedCommands from "../components/created-commands/CreatedCommands";
+import DataAboutStudent from "../components/data-about-student/DataAboutStudent";
 import MainContent from "../components/main-section/MainSection";
 import React, { useState } from "react";
 /*
@@ -57,7 +59,7 @@ const ProfilePage = () => {
   const [currentContent, setCurrentContent] = useState("My applications"); // начальное значение
 
   const [currentTeamsData, setCurrentTeamsData] = useState(teamsData);
-  
+
   function removeCard(id){
     const newTeamsData = currentTeamsData.filter((item)=> { 
         return item.id !== id})
@@ -84,21 +86,20 @@ const ProfilePage = () => {
       case "My resume":
         return (
           <div>
-            {<Resume />}
+            {<TextFieldEdit />}
           </div>
         );
       case "My commands":
         return (
           <div>
             <h2>Messages Component</h2>
-            {/* Ваш код для компонента сообщений */}
+            {/*TODO*/}
           </div>
         );
       case "Created commands":
         return (
           <div>
-            <h2>Messages Component</h2>
-            {/* Ваш код для компонента сообщений */}
+            {<CreatedCommands />}
           </div>
         );
       default:
@@ -109,6 +110,7 @@ const ProfilePage = () => {
   return (
     <>
       <Navbar />
+      <DataAboutStudent />
       <div className="container">
         <Sidebar onItemClick={setCurrentContent} />
         <MainContent>{renderMainContent()}</MainContent>
