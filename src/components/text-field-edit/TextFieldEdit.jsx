@@ -20,7 +20,7 @@ const Resume = () => {
 
 let tags= ['JavaScript', 'React', 'Node.js'];
 
-const Resume = () => {
+const TextFieldEdit = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [infoText, setInfoText] = useState("Опытный разработчик с большим опытом в разработке веб-приложений и API.");
     const [tagsText, setTagsText] = useState(tags);
@@ -76,4 +76,4 @@ const Resume = () => {
     );
 };
 
-export default Resume;
+export default TextFieldEdit;

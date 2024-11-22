@@ -21,6 +21,7 @@
 .navbar .nav-links {
     display: flex;
     gap: 20px;
+    font-size: 20px;
 }
 
 .navbar .nav-links a {

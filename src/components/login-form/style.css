@@ -1,0 +1,254 @@
+
+.background {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; 
+    width: 100vw;
+    background: linear-gradient(135deg, #6a1b9a, #f06292); 
+    font-family: Arial, sans-serif;
+    box-sizing: border-box;
+}
+
+
+.login-container {
+    display: flex;
+    max-width: 75vw; 
+    width: 800px;
+    background-color: #fff; 
+    border-radius: 20px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    height: 500px;
+}
+
+
+.login-image {
+    flex: 1.5; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px; 
+}
+
+.login-image img {
+    width: 100%;
+    max-width: 250px; 
+    border-radius: 15px; 
+}
+
+
+.login-content {
+    flex: 2; 
+    padding: 50px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.welcome-text {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--purple);
+    margin-bottom: 30px; 
+}
+
+
+.login-button {
+    width: 100%;
+    padding: 16px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #fff;
+    background-color: var(--purple);
+    border: none;
+    border-radius: 10px; 
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.login-button:hover {
+    background-color: var(--purple-light);
+}
+
+
+@media (max-width: 768px) {
+    .login-container {
+        flex-direction: column; 
+        width: 90vw;
+        height: auto;
+    }
+
+    .login-image {
+        padding: 20px; 
+    }
+
+    .login-image img {
+        max-width: 200px;
+    }
+
+    .login-content {
+        padding: 30px;
+    }
+
+    .welcome-text {
+        font-size: 1.5rem; 
+        margin-bottom: 20px;
+    }
+
+    .login-button {
+        font-size: 1rem;
+        padding: 14px;
+    }
+}
+
+
+@media (max-width: 480px) {
+    .login-container {
+        width: 95vw;
+    }
+
+    .login-image {
+        padding: 10px; 
+    }
+
+    .login-image img {
+        max-width: 150px; 
+    }
+
+    .login-content {
+        padding: 20px; 
+    }
+
+    .welcome-text {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+    }
+
+    .login-button {
+        font-size: 0.9rem;
+        padding: 12px;
+    }
+}
+ 
+
+ 
+/* * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Funnel Display", sans-serif;
+  }
+  
+
+  .login-container {
+    display: flex;
+    max-width: 75vw;
+    width: 800px;
+    height: 500px;
+    border-radius: 20px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    background-color: #fff; 
+  }
+  
+
+  .login-left {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #6a1b9a, #f06292); 
+    color: #fff;
+    padding: 20px;
+  }
+  
+  .left-text {
+    font-size: 1.8rem;
+    font-weight: 600;
+    text-align: center;
+  }
+  
+  
+  .login-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: #fff; 
+  }
+  
+  .login-image {
+    max-width: 200px;
+    margin-bottom: 20px;
+  }
+  
+  .login-button {
+    width: 100%;
+    padding: 16px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #fff;
+    background-color: var(--purple);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .login-button:hover {
+    background-color: var(--purple-light);
+  }
+  
+
+  @media (max-width: 768px) {
+    .login-container {
+      flex-direction: column; 
+      width: 90vw;
+      height: auto;
+    }
+  
+    .login-left,
+    .login-right {
+      flex: unset;
+      width: 100%; 
+      padding: 20px;
+    }
+  
+    .left-text {
+      font-size: 1.5rem;
+    }
+  
+    .login-image {
+      max-width: 150px;
+    }
+  
+    .login-button {
+      font-size: 1rem;
+      padding: 14px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .login-container {
+      width: 95vw;
+    }
+  
+    .left-text {
+      font-size: 1.3rem;
+    }
+  
+    .login-image {
+      max-width: 120px;
+    }
+  
+    .login-button {
+      font-size: 0.9rem;
+      padding: 12px;
+    }
+  }
+   */
