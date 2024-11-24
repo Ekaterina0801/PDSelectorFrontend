@@ -36,16 +36,25 @@ import './style.css';
 ); 
 */
 
-const Sidebar = ({ onItemClick }) => {
+const Sidebar = ({ items, onItemClick }) => {
     return (
-    <div className="sidebar">
-        <ul className="sidebar-links">
-            <li><a onClick={() => onItemClick("My applications")}>Мои заявки</a></li>
-            <li><a onClick={() => onItemClick("My resume")}>Мое резюме</a></li>
-            <li><a onClick={() => onItemClick("My commands")}>Мои команды</a></li>
-            <li><a onClick={() => onItemClick("Created commands")}>Созданные команды</a></li>
-        </ul>
-    </div>
+        <div className="sidebar">
+            <ul className="sidebar-links">
+                {items.map((item, index) => (
+                    <li key={index}>
+                        <a 
+                            href={item.link || "#"}  // Если есть ссылка, используем ее, иначе просто # 
+                            onClick={(e) => {
+                                e.preventDefault(); // Чтобы предотвратить стандартное поведение ссылки, если используется onItemClick
+                                onItemClick(item.name);
+                            }}
+                        >
+                            {item.name}
+                        </a>
+                    </li>
+                ))}
+            </ul>
+        </div>
     );
 };
 

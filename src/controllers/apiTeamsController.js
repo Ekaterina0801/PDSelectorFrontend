@@ -1,42 +1,68 @@
 import axios from "axios";
 
-//const API_BASE_URL = "http://188.225.11.37:8080/api/v1";
-const API_BASE_URL = "http://localhost:8080/api/v1";
-/*
-    public static final String FIND_BY_LIKE = "/api/v1/teams/like";
-
-    public static final String SEARCH_TEAMS = "/api/v1/teams/search";
-
-*/
-// Получение данных о командах
-export const fetchTeams = async (trackId) => {
+import { API_BASE_URL } from '../config/apiConfig';
+export const fetchTeams = async ({ input, trackId, isFull, projectType, technologies }) => {
   try {
-    const response = await fetch(`http://localhost:8080/api/v1/teams?trackId=${trackId}`, {
-      method: 'GET',
-      credentials: 'include', // Обеспечивает отправку cookies
+    // Формируем параметры запроса
+    const queryParams = new URLSearchParams();
+
+    if (input) queryParams.append("input", input);
+    console.log("input", input);
+    if (trackId) queryParams.append("track_id", trackId);
+    if (isFull !== undefined) queryParams.append("is_full", isFull);
+    if (projectType) queryParams.append("project_type", projectType);
+    if (technologies && technologies.length > 0) {
+      technologies.forEach((techId) => queryParams.append("technologies", techId));
+    }
+
+    const response = await fetch(`${API_BASE_URL}/teams/search?${queryParams.toString()}`, {
+      method: "GET",
+      credentials: "include",
     });
 
     if (!response.ok) {
       throw new Error(`Ошибка HTTP: ${response.status}`);
     }
+    console.log('response', response);
+    const data = await response.json();
+    console.log('data',data);
 
-    const data = await response.json(); // Преобразуем JSON-ответ в объект
-    console.log(data); 
     return data;
   } catch (error) {
     console.error("Ошибка при получении данных команд:", error);
-    throw error; 
+    throw error;
   }
 };
 
 
+
 // Получение данных о командах
 export const fetchTeamById = async (teamId) => {
+  console.log('id team',teamId);
     try {
-      const response = await axios.get(`${API_BASE_URL}/teams/${teamId}`);
-      return response.data;
+      const response = await fetch(`${API_BASE_URL}/teams/${teamId}`, {
+        method: 'GET',
+        credentials: 'include', 
+      });
+
+      return response.json();
     } catch (error) {
       console.error("Ошибка при получении данных команды:", error);
+      throw error;
+    }
+  };
+
+  // Получение данных о фильтре
+export const fetchFilterParamsByTrackId = async (trackId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/teams/filters?track_id=${trackId}`, {
+        method: 'GET',
+        credentials: 'include', 
+      });
+
+      return response.json();
+    } catch (error) {
+      console.error("Ошибка при получении данных:", error);
       throw error;
     }
   };

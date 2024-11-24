@@ -1,84 +1,115 @@
 import './style.css';
-const Filter = () => {
+import React, { useState } from "react";
+
+
+const Filter = ({ filterParams, onApplyFilters }) => {
+  const [isFull, setIsFull] = useState(null); // Флаг заполненности
+  const [projectTypes, setProjectTypes] = useState([]); // Типы проектов
+  const [technologies, setTechnologies] = useState([]); // Технологии
+
+  // Extract project types and technologies from params
+  const availableProjectTypes = filterParams.projectTypes || []; // Array of project types
+  const availableTechnologies = filterParams.technologies || []; // Array of technology objects
+
+  const handleProjectTypeChange = (type) => {
+    setProjectTypes((prevTypes) =>
+      prevTypes.includes(type)
+        ? prevTypes.filter((t) => t !== type)
+        : [...prevTypes, type]
+    );
+  };
+
+  const handleTechnologyChange = (technology) => {
+    setTechnologies((prevTechnologies) =>
+      prevTechnologies.includes(technology)
+        ? prevTechnologies.filter((t) => t !== technology)
+        : [...prevTechnologies, technology]
+    );
+  };
+
+  const handleApplyFilters = () => {
+    const filters = {
+      isFull,
+      projectType: projectTypes.length > 0 ? projectTypes : null,
+      technologies: technologies.length > 0 ? technologies : null,
+    };
+
+    onApplyFilters(filters);
+  };
+
   return (
     <div className="filter-section">
       <h2>Фильтры</h2>
-      {/* Фильтр по цвету */}
+      {/* Фильтр по заполненности */}
       <div className="filter-group">
-        <h3>Цвет</h3>
+        <h3>Заполненность</h3>
         <label>
-          <input type="checkbox" name="color" value="синий" />
-          <span
-            className="color-circle color-blue"
-            style={{
-              display: "inline-block",
-              width: "15px",
-              height: "15px",
-              backgroundColor: "blue",
-              borderRadius: "50%",
-              marginRight: "5px",
-            }}
-          ></span>
-          синий
+          <input
+            type="radio"
+            name="isFull"
+            value="true"
+            checked={isFull === true}
+            onChange={() => setIsFull(true)}
+          />
+          Полностью укомплектован
         </label>
         <label>
-          <input type="checkbox" name="color" value="красный" />
-          <span
-            className="color-circle color-red"
-            style={{
-              display: "inline-block",
-              width: "15px",
-              height: "15px",
-              backgroundColor: "red",
-              borderRadius: "50%",
-              marginRight: "5px",
-            }}
-          ></span>
-          красный
+          <input
+            type="radio"
+            name="isFull"
+            value="false"
+            checked={isFull === false}
+            onChange={() => setIsFull(false)}
+          />
+          Есть свободные места
         </label>
         <label>
-          <input type="checkbox" name="color" value="зеленый" />
-          <span
-            className="color-circle color-green"
-            style={{
-              display: "inline-block",
-              width: "15px",
-              height: "15px",
-              backgroundColor: "green",
-              borderRadius: "50%",
-              marginRight: "5px",
-            }}
-          ></span>
-          зеленый
+          <input
+            type="radio"
+            name="isFull"
+            value="null"
+            checked={isFull === null}
+            onChange={() => setIsFull(null)}
+          />
+          Все
         </label>
       </div>
 
-      {/* Фильтр по размеру */}
+      {/* Фильтр по типу проекта */}
       <div className="filter-group">
-        <h3>Фильтр 1</h3>
-        <label>
-          <input type="checkbox" name="size" value="маленький" /> 1
-        </label>
-        <label>
-          <input type="checkbox" name="size" value="средний" /> 2
-        </label>
-        <label>
-          <input type="checkbox" name="size" value="большой" /> 3
-        </label>
+        <h3>Тип проекта</h3>
+        {availableProjectTypes.map((type) => (
+          <label key={type}>
+            <input
+              type="checkbox"
+              checked={projectTypes.includes(type)}
+              onChange={() => handleProjectTypeChange(type)}
+            />
+            {type}
+          </label>
+        ))}
       </div>
 
-      {/* Фильтр по цене */}
+      {/* Фильтр по технологиям */}
       <div className="filter-group">
-        <h3>Фильтр 2</h3>
-        <div className="price-range">
-          <input type="number" placeholder="от" min="0" />
-          <input type="number" placeholder="до" min="0" />
-        </div>
-        <input type="range" className="slider" min="0" max="1000" />
+        <h3>Технологии</h3>
+        {availableTechnologies.map((tech) => (
+          <label key={tech.id}> {/* Use tech.id as a unique key */}
+            <input
+              type="checkbox"
+              checked={technologies.includes(tech.id)} // Check against tech.id for technologies
+              onChange={() => handleTechnologyChange(tech.id)} // Use tech.id to handle changes
+            />
+            {tech.name} {/* Display the technology name */}
+          </label>
+        ))}
       </div>
 
-      <button className="show-button">Показать</button>
+      <button className="show-button" onClick={handleApplyFilters}>
+        Применить фильтры
+      </button>
     </div>
   );
 };
+
 export default Filter;

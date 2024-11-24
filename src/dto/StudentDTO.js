@@ -18,7 +18,6 @@ export default class StudentDto {
       this.about_self = about_self; 
       this.contacts = contacts; 
       this.has_team = has_team; 
-      this.is_full = is_full; 
       this.is_captain = is_captain; 
       this.current_team = current_team; 
       this.technologies = technologies; 

@@ -1,7 +1,6 @@
 import axios from "axios";
-
+import { API_BASE_URL } from '../config/apiConfig';
 //const API_BASE_URL = "http://188.225.11.37:8080/api/v1";
-const API_BASE_URL = "http://localhost:8080/api/v1";
 // Получение данных о всех заявках
 export const fetchApplications = async (trackId) => {
   try {

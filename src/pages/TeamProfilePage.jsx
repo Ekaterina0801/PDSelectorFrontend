@@ -1,113 +1,163 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import Navbar from "../components/navbar/Navbar";
 import Sidebar from "../components/sidebar/Sidebar";
 import Card from "../components/card/Card";
 import MainContent from "../components/main-section/MainSection";
 import EditableDescription from "../components/editable-text-field/EditableTextField";
-import { fetchStudents } from '../controllers/apiStudentsController';
-import { fetchTeamById } from '../controllers/apiTeamsController';
-import TeamDto from '../dto/TeamDTO';
-
-const TeamProfilePage = ({ teamId }) => {
-    const [currentContent, setCurrentContent] = useState("Team Members");
-    const [studentsData, setStudentsData] = useState([]);
-    const [teamRequests, setTeamRequests] = useState([]);
-    const [teamDescription, setTeamDescription] = useState(""); // State for team description
-    const [teamCaptain, setTeamCaptain] = useState(""); // State for team captain
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-  
-    useEffect(() => {
-        const loadContent = async () => {
-            setLoading(true);
-            setError(null);
-            try {
-                const fetchedTeam = await fetchTeamById(1);
-                const teamDto = new TeamDto(fetchedTeam);
-                setTeamDescription(teamDto.project_description); // Set team description
-                setTeamCaptain(teamDto.captain); // Set team captain
-
-                if (currentContent === "Team Members") {
-                    const fetchedStudents = await fetchStudents(); 
-                    setStudentsData(fetchedStudents);
-                } else if (currentContent === "Team Requests") {
-                    const fetchedRequests = await fetchTeamRequests();
-                    setTeamRequests(fetchedRequests);
-                }
-            } catch (error) {
-                setError("Failed to load data.");
-                console.error(error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        loadContent();
-    }, [currentContent, teamId]); // Added teamId as a dependency
-
-    // Render the main content
-    const renderMainContent = () => {
-        if (loading) {
-            return <p>Загрузка...</p>;
-        }
-
-        if (error) {
-            return <p>{error}</p>;
-        }
-
-        switch (currentContent) {
-            case "Team Members":
-                return (
-                    <div className="cards">
-                        {studentsData.map((student) => (
-                            <Card
-                                key={student.id}
-                                name={student.name}
-                                resume={student.resume}
-                                /*tags={student.technologiess}*/
-                            />
-                        ))}
-                    </div>
-                );
-            case "Team Requests":
-                return (
-                    <div className="cards">
-                        {teamRequests.length > 0 ? (
-                            teamRequests.map((request) => (
-                                <Card
-                                    key={request.id}
-                                    name={request.name}
-                                    resume={request.description}
-                                    /*tags={request.technologies}*/
-                                />
-                            ))
-                        ) : (
-                            <p>Нет доступных запросов.</p>
-                        )}
-                    </div>
-                );
-            default:
-                return null;
-        }
+import {
+  fetchStudentById,
+  fetchStudents,
+} from "../controllers/apiStudentsController";
+import { fetchTeamById } from "../controllers/apiTeamsController";
+import TeamDto from "../dto/TeamDTO";
+import { useParams } from "react-router-dom";
+import StudentDto from "../dto/StudentDTO";
+import { fetchCurrentUser } from "../controllers/apiStudentsController";
+const sidebarItems = [
+  { name: "Текущие участники" },
+  { name: "Заявки в команду" },
+];
+import Header from "../components/header/Header";
+const TeamProfilePage = () => {
+  const { teamId } = useParams();
+  const [currentContent, setCurrentContent] = useState("Текущие участники");
+  const [studentsData, setStudentsData] = useState([]);
+  const [teamRequests, setTeamRequests] = useState([]);
+  const [teamDescription, setTeamDescription] = useState("");
+  const [teamTechnologies, setTeamTechnologies] = useState([]);
+  const [teamName, setTeamName] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [isCaptain, setIsCaptain] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [teamCaptain, setTeamCaptain] = useState(null);
+  const [captainId, setCaptainId] = useState(null);
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const userData = await fetchCurrentUser();
+        setCurrentUser(userData);
+      } catch (error) {
+        console.error("Ошибка при загрузке профиля пользователя:", error);
+      }
     };
-  
-    return (
-        <>
-            <Navbar />
-            <h1>Профиль команды</h1>
-            <div className="container">
-                <MainContent>
-                    <Sidebar onItemClick={setCurrentContent} />
-                    <h2>{currentContent}</h2>
-                    <EditableDescription
-                        initialDescription={teamDescription}
-                    />
-                    <p><strong>Капитан команды:</strong> {teamCaptain}</p> {/* Display team captain */}
-                    {renderMainContent()}
-                </MainContent>
-            </div>
-        </>
-    );
+
+    loadUser();
+  }, []);
+
+  useEffect(() => {
+    const loadTeamAndCaptain = async () => {
+      setLoading(true);
+      try {
+        const fetchedTeam = await fetchTeamById(teamId);
+        const teamDto = new TeamDto(fetchedTeam);
+        setTeamDescription(teamDto.project_description);
+        setTeamName(teamDto.name);
+        setCaptainId(teamDto.captain_id);
+
+        if (currentUser && teamDto.captain_id === currentUser.id) {
+          if (!isCaptain) setIsCaptain(true);
+        }
+
+        if (teamDto.captain_id) {
+          const captainData = await fetchStudentById(teamDto.captain_id);
+          const captain = new StudentDto(captainData);
+          setTeamCaptain(captain.user.fio);
+        }
+
+        if (currentContent === "Текущие участники") {
+          setStudentsData(teamDto.students);
+        } else if (currentContent === "Заявки в команду") {
+          setTeamRequests(teamDto.applications);
+        }
+      } catch (error) {
+        setError("Ошибка при загрузке данных команды или капитана.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (currentUser) {
+      loadTeamAndCaptain();
+    }
+  }, [currentContent, teamId, currentUser]);
+
+  const handleSave = ({ description, technologies }) => {
+    setTeamDescription(description);
+    setTeamTechnologies(technologies);
+  };
+
+  const renderMainContent = () => {
+    if (loading) {
+      return <p>Загрузка...</p>;
+    }
+
+    if (error) {
+      return <p>{error}</p>;
+    }
+
+    switch (currentContent) {
+      case "Текущие участники":
+        return (
+          <div className="cards">
+            {studentsData.map((student) => (
+              <Card
+                key={student.id}
+                name={student.user.fio}
+                resume={student.about_self}
+                tags={student.technologies}
+              />
+            ))}
+          </div>
+        );
+      case "Заявки в команду":
+        return (
+          <div className="cards">
+            {teamRequests.length > 0 ? (
+              teamRequests.map((request) => (
+                <Card
+                  key={request.id}
+                  name={request.user.fio}
+                  resume={request.about_self}
+                  tags={request.technologies}
+                />
+              ))
+            ) : (
+              <p>Нет доступных запросов.</p>
+            )}
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <>
+      <Navbar />
+      <h1>Профиль команды {teamName}</h1>
+      <div className="container">
+        {!isCaptain && (
+          <Sidebar onItemClick={setCurrentContent} items={sidebarItems} />
+        )}{" "}
+        <MainContent>
+          <h2>Описание команды</h2>
+          <EditableDescription
+            initialDescription={teamDescription}
+            initialTechnologies={teamTechnologies}
+            canEdit={!isCaptain}
+            onSave={handleSave}
+          />
+
+          <p>
+            <strong>Капитан команды:</strong> {teamCaptain}
+          </p>
+          <h2>{currentContent}</h2>
+          {renderMainContent()}
+        </MainContent>
+      </div>
+    </>
+  );
 };
 
 export default TeamProfilePage;
