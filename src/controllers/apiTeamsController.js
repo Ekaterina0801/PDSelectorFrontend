@@ -120,6 +120,3 @@ export const updateTeam = async (teamData, trackId) => {
 
 
 
-
-
-

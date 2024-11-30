@@ -102,14 +102,17 @@ const StudentProfilePage = () => {
       case "Профиль":
         console.log('user', currentUser);
         return (
+
           <div>
-            <h3>ФИО текущего пользователя: {currentUser.fio}</h3>
+            
+            {/*<h3>ФИО текущего пользователя: {currentUser.fio}</h3>*/}
             <EditableProfile
               studentData={studentData} // Данные студента, полученные из API
               canEdit={!isCurrentUser} // Разрешение на редактирование только для текущего пользователя
               onSave={handleProfileSave}
             />
           </div>
+
         );
       case "Мои команды":
         return (
