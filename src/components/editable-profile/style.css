@@ -9,35 +9,37 @@
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
-  
-  h3 {
+   
+  h3.editable-profile {
     text-align: center;
     color: #333;
     font-size: 28px;
     margin-bottom: 20px;
   }
-  
+
   .profile-container {
     background-color: #f7f7f7;
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
   }
-  
+   
   .form-group {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 8px;
     margin-bottom: 15px;
+    align-items: center;
   }
-  
-  label {
+
+  .label.editable-profile {
     font-weight: bold;
     font-size: 16px;
     color: #555;
   }
   
-  p {
+  .p-editable-profile {
     font-size: 16px;
     color: #333;
     margin: 0;
@@ -52,7 +54,7 @@
     font-style: italic;
   }
   
-  input {
+  input.editable-profile {
     padding: 10px;
     font-size: 16px;
     margin-top: 5px;
@@ -67,10 +69,26 @@
     border-color: #e0e0e0;
   }
   
-
-  
   button:disabled {
     background-color: #a0a0a0;
     cursor: not-allowed;
   }
-  
+
+  .edit-button button {
+    background-color: var(--purple-light);
+    color: var(--purple);
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  .edit-button button:hover {
+    background-color: var(--purple);
+    color: #fff;
+  }
+
+
+ 
