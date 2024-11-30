@@ -40,7 +40,7 @@ const StudentProfilePage = () => {
       }
     };
 
-    loadUser();
+    loadUser(); 
   }, []);
 
   // Загрузка данных студента и его команд

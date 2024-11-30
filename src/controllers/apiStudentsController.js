@@ -61,7 +61,7 @@ export const deleteStudent = async (studentId) => {
 export const fetchStudentById = async (studentId) => {
   console.log('st',studentId);
   try {
-    const response =await fetch(`${API_BASE_URL}/students/${studentId}`, {
+    const response = await fetch(`${API_BASE_URL}/students/${studentId}`, {
       method: 'GET',
       credentials: 'include', 
     });

@@ -94,7 +94,7 @@ const ProfilePage = () => {
       <DataAboutStudent />
       <FilterYear />
       <div className="container">
-        <Sidebar onItemClick={setCurrentContent} />
+        <Sidebar onItemClick={setCurrentContent} items={sidebarItems} />
         <MainContent>{renderMainContent()}</MainContent>
       </div>
     </>

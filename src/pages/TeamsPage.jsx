@@ -60,7 +60,7 @@ const TeamsPage = () => {
     const loadFilters = async () => {
       const trackId = getSavedTrackId();
       console.log('trackId', trackId);
-      if (!trackId) return;
+      if (!trackId) return; 
       try {
         const params = await fetchFilterParamsByTrackId(trackId);
         setFilterParams(params);
