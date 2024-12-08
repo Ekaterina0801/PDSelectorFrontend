@@ -11,13 +11,17 @@ const SearchBar = ({ onSearch }) => {
 
   return (
     <div className="search-bar">
-      <input
-        type="text"
-        value={searchInput}
-        onChange={(e) => setSearchInput(e.target.value)} // Обновляем локальное состояние
-        placeholder="Поиск"
-      />
-      <button onClick={handleSearch}>Искать</button>
+      <div className="search-container">
+        <input
+          type="text"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)} // Обновляем локальное состояние
+          placeholder="Поиск"
+        />
+        <button className="search-button" onClick={handleSearch}>
+          🔍
+        </button>
+      </div>
     </div>
   );
 };

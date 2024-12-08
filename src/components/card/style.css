@@ -7,7 +7,7 @@
     overflow: hidden;
     text-align: left;
     padding: 20px;
-    margin-bottom: 20px;
+    margin: 20px;
     border: 1px solid var(--purple-light);
     transition: transform 0.3s, box-shadow 0.3s;
 }
@@ -18,60 +18,94 @@
 }
 
 .card-name {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--purple);
+    margin-bottom: 12px;
+    letter-spacing: 0.5px;
+}
+
+.card-type,
+.card-resume {
+    display: flex;
+    align-items: center; 
+    margin-bottom: 12px; 
+    font-size: 1rem;
+    color: #555;
+    gap: 10px;
+}
+
+.type-capture,
+.resume-capture {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--purple);
+    white-space: nowrap; 
+}
+
+.card-type p,
+.card-resume p {
+    margin: 0;
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    white-space: nowrap; 
+}
+
+
+.card-tags {
+    margin-bottom: 15px;
+}
+
+.card-tags h3 {
+    font-size: 1.1rem;
     font-weight: 600;
     color: var(--purple);
     margin-bottom: 10px;
 }
 
-.card-resume {
-    font-size: 1rem;
-    color: #555;
-    margin-bottom: 10px;
-    display: -webkit-box; /* Устанавливает тип отображения для обрезки текста */
-    -webkit-box-orient: vertical; /* Устанавливает направление для обрезки текста */
-    -webkit-line-clamp: 2; /* Ограничивает количество строк до 2 */
-    line-clamp: 2;
-    overflow: hidden; /* Скрывает переполняющий текст */
-    text-overflow: ellipsis; /* Добавляет троеточие */
-}
-
-
-.card-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
 .card-tag {
     background-color: var(--purple-light);
     color: var(--purple);
-    padding: 5px 10px;
-    border-radius: 15px;
-    font-size: 0.8rem;
+    padding: 6px 12px;
+    border-radius: 18px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
+.card-tag:hover {
+    background-color: var(--purple);
+    color: white;
+    transform: scale(1.05);
+}
+
+
 .card-actions {
-    margin-top: 10px;
+    margin-top: 15px;
+    display: flex;
     align-items: center;
-  }
-  
-  .action-button {
+    gap: 10px;
+}
+
+.action-button {
     background-color: var(--purple);
     color: #fff;
     border: none;
-    border-radius: 8px; /* Увеличиваем радиус закругления */
-    padding: 8px 12px;
+    border-radius: 8px;
+    padding: 10px 15px;
     cursor: pointer;
-    margin-right: 10px;
-    transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s; /* Добавлены переходы для объема */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Добавляем тень для объема */
-  }
-  
-  .action-button:hover {
-    background-color: darken(var(--purple), 10%);
-    transform: translateY(-2px); /* Добавляем эффект поднятия при наведении */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Увеличиваем тень при наведении */
-  }
-  
-  
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    font-size: 1rem;
+}
+
+.action-button:hover {
+    background-color: var(--purple-light);;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.action-link {
+    text-decoration: none;
+}

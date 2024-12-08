@@ -7,6 +7,8 @@
   .navbar {
     width: 100vw;
     max-width: 1200px;
+    top: 0; 
+    position: sticky;
     display: flex;
     justify-content: space-between; /* Распределение элементов по краям */
     align-items: center;
@@ -16,6 +18,8 @@
     border-radius: 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin-top: 20px;
+    z-index: 1000;
+  position: -webkit-sticky;
   }
   
   .navbar .logo {
@@ -102,3 +106,69 @@
     transition: transform 0.3s ease;
   }
   
+  /* Настройка react-burger-menu */
+.bm-burger-button {
+  position: fixed;
+  width: 36px;
+  height: 30px;
+  right: 20px;
+  top: 20px;
+}
+
+.bm-burger-bars {
+  background: #fff;
+}
+
+.bm-burger-bars-hover {
+  background: #9c27b0; /* Цвет при наведении */
+}
+
+.bm-cross-button {
+  height: 24px;
+  width: 24px;
+}
+
+.bm-cross {
+  background: #fff;
+}
+
+.bm-menu {
+  background: #6a1b9a; /* Цвет меню */
+  padding: 2.5em 1.5em 0;
+  font-size: 1.15em;
+}
+
+.bm-item-list {
+  color: #fff;
+  padding: 0.8em;
+}
+
+.bm-item {
+  display: block;
+  padding: 0.5em;
+  text-decoration: none;
+  color: #fff;
+  transition: color 0.3s;
+}
+
+.bm-item:hover {
+  color: #9c27b0; /* Цвет ссылки при наведении */
+}
+
+.bm-overlay {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Скрываем стандартные ссылки на маленьких экранах */
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+}
+
+/* Оставляем стандартные ссылки для больших экранов */
+@media (min-width: 769px) {
+  .bm-burger-button {
+    display: none;
+  }
+}

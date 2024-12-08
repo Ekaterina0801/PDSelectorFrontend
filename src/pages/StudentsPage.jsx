@@ -4,29 +4,26 @@ import SearchBar from "../components/search-bar/SearchBar";
 import Card from "../components/card/Card";
 import Filter from "../components/forms/Filter";
 import MainContent from "../components/main-section/MainSection";
-import { fetchStudents } from "../controllers/apiStudentsController";
+import { fetchStudents } from "../api/apiStudentsController";
 import Header from "../components/header/Header";
 import { getSavedTrackId } from "../hooks/cookieUtils";
-import { fetchFilterParamsByTrackId } from "../controllers/apiTeamsController";
+import { fetchFilterParamsByTrackId } from "../api/apiTeamsController";
 const StudentsPage = () => {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
   const [filters, setFilters] = useState({});
-  const [filterParams, setFilterParams] = useState([]); // State to hold filter parameters
+  const [filterParams, setFilterParams] = useState([]);
   const [searchInput, setSearchInput] = useState("");
 
-  // Handler for applying filters
   const handleApplyFilters = (newFilters) => {
     setFilters(newFilters);
   };
 
-  // Handler for search input
   const handleSearch = (input) => {
     setSearchInput(input);
   };
 
-  // Load students, user, and filter parameters
   useEffect(() => {
     const loadStudents = async () => {
       const trackId = getSavedTrackId();
@@ -36,7 +33,7 @@ const StudentsPage = () => {
         return;
       }
       try {
-        const data = await fetchStudents(trackId, { ...filters, input: searchInput }); // Pass filters and search input if needed
+        const data = await fetchStudents(trackId, { ...filters, input: searchInput }); 
         setStudents(data);
         console.log("Загруженные студенты:", data);
       } catch (error) {
@@ -57,7 +54,7 @@ const StudentsPage = () => {
       }
     };
 
-    setLoading(true); // Set loading state before loading data
+    setLoading(true); 
     Promise.all([loadStudents(), loadFilters()]).finally(() => {
       setLoading(false);
     });

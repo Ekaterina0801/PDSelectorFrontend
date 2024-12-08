@@ -1,78 +1,51 @@
 import './style.css';
 import React, { useState } from "react";
-
+import { useMemo } from 'react';
 
 const Filter = ({ filterParams, onApplyFilters }) => {
-  const [isFull, setIsFull] = useState(null); // Флаг заполненности
-  const [projectTypes, setProjectTypes] = useState([]); // Типы проектов
-  const [technologies, setTechnologies] = useState([]); // Технологии
+  const [isFull, setIsFull] = useState(null);
+  const [selectedProjectTypes, setSelectedProjectTypes] = useState([]);
+  const [selectedTechnologies, setSelectedTechnologies] = useState([]);
 
-  // Extract project types and technologies from params
-  const availableProjectTypes = filterParams.projectTypes || []; // Array of project types
-  const availableTechnologies = filterParams.technologies || []; // Array of technology objects
 
-  const handleProjectTypeChange = (type) => {
-    setProjectTypes((prevTypes) =>
-      prevTypes.includes(type)
-        ? prevTypes.filter((t) => t !== type)
-        : [...prevTypes, type]
-    );
-  };
+  const availableProjectTypes = useMemo(() => filterParams.projectTypes || [], [filterParams]);
+  const availableTechnologies = useMemo(() => filterParams.technologies || [], [filterParams]);
 
-  const handleTechnologyChange = (technology) => {
-    setTechnologies((prevTechnologies) =>
-      prevTechnologies.includes(technology)
-        ? prevTechnologies.filter((t) => t !== technology)
-        : [...prevTechnologies, technology]
+
+  const toggleSelection = (setState, value) => {
+    setState((prev) =>
+      prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value]
     );
   };
 
   const handleApplyFilters = () => {
     const filters = {
       isFull,
-      projectType: projectTypes.length > 0 ? projectTypes : null,
-      technologies: technologies.length > 0 ? technologies : null,
+      projectType: selectedProjectTypes.length > 0 ? selectedProjectTypes : null,
+      technologies: selectedTechnologies.length > 0 ? selectedTechnologies : null,
     };
-
     onApplyFilters(filters);
   };
 
   return (
     <div className="filter-section">
       <h2>Фильтры</h2>
+
       {/* Фильтр по заполненности */}
       <div className="filter-group">
         <h3>Заполненность</h3>
-        <label>
-          <input
-            type="radio"
-            name="isFull"
-            value="true"
-            checked={isFull === true}
-            onChange={() => setIsFull(true)}
-          />
-          Полностью укомплектован
-        </label>
-        <label>
-          <input
-            type="radio"
-            name="isFull"
-            value="false"
-            checked={isFull === false}
-            onChange={() => setIsFull(false)}
-          />
-          Есть свободные места
-        </label>
-        <label>
-          <input
-            type="radio"
-            name="isFull"
-            value="null"
-            checked={isFull === null}
-            onChange={() => setIsFull(null)}
-          />
-          Все
-        </label>
+        {["Полностью укомплектован", "Есть свободные места", "Все"].map((label, index) => (
+          <label key={index}>
+            <input
+              type="radio"
+              name="isFull"
+              value={index === 2 ? null : index === 0}
+              checked={isFull === (index === 2 ? null : index === 0)}
+              onChange={() => setIsFull(index === 2 ? null : index === 0)}
+            />
+            {label}
+          </label>
+        ))}
       </div>
 
       {/* Фильтр по типу проекта */}
@@ -82,8 +55,8 @@ const Filter = ({ filterParams, onApplyFilters }) => {
           <label key={type}>
             <input
               type="checkbox"
-              checked={projectTypes.includes(type)}
-              onChange={() => handleProjectTypeChange(type)}
+              checked={selectedProjectTypes.includes(type)}
+              onChange={() => toggleSelection(setSelectedProjectTypes, type)}
             />
             {type}
           </label>
@@ -94,13 +67,13 @@ const Filter = ({ filterParams, onApplyFilters }) => {
       <div className="filter-group">
         <h3>Технологии</h3>
         {availableTechnologies.map((tech) => (
-          <label key={tech.id}> {/* Use tech.id as a unique key */}
+          <label key={tech.id}>
             <input
               type="checkbox"
-              checked={technologies.includes(tech.id)} // Check against tech.id for technologies
-              onChange={() => handleTechnologyChange(tech.id)} // Use tech.id to handle changes
+              checked={selectedTechnologies.includes(tech.id)}
+              onChange={() => toggleSelection(setSelectedTechnologies, tech.id)}
             />
-            {tech.name} {/* Display the technology name */}
+            {tech.name}
           </label>
         ))}
       </div>

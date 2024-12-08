@@ -37,11 +37,12 @@ const Card = ({
     <div className="card">
       <div className="card-header">
         <h3 className="card-name">{name}</h3>
-        {type && <p className="card-type">{type}</p>}
+        {type && <p className="card-type"><h3 className="type-capture">Тип проекта: </h3>{type}</p>}
       </div>
       <div className="card-body">
-        {resume && <p className="card-resume">{resume}</p>}
+        {resume && <p className="card-resume"><h3 className="type-capture">Резюме: </h3>{resume}</p>}
         <div className="card-tags">
+          <h3 className="text-capture">Технологии: </h3>
           {tags.length > 0 ? (
             tags.map((tag, index) => (
               <span key={index} className="card-tag">
@@ -49,7 +50,7 @@ const Card = ({
               </span>
             ))
           ) : (
-            <p className="no-tags">Нет указанных технологий</p>
+            <p className="no-tags">-</p>
           )}
         </div>
       </div>

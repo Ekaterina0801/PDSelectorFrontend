@@ -10,7 +10,8 @@
 }
 
 body {
-  background-color: #f5efed;
+  /*background-color: #f5efed;*/
+  background-image: url('./assets/backgroundReact.jpg');
   /*#fff;*/
   color: #f5efed;
   /*#333;*/

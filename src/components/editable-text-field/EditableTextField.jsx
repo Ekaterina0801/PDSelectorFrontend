@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./style.css";
 import { FaPlus, FaTrash, FaEdit, FaSave, FaChevronDown } from "react-icons/fa";
 import { isEqual } from "lodash";
-import { fetchFilterParamsByTrackId } from "../../controllers/apiTeamsController";
+import { fetchFilterParamsByTrackId } from "../../api/apiTeamsController";
 import { getSavedTrackId } from "../../hooks/cookieUtils";
 import DropDownTechnologies from "../drop-down-technologies/DropDownTechnologies";
 

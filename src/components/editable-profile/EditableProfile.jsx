@@ -4,7 +4,7 @@ import "../modal/style.css";
 import "./style.css";
 import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
 import DropDownTechnologies from "../drop-down-technologies/DropDownTechnologies";
-import { fetchFilterParamsByTrackId } from "../../controllers/apiTeamsController";
+import { fetchFilterParamsByTrackId } from "../../api/apiTeamsController";
 import { getSavedTrackId } from "../../hooks/cookieUtils";
 
 const EditableProfile = ({ studentData, canEdit, onSave }) => {
@@ -22,7 +22,7 @@ const EditableProfile = ({ studentData, canEdit, onSave }) => {
 
   useEffect(() => {
     if (studentData) {
-      setFio(studentData.fio || "");
+      setFio(studentData.user.fio || "");
       setCourse(studentData.course || "");
       setGroup(studentData.group || "");
       setContacts(studentData.contacts || "");
