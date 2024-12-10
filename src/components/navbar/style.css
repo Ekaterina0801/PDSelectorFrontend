@@ -3,7 +3,7 @@
     --grey-light: #f4f4f4;
     --shadow: rgba(0, 0, 0, 0.15);
   }
-  
+
   .navbar {
     width: 100vw;
     max-width: 1200px;
@@ -101,4 +101,156 @@
   .navbar .select-icon svg {
     transition: transform 0.3s ease;
   }
+
+  /*стили для MobileNavigation*/
+  .navbar-mobile {
+    display: flex;
+    align-items: center; 
+    flex-direction: column; 
+    justify-content: flex-start;
+    background-color: var(--purple);
+    color: var(--white);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 100%;
+    position: absolute;
+    border-radius: 15px;
+    flex-direction: column;
+    transform: translateY(100px);
+  }
+
+  .navbar-mobile .logo {
+    font-weight: 600;
+    font-size: 1.75rem;
+    color: var(--white);
+    margin-right: auto; /* Иконка приложения выравнивается слева */
+  }
   
+  .navbar-mobile .nav-links {
+    flex-direction: column;
+    display: flex;
+    gap: 10px;
+    font-size: 18px;
+    margin-top: 30px;
+  }
+  
+  .navbar-mobile .nav-links a {
+    text-decoration: none;
+    color: var(--white);
+    font-weight: 600;
+    transition: color 0.3s, transform 0.3s;
+    display: inline-block;
+  }
+  
+  .navbar-mobile .nav-links a:hover {
+    color: var(--purple-light);
+    transform: translateY(-2px);
+  }
+  
+  .navbar-mobile-logo .track-selector {
+    position: relative;
+    cursor: pointer;
+    margin: 0 auto;               
+    display: block;
+  }
+  
+  .navbar-mobile-logo .select-icon {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 15px;
+    background-color: var(--white);
+    color: var(--purple);
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-weight: 600;
+  }
+  
+  .navbar-mobile-logo .select-icon.open svg {
+    transform: rotate(180deg); /* Стрелка вниз при открытом списке */
+  }
+  
+  .navbar-mobile-logo .dropdown {
+    position: absolute;
+    top: 35px;
+    left: 0;
+    right: 0;
+    background-color: var(--white);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    z-index: 1;
+    padding: 10px 0;
+    display: block;
+  }
+  
+  .navbar-mobile-logo .dropdown ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .navbar-mobile-logo .dropdown li {
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--purple);
+    transition: background-color 0.2s ease;
+  }
+  
+  .navbar-mobile-logo .dropdown li:hover {
+    background-color: var(--purple-light);
+  }
+  
+  .navbar-mobile .select-icon svg {
+    transition: transform 0.3s ease;
+  }
+
+.HamburgerMenu{
+  position: absolute;
+  right: 2%;
+  cursor: pointer;
+}
+
+.navbar-mobile-logo{
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  padding: 15px 25px;
+  background-color: var(--purple);
+  color: var(--white);
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+/* Стили для Navbar на больших экранах */
+@media (min-width: 769px) {
+  .navbar {
+      display: flex; /* Показываем .navbar для больших экранов */
+  }
+
+  .navbar-mobile-logo {
+      display: none; /* Скрываем .navbar-mobile для больших экранов */
+  }
+
+  .HamburgerMenu{
+    display: none;
+  }
+}
+
+/* Стили для Navbar на мобильных экранах */
+@media (max-width: 768px) {
+  .navbar {
+      display: none; /* Скрываем .navbar для мобильных экранов */
+  }
+
+  .navbar-mobile-logo {
+      display: flex; /* Показываем .navbar-mobile для мобильных экранов */
+  }
+
+  .HamburgerMenu{
+    display: flex;
+  }
+}

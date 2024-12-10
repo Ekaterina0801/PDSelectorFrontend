@@ -10,6 +10,8 @@ import MainContent from "../components/main-section/MainSection";
 import EditableProfile from "../components/editable-profile/EditableProfile"; // Компонент для редактирования профиля студента
 import Card from "../components/card/Card";
 import Navbar from "../components/navbar/Navbar";
+import MobileNavigation from "../components/mobile-navigation/MobileNavigation";
+
 const sidebarItems = [
   { name: "Мои команды" },
   { name: "Мой профиль" },
@@ -177,6 +179,7 @@ const StudentProfilePage = () => {
   return (
     <>
       <Navbar />
+      <MobileNavigation />
       <h1>Профиль студента</h1>
       <div className="container">
         {!isCurrentUser && (

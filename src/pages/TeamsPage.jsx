@@ -10,6 +10,7 @@ import { fetchCurrentUser } from "../controllers/apiStudentsController";
 import TeamDto from "../dto/TeamDTO";
 import { getSavedTrackId } from "../hooks/cookieUtils";
 import { fetchFilterParamsByTrackId } from "../controllers/apiTeamsController";
+import MobileNavigation from "../components/mobile-navigation/MobileNavigation";
 
 const TeamsPage = () => {
   const [teams, setTeams] = useState([]);
@@ -79,6 +80,7 @@ const TeamsPage = () => {
   return (
     <>
       <Navbar />
+      <MobileNavigation />
       <SearchBar onSearch={handleSearch} />
       <div className="container">
         <Filter filterParams={filterParams} onApplyFilters={handleApplyFilters} /> {/* Pass filter parameters */}

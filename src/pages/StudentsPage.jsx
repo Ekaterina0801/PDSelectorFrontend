@@ -8,6 +8,8 @@ import { fetchStudents } from "../controllers/apiStudentsController";
 import Header from "../components/header/Header";
 import { getSavedTrackId } from "../hooks/cookieUtils";
 import { fetchFilterParamsByTrackId } from "../controllers/apiTeamsController";
+import MobileNavigation from "../components/mobile-navigation/MobileNavigation";
+
 const StudentsPage = () => {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -67,6 +69,7 @@ const StudentsPage = () => {
     <>
       <Header />
       <Navbar />
+      <MobileNavigation />
       <SearchBar onSearch={handleSearch} /> {/* Pass handler for search */}
       <div className="container">
         <Filter filterParams={filterParams} onApplyFilters={handleApplyFilters} /> {/* Pass filter parameters */}

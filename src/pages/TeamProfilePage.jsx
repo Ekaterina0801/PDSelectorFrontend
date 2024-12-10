@@ -13,6 +13,8 @@ import TeamDto from "../dto/TeamDTO";
 import { useParams } from "react-router-dom";
 import StudentDto from "../dto/StudentDTO";
 import { fetchCurrentUser } from "../controllers/apiStudentsController";
+import MobileNavigation from "../components/mobile-navigation/MobileNavigation";
+
 const sidebarItems = [
   { name: "Текущие участники" },
   { name: "Заявки в команду" },
@@ -135,6 +137,7 @@ const TeamProfilePage = () => {
   return (
     <>
       <Navbar />
+      <MobileNavigation />
       <h1>Профиль команды {teamName}</h1>
       <div className="container">
         {!isCaptain && (

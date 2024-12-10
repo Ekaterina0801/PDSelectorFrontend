@@ -6,6 +6,7 @@ import CreatedCommands from "../components/created-commands/CreatedCommands";
 import DataAboutStudent from "../components/data-about-student/DataAboutStudent";
 import MainContent from "../components/main-section/MainSection";
 import FilterYear from "../components/forms/FilterYear"
+import MobileNavigation from "../components/mobile-navigation/MobileNavigation";
 
 import React, { useState } from "react";
 
@@ -91,6 +92,7 @@ const ProfilePage = () => {
   return (
     <>
       <Navbar />
+      <MobileNavigation />
       <DataAboutStudent />
       <FilterYear />
       <div className="container">
