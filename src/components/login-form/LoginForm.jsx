@@ -7,7 +7,7 @@ const LoginForm = () => {
   const handleLogin = () => {
     // Перенаправляем пользователя на сервер для начала авторизации через GitHub
     //window.location.href = 'http://188.225.11.37:8080/api/v1/';
-    window.location.href = 'http://localhost:8080/api/v1/';
+    window.location.href = 'http://localhost:8080/oauth2/authorization/github';
   };
 
   return (
