@@ -16,6 +16,7 @@ import AuthPage from './pages/AuthPage';
 import LoginForm from './components/login-form/LoginForm';
 import Header from './components/header/Header';
 import StudentProfilePage from './pages/StudentProfile';
+import WheelPage from './pages/WheelPage';
 function App() {
   return (
       <div className="App">
@@ -30,6 +31,7 @@ function App() {
               <Route path="/students/:studentId" element={<StudentProfilePage />} /> 
               <Route path="/students" element={<StudentsPage />} /> 
               <Route path="/auth" element={<AuthPage />} /> 
+              <Route path="/wheel" element={<WheelPage />} /> 
             </Routes>
         </Router>
       </div>

@@ -1,0 +1,19 @@
+.wheelRandomComand{
+    margin-top: 30px;
+}
+.action-button-wheel {
+    background-color: var(--purple);
+    color: #fff;
+    border: none;
+    border-radius: 8px; /* Увеличиваем радиус закругления */
+    padding: 8px 12px;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s; /* Добавлены переходы для объема */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Добавляем тень для объема */
+    margin-top:30px;
+  }
+
+  .winner{
+    margin-top: 30px;
+  }

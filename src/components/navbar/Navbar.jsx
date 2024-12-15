@@ -39,6 +39,12 @@ const Navbar = () => {
                 >
                     Профиль
                 </NavLink>
+                <NavLink
+                    to="/wheel"
+                    className={({ isActive }) => (isActive ? "active-link" : "")}
+                >
+                    Хочу в рандомную команду
+                </NavLink>
             </div>
             <div className="track-selector" ref={dropdownRef}>
         <div
