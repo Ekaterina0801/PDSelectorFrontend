@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "axios": "^1.7.7",
+    "canvas-confetti": "^1.9.3",
     "d3": "^7.9.0",
     "js-cookie": "^3.0.5",
     "js-cookies": "^1.0.4",

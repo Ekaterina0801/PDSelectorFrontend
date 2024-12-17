@@ -1,27 +1,28 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./style.css";
 import * as d3 from "d3";
+import confetti from 'canvas-confetti';
 function WheelRandom(teamsData) {
   const [data, setData] = useState([]); //команды из БД
   const [rotation, setRotation] = useState(0);
   const [oldRotation, setOldRotation] = useState(0);
   const [svgCircle, setSvgCircle] = useState();
-  const [onButton, setOnButton] = useState(true);
+  const [onButton, setOnButton] = useState(false);
   const [sectorsAngles, setSectorsAngles] = useState([]);
   const [winSector, setWinSector] = useState();
 
   useEffect(() => {
     let newData = [];
-    let dataAngles =[];
-    let all_quantity=0;
+    let dataAngles = [];
+    let all_quantity = 0;
 
     for (let item of teamsData.teamsData) {
       let oneCommand = { name: item.name, value: 1 };
       all_quantity += item.quantity_of_students;
       newData.push(oneCommand);
     }
-    
-    let angle=360/newData.length;
+
+    let angle = 360 / newData.length;
 
     for (let item of teamsData.teamsData) {
       //let angleSector = angle*item.quantity_of_students;
@@ -114,21 +115,33 @@ function WheelRandom(teamsData) {
           .attr("x", 0)
           .attr("y", "0.7em")
           .attr("fill-opacity", 0.7)
-          .text((d) => d.data.value.toLocaleString("en-US"))
       );
 
-      setSvgCircle(svg);
+    setSvgCircle(svg);
+
+    var sym = d3.symbol().type(d3.symbolTriangle).size(500);
+    d3.select("#gfg")
+      .append("path")
+      .attr("d", sym)
+      .attr("fill", "black")
+      .attr("transform", "translate(20, 20) rotate(180)");
   }, [data]);
 
   useEffect(() => {
     console.log("rotation-povorot: ", rotation);
-    if(!!svgCircle){
-    svgCircle
-    .transition()
-    .duration(3000) // Длительность анимации
-    .attrTween("transform", () =>
-      d3.interpolateString(`rotate(${oldRotation})`, `rotate(${rotation})`)
-    );}
+    if (!!svgCircle) {
+      svgCircle
+        .transition()
+        .duration(3000) // Длительность анимации
+        .attrTween("transform", () =>
+          d3.interpolateString(`rotate(${oldRotation})`, `rotate(${rotation})`)
+        );
+        
+        setTimeout(() => {
+          setOnButton(true);
+          confetti("tsparticles");
+        }, 3000);
+    }
   }, [rotation]);
 
   const handleSpin = () => {
@@ -136,43 +149,42 @@ function WheelRandom(teamsData) {
     setOnButton(false);
     setOldRotation(rotation);
     console.log("rotation????????: ", rotation);
-    let newRotation = rotation + 720 + Math.floor(Math.random() * 360)+1;
+    let newRotation = rotation + 720 + Math.floor(Math.random() * 360) + 1;
     setRotation(newRotation);
     console.log("rotation????????: ", rotation);
-
     winComand(newRotation);
   };
 
   const winComand = (newRotation) => {
-    let angleOfRotation=newRotation % 360;
-    angleOfRotation=360-angleOfRotation;
-    let sumOfAngles=0;
-    let index_i=0;
+    let angleOfRotation = newRotation % 360;
+    angleOfRotation = 360 - angleOfRotation;
+    let sumOfAngles = 0;
+    let index_i = 0;
     console.log("sectorsAngles!!!!!!!: ", sectorsAngles);
     console.log("angleOfRotation!!!!!!!: ", angleOfRotation);
     console.log("rotation!!!!!!!: ", newRotation);
 
-    if(angleOfRotation>0){
-      while(sumOfAngles<angleOfRotation){
+    if (angleOfRotation > 0) {
+      while (sumOfAngles < angleOfRotation) {
         sumOfAngles += sectorsAngles[index_i].angle;
         index_i++;
       }
-      setWinSector(sectorsAngles[index_i-1].name);
-    }
-    else{
+      setWinSector(sectorsAngles[index_i - 1].name);
+    } else {
       setWinSector(sectorsAngles[index_i].name);
     }
   };
-  
+
   return (
     <div className="wheelRandomComand">
+      <svg id="gfg" width="40" height="40"></svg>
       <div ref={svgRef}></div>
 
       <button className="action-button-wheel" onClick={handleSpin}>
         Вращать колесо
       </button>
-      {!onButton &&(
-      <p className="winner">Победитель: {winSector}</p>)}
+      <p className="winner">Победитель:</p>
+      {onButton && <p className="winner">{winSector}</p>}
     </div>
   );
 }

@@ -12,6 +12,8 @@ import { getSavedTrackId } from "../hooks/cookieUtils";
 import { fetchFilterParamsByTrackId } from "../controllers/apiTeamsController";
 import MobileNavigation from "../components/mobile-navigation/MobileNavigation";
 import WheelRandom from "../components/wheel/WheelRandom";
+import * as d3 from "d3";
+import Triangle from "../components/triangle/Triangle";
 
 const WheelPage = () => {
   const [teams, setTeams] = useState([]);
@@ -58,8 +60,6 @@ const WheelPage = () => {
             ) : (
         <WheelRandom teamsData={teams}/>
       )}    
-
-      {/*<WheelRandom teamsData={data}/>*/}
       </div>
     </>
   );
