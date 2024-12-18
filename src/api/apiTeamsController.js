@@ -1,9 +1,9 @@
 import axios from "axios";
 
 import { API_BASE_URL } from '../config/apiConfig';
+
 export const fetchTeams = async ({ input, trackId, isFull, projectType, technologies }) => {
   try {
-    // Формируем параметры запроса
     const queryParams = new URLSearchParams();
 
     if (input) queryParams.append("input", input);
@@ -69,19 +69,30 @@ export const fetchFilterParamsByTrackId = async (trackId) => {
 
 
 
-// Создание новой команды
-export const createTeam = async (teamData, trackId) => {
-  try {
-    const response = await axios.post(
-      `${API_BASE_URL}/teams?trackId=${trackId}`,
-      teamData
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Ошибка при создании команды:", error);
-    throw error;
-  }
-};
+  export const createTeam = async (teamData) => {
+    console.log('sent', teamData);
+    try {
+      const response = await fetch(`${API_BASE_URL}/teams`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(teamData), 
+        credentials: "include", 
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Ошибка HTTP: ${response.status}`);
+      }
+  
+      return response.json();
+    } catch (error) {
+      console.error("Ошибка при создании команды:", error);
+      throw error;
+    }
+  };
+  
+  
 
 // Получение данных о командах
 export const deleteTeam = async (teamId) => {

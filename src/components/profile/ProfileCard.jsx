@@ -14,10 +14,10 @@ const ProfileCard = ({ studentData, onEdit }) => {
           </div>
           <div className="profile-details">
             <div className="profile-detail">
-              <strong>Группа:</strong> <span>{studentData.group || "Не указана"}</span>
+              <strong>Группа:</strong> <span>{studentData.group_number || "Не указана"}</span>
             </div>
             <div className="profile-detail">
-              <strong>Контакты:</strong> <span>{studentData.contact || "Не указаны"}</span>
+              <strong>Контакты:</strong> <span>{studentData.contacts || "Не указаны"}</span>
             </div>
             <div className="profile-detail">
               <strong>Технологии:</strong>

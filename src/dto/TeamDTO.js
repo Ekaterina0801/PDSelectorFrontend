@@ -5,7 +5,7 @@ export default class TeamDto {
       project_description = '',
       project_type = '',
       quantity_of_students = 0,
-      captain_id = null,
+      captain = null,
       is_full = false,
       technologies = [],
       current_track = null,
@@ -17,7 +17,7 @@ export default class TeamDto {
       this.project_description = project_description; 
       this.project_type = project_type; 
       this.quantity_of_students = quantity_of_students; 
-      this.captain_id = captain_id; 
+      this.captain = captain; 
       this.is_full = is_full; 
       this.technologies = technologies; 
       this.current_track = current_track; 

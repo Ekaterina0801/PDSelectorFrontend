@@ -1,36 +1,24 @@
 import React from 'react';
 import "./style.css"
 import { useState } from "react";
-
+import { getCurrentStudentId } from '../../api/apiStudentsController';
 const Card = ({
   name,
   type,
   resume,
   tags = [],
   profileLink = "#",
-  isCaptain = false, 
-  showActionsForCaptain = true, 
-  showActionsForUser = true,
-  onAccept,
-  onDecline,
+  showActionsForStudent = true,
   onApply,
-  onCancel,
-  acceptText = "Принять заявку",
-  declineText = "Отклонить заявку",
   applyText = "Подать заявку",
-  cancelText = "Отменить заявку",
   viewText = "Перейти",
+  showApplyButton
 }) => {
-  const [hasApplied, setHasApplied] = useState(false); // Состояние для отслеживания подачи заявки
+  const [hasApplied, setHasApplied] = useState(false);
 
   const handleApply = () => {
-    if (onApply) onApply(); 
-    setHasApplied(true); 
-  };
-
-  const handleCancel = () => {
-    if (onCancel) onCancel(); 
-    setHasApplied(false); 
+    if (onApply) onApply();
+    setHasApplied(true);
   };
 
   return (
@@ -55,33 +43,10 @@ const Card = ({
         </div>
       </div>
       <div className="card-actions">
-        {isCaptain && showActionsForCaptain ? (
-          <>
-            {onAccept && (
-              <button className="action-button accept" onClick={onAccept}>
-                {acceptText}
-              </button>
-            )}
-            {onDecline && (
-              <button className="action-button decline" onClick={onDecline}>
-                {declineText}
-              </button>
-            )}
-          </>
-        ) : (
-          showActionsForUser && (
-            <>
-              {!hasApplied ? (
-                <button className="action-button apply" onClick={handleApply}>
-                  {applyText}
-                </button>
-              ) : (
-                <button className="action-button cancel" onClick={handleCancel}>
-                  {cancelText}
-                </button>
-              )}
-            </>
-          )
+        {showActionsForStudent && showApplyButton && (
+          <button className="action-button apply" onClick={handleApply}>
+            {applyText}
+          </button>
         )}
         <a href={profileLink} className="action-link" rel="noopener noreferrer">
           <button className="action-button view">{viewText}</button>
@@ -92,4 +57,3 @@ const Card = ({
 };
 
 export default Card;
-

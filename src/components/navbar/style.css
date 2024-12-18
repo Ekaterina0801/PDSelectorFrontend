@@ -1,112 +1,120 @@
 :root {
-    --white: #fff;
-    --grey-light: #f4f4f4;
-    --shadow: rgba(0, 0, 0, 0.15);
-  }
-  
-  .navbar {
-    width: 100vw;
-    max-width: 1200px;
-    top: 0; 
-    position: sticky;
-    display: flex;
-    justify-content: space-between; /* Распределение элементов по краям */
-    align-items: center;
-    padding: 15px 25px;
-    background-color: var(--purple);
-    color: var(--white);
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
-    z-index: 1000;
+  --white: #fff;
+  --grey-light: #f4f4f4;
+  --shadow: rgba(0, 0, 0, 0.15);
+
+}
+.navbar {
+  width: 100vw;
+  max-width: 1200px;
+  top: 0; 
+  position: sticky;
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  padding: 0px 20px; 
+  background-color: var(--purple);
+  color: var(--white);
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  z-index: 1000;
   position: -webkit-sticky;
-  }
-  
-  .navbar .logo {
-    font-weight: 600;
-    font-size: 1.75rem;
-    color: var(--white);
-    margin-right: auto; /* Иконка приложения выравнивается слева */
-  }
-  
-  .navbar .nav-links {
-    display: flex;
-    gap: 30px;
-    font-size: 18px;
-    margin-left: auto; /* Выравнивание кнопок вправо */
-  }
-  
-  .navbar .nav-links a {
-    text-decoration: none;
-    color: var(--white);
-    font-weight: 600;
-    transition: color 0.3s, transform 0.3s;
-    display: inline-block;
-  }
-  
-  .navbar .nav-links a:hover {
-    color: var(--purple-light);
-    transform: translateY(-2px);
-  }
-  
-  .navbar .track-selector {
-    position: relative;
-    cursor: pointer;
-    margin-left: 20px; /* Добавляем отступ между кнопками и селектором */
-  }
-  
-  .navbar .select-icon {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 15px;
-    background-color: var(--white);
-    color: var(--purple);
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    font-weight: 600;
-  }
-  
-  .navbar .select-icon.open svg {
-    transform: rotate(180deg); /* Стрелка вниз при открытом списке */
-  }
-  
-  .navbar .dropdown {
-    position: absolute;
-    top: 35px;
-    left: 0;
-    right: 0;
-    background-color: var(--white);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    z-index: 10;
-    padding: 10px 0;
-    display: block;
-  }
-  
-  .navbar .dropdown ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .navbar .dropdown li {
-    padding: 10px 15px;
-    cursor: pointer;
-    font-size: 1rem;
-    color: var(--purple);
-    transition: background-color 0.2s ease;
-  }
-  
-  .navbar .dropdown li:hover {
-    background-color: var(--purple-light);
-  }
-  
-  .navbar .select-icon svg {
-    transition: transform 0.3s ease;
-  }
-  
-  /* Настройка react-burger-menu */
+}
+
+.navbar .logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+  padding: 0;
+}
+
+.navbar .logo img {
+  max-width: 120px;
+  height: auto;
+  width: auto;
+  object-fit: contain;
+}
+
+.navbar .nav-links {
+  display: flex;
+  gap: 30px;
+  font-size: 18px;
+  margin-left: auto; 
+}
+
+.navbar .nav-links a {
+  text-decoration: none;
+  color: var(--white);
+  font-weight: 600;
+  transition: color 0.3s, transform 0.3s;
+  display: inline-block;
+}
+
+.navbar .nav-links a:hover {
+  color: var(--purple-light);
+  transform: translateY(-2px);
+}
+
+.navbar .track-selector {
+  position: relative;
+  cursor: pointer;
+  margin-left: 20px;
+}
+
+.navbar .select-icon {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
+  background-color: var(--white);
+  color: var(--purple);
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-weight: 600;
+}
+
+.navbar .select-icon.open svg {
+  transform: rotate(180deg); /* Down arrow when dropdown is open */
+}
+
+.navbar .dropdown {
+  position: absolute;
+  top: 35px;
+  left: 0;
+  right: 0;
+  background-color: var(--white);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  z-index: 10;
+  padding: 10px 0;
+  display: block;
+}
+
+.navbar .dropdown ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.navbar .dropdown li {
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 1rem;
+  color: var(--purple);
+  transition: background-color 0.2s ease;
+}
+
+.navbar .dropdown li:hover {
+  background-color: var(--purple-light);
+}
+
+.navbar .select-icon svg {
+  transition: transform 0.3s ease;
+}
+
+/* Burger menu styles */
 .bm-burger-button {
   position: fixed;
   width: 36px;
@@ -120,7 +128,7 @@
 }
 
 .bm-burger-bars-hover {
-  background: #9c27b0; /* Цвет при наведении */
+  background: #9c27b0; /* Color on hover */
 }
 
 .bm-cross-button {
@@ -133,7 +141,7 @@
 }
 
 .bm-menu {
-  background: #6a1b9a; /* Цвет меню */
+  background: #6a1b9a; /* Menu background color */
   padding: 2.5em 1.5em 0;
   font-size: 1.15em;
 }
@@ -152,21 +160,21 @@
 }
 
 .bm-item:hover {
-  color: #9c27b0; /* Цвет ссылки при наведении */
+  color: #9c27b0; /* Hover link color */
 }
 
 .bm-overlay {
   background: rgba(0, 0, 0, 0.3);
 }
 
-/* Скрываем стандартные ссылки на маленьких экранах */
+/* Hide default links on small screens */
 @media (max-width: 768px) {
   .nav-links {
     display: none;
   }
 }
 
-/* Оставляем стандартные ссылки для больших экранов */
+/* Show links and hide burger menu on larger screens */
 @media (min-width: 769px) {
   .bm-burger-button {
     display: none;

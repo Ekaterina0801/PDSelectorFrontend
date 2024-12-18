@@ -3,8 +3,7 @@ import { fetchTeamById } from "../api/apiTeamsController";
 import { fetchStudentById } from "../api/apiStudentsController";
 import TeamDto from "../dto/TeamDTO";
 import StudentDto from "../dto/StudentDTO";
-
-const useTeamData = (teamId, currentUser, currentContent) => {
+const useTeamData = (teamId, currentUser) => {
   const [teamData, setTeamData] = useState({
     name: "",
     description: "",
@@ -25,23 +24,23 @@ const useTeamData = (teamId, currentUser, currentContent) => {
       try {
         const fetchedTeam = await fetchTeamById(teamId);
         const teamDto = new TeamDto(fetchedTeam);
+        console.log('teamdto', teamDto);
 
-        const isCurrentUserCaptain = teamDto.captain_id === currentUser.id;
-        let captainName = null;
+        const isCurrentUserCaptain = teamDto.captain.id === currentUser.id;
+        let captainId = null;
 
-        if (teamDto.captain_id) {
-          const captainData = await fetchStudentById(teamDto.captain_id);
-          const captain = new StudentDto(captainData);
-          captainName = captain.user.fio;
+        if (teamDto.captain) {
+          console.log('ddd',teamDto);
+          captainId = teamDto.captain.id;
         }
 
         setTeamData({
           name: teamDto.name,
           description: teamDto.project_description,
           technologies: teamDto.technologies || [],
-          students: currentContent === "Текущие участники" ? teamDto.students : [],
-          requests: currentContent === "Заявки в команду" ? teamDto.applications : [],
-          captainName,
+          students: teamDto.students || [],
+          requests: teamDto.applications || [],
+          captainId,
           isCaptain: isCurrentUserCaptain,
         });
       } catch (err) {
@@ -53,7 +52,7 @@ const useTeamData = (teamId, currentUser, currentContent) => {
     };
 
     loadTeamData();
-  }, [teamId, currentUser, currentContent]);
+  }, [teamId, currentUser]);
 
   return { ...teamData, loading, error };
 };

@@ -1,4 +1,4 @@
-/* Основной контейнер фильтров */
+
 .filter-section {
     top: 20px;           
     width: 250px;
@@ -17,40 +17,40 @@
   
 
 .filter-section:hover {
-    transform: scale(1.02);      /* Эффект увеличения при наведении */
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15); /* Более сильная тень */
+    transform: scale(1.02);     
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15); 
 }
 
 .filter-section h2 {
     font-size: 1.4rem;
     margin-bottom: 20px;
     color: var(--purple);
-    font-weight: 700;           /* Сделаем заголовок жирнее */
+    font-weight: 700;          
     text-align: center;
-    border-bottom: 2px solid var(--purple-light); /* Подчёркивание */
+    border-bottom: 2px solid var(--purple-light);
     padding-bottom: 10px;
 }
 
-/* Группы фильтров */
+
 .filter-group {
     display: flex;
     flex-direction: column;
-    gap: 10px;                  /* Отступы между элементами внутри группы */
+    gap: 10px;               
 }
 
 .filter-group h3 {
     font-size: 1.2rem;
-    color: var(--purple);               /* Мягкий серый цвет для заголовков */
+    color: var(--purple);               
     font-weight: 600;
     margin-bottom: 10px;
-    border-left: 4px solid var(--purple-light); /* Полоска рядом с заголовком */
+    border-left: 4px solid var(--purple-light); 
     padding-left: 10px;
 }
 
 .filter-group label {
     display: flex;
     align-items: center;
-    gap: 8px;                  /* Отступ между чекбоксом и текстом */
+    gap: 8px;      
     font-size: 1rem;
     color: #333;
     cursor: pointer;
@@ -58,21 +58,21 @@
 }
 
 .filter-group label:hover {
-    color: var(--purple);      /* Подсветка текста при наведении */
+    color: var(--purple);    
 }
 
-/* Радиокнопки */
+
 .filter-group input[type="radio"] {
     margin-right: 8px;
 }
 
-/* Чекбоксы */
+
 .filter-group input[type="checkbox"] {
-    accent-color: var(--purple); /* Используем фиолетовый цвет чекбоксов */
-    transform: scale(1.2);       /* Увеличим чекбоксы для удобства */
+    accent-color: var(--purple); 
+    transform: scale(1.2);      
 }
 
-/* Поле ввода и ползунок */
+
 .price-range {
     display: flex;
     justify-content: space-between;
@@ -86,12 +86,12 @@
     border: 1px solid #ddd;
     border-radius: 5px;
     text-align: center;
-    background-color: #f5f5f5; /* Светлый фон */
+    background-color: #f5f5f5;
     transition: border-color 0.3s ease;
 }
 
 .price-range input[type="number"]:focus {
-    border-color: var(--purple-light); /* Подсветка при фокусе */
+    border-color: var(--purple-light); 
     outline: none;
 }
 
@@ -110,7 +110,7 @@
     opacity: 1;
 }
 
-/* Кнопка показа */
+
 .show-button {
     display: block;
     width: 100%;
@@ -118,7 +118,6 @@
     margin-top: 10px;
     font-size: 1rem;
     font-weight: 600;
-    color: #fff;
     background-color: var(--purple);
     border: none;
     border-radius: 10px;
@@ -127,11 +126,11 @@
 }
 
 .show-button:hover {
-    background-color: var(--purple-dark);
-    transform: scale(1.03); /* Легкий эффект увеличения при наведении */
+    background-color: var(--purple);
+    transform: scale(1.03); 
 }
 
-/* Фильтр годов */
+
 .filter-years {
     width: 100%;
     padding: 20px;
@@ -143,7 +142,7 @@
     flex-direction: column;
     align-items: start;
     margin-top: 20px;
-    gap: 10px;                 /* Отступы между элементами */
+    gap: 10px;                 
 }
 
 .filter-years h3 {
@@ -155,3 +154,81 @@
     padding-left: 10px;
 }
 
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  label {
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+    text-align: left;
+  }
+  
+  input, select {
+    margin-bottom: 16px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  button[type="submit"] {
+    padding: 12px;
+    background-color: var(--purple, #330036); 
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: var(--purple);
+  }
+  
+  form input, form select {
+    text-align: left;
+    outline: none;
+  }
+  
+  form input:focus, form select:focus {
+    border-color: var(--purple, #330036);
+  }
+  
+  .player-list {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-top: 10px;
+  }
+  
+
+  .technologies-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    max-height: 200px; 
+    overflow-y: auto;  
+    padding-right: 10px; 
+  }
+  
+  
+  .technology-checkbox {
+    display: flex;
+    align-items: center;
+  }
+  
+  .technology-checkbox input[type="checkbox"] {
+    margin-right: 10px;
+  }

@@ -37,7 +37,7 @@
 
 .type-capture,
 .resume-capture {
-    font-size: 1rem;
+    font-size: 1.2rem;
     font-weight: 600;
     color: var(--purple);
     white-space: nowrap; 
@@ -55,10 +55,11 @@
 
 .card-tags {
     margin-bottom: 15px;
+    
 }
 
 .card-tags h3 {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     font-weight: 600;
     color: var(--purple);
     margin-bottom: 10px;
@@ -68,6 +69,7 @@
     background-color: var(--purple-light);
     color: var(--purple);
     padding: 6px 12px;
+    margin: 3px;
     border-radius: 18px;
     font-size: 0.9rem;
     font-weight: 600;

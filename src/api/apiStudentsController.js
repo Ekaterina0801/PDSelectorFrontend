@@ -1,13 +1,10 @@
 import axios from 'axios';
 
-//const API_BASE_URL = 'http://188.225.11.37:8080/api/v1'; 
 import { API_BASE_URL } from '../config/apiConfig';
-// получение студентов с фильтрацией
 export const fetchStudents = async ({ input, course, groupNumber, hasTeam, technologies }) => {
   try {
-    // Формируем параметры запроса
     const queryParams = new URLSearchParams();
-    console.log('input', input);
+
     if (input) queryParams.append("input", input);
     if (course) queryParams.append("course", course);
     if (groupNumber) queryParams.append("group_number", groupNumber);
@@ -16,26 +13,32 @@ export const fetchStudents = async ({ input, course, groupNumber, hasTeam, techn
       technologies.forEach((tech) => queryParams.append("technologies", tech));
     }
 
+
     const response = await fetch(`${API_BASE_URL}/students/search?${queryParams.toString()}`, {
-      method: 'GET',
-      credentials: 'include', // Обеспечивает отправку cookies
+      method: "GET",
+      credentials: "include",
     });
 
     if (!response.ok) {
-      throw new Error(`Ошибка HTTP: ${response.status}`);
+      if (response.status === 401) {
+
+        window.location.href = "/login";
+        return;
+      } 
+      throw new Error(`HTTP Error: ${response.status}`);
     }
 
-    const data = await response.json(); // Преобразуем JSON-ответ в объект
-    console.log(data); 
+    // Обрабатываем успешный ответ
+    const data = await response.json();
+    console.log(data); // Логируем данные только для отладки
     return data;
   } catch (error) {
-    console.error('Ошибка при получении данных студентов:', error);
-    throw error;
+    // Обрабатываем неожиданные ошибки
+    console.error("Error fetching students:", error);
+    throw error; // Пробрасываем ошибку для дальнейшей обработки
   }
 };
 
-
-// Создание нового студента
 export const createStudent = async (trackId, studentData) => {
     try {
       const response = await axios.post(`${API_BASE_URL}/students?trackId=${trackId}`, studentData);
@@ -46,7 +49,7 @@ export const createStudent = async (trackId, studentData) => {
     }
   };
 
-  // Удаление студента 
+
 export const deleteStudent = async (studentId) => {
     try {
       const response = await axios.delete(`${API_BASE_URL}/students/${studentId}`);
@@ -57,7 +60,7 @@ export const deleteStudent = async (studentId) => {
     }
   };
 
-  // Получение данных о студенте
+
 export const fetchStudentById = async (studentId) => {
   console.log('st',studentId);
   try {
@@ -76,7 +79,7 @@ export const fetchStudentById = async (studentId) => {
   }
 };
 
-// Создание нового студента
+
 export const updateStudent = async (trackId, studentData) => {
   try {
     const response = await axios.put(`${API_BASE_URL}/students?trackId=${trackId}`, studentData);
@@ -87,31 +90,30 @@ export const updateStudent = async (trackId, studentData) => {
   }
 };
 
-// Импорт для работы с запросами
 export const fetchCurrentUser = async () => {
   try {
-    // Выполнение GET-запроса к серверу
-    const response = await fetch(`${API_BASE_URL}/me`, {
-      method: "GET",
-      credentials: "include", // Включает cookies для авторизации
-      headers: {
-        "Content-Type": "application/json", // Указание типа данных
-      },
+    const response = await axios.get(`${API_BASE_URL}/users/me`, {
+      withCredentials: true, 
     });
-
-    // Проверка успешности ответа
-    if (!response.ok) {
-      throw new Error(`Ошибка HTTP: ${response.status}`);
-    }
-
-    // Парсинг данных
-    const data = await response.json();
-    return data;
+    return response.data.id;
   } catch (error) {
-    console.error("Ошибка при получении текущего пользователя:", error);
-    throw error;
+    if (error.response && error.response.status === 401) {
+      window.location.href = '/login';
+    } else {
+      console.error("Error fetching user ID:", error);
+      throw error;
+    }
   }
 };
+
+
+export const getCurrentStudentId = async () => {
+  const response = await axios.get(`${API_BASE_URL}/students/me`, {
+    withCredentials: true,
+  });
+  return response.data;
+};
+
 
 
   

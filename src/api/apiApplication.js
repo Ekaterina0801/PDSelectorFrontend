@@ -1,7 +1,7 @@
 import axios from "axios";
 import { API_BASE_URL } from '../config/apiConfig';
-//const API_BASE_URL = "http://188.225.11.37:8080/api/v1";
-// Получение данных о всех заявках
+
+// Получение всех заявок
 export const fetchApplications = async (trackId) => {
   try {
     const response = await axios.get(
@@ -17,12 +17,21 @@ export const fetchApplications = async (trackId) => {
 // Получение данных о конкретной заявке
 export const fetchApplicationById = async (applicationId) => {
   try {
-    const response = await axios.get(
-      `${API_BASE_URL}/applications/${applicationId}`
-    );
-    return response.data;
+    const response = await fetch(`${API_BASE_URL}/applications/${applicationId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Ошибка сервера: ${response.statusText}`);
+    }
+    
+    return await response.json(); 
   } catch (error) {
-    console.error("Ошибка при получении данных заявки:", error);
+    console.error("Ошибка при получении заявки:", error);
     throw error;
   }
 };
@@ -40,19 +49,28 @@ export const fetchTeamApplications = async (teamId) => {
   }
 };
 
-// Создание новой заявки
 export const createApplication = async (applicationData) => {
   try {
-    const response = await axios.post(
-      `${API_BASE_URL}/applications?`,
-      applicationData
-    );
-    return response.data;
+    const response = await fetch(`${API_BASE_URL}/applications`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(applicationData), 
+      credentials: 'include',
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Ошибка сервера: ${response.statusText}`);
+    }
+    
+    return await response.json(); 
   } catch (error) {
     console.error("Ошибка при создании заявки:", error);
     throw error;
   }
 };
+
 
 // Удаление заявки
 export const deleteApplication = async (applicationId) => {
@@ -68,13 +86,22 @@ export const deleteApplication = async (applicationId) => {
 };
 
 // Обновление заявки
-export const updateApplication = async (applicationData, applicationId) => {
+export const updateApplication = async (applicationData) => {
   try {
-    const response = await axios.post(
-      `${API_BASE_URL}/applications/${applicationId}`,
-      applicationData
-    );
-    return response.data;
+    const response = await fetch(`${API_BASE_URL}/applications`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(applicationData), 
+      credentials: 'include',
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Ошибка сервера: ${response.statusText}`);
+    }
+    
+    return await response.json(); 
   } catch (error) {
     console.error("Ошибка при обновлении заявки:", error);
     throw error;

@@ -1,20 +1,36 @@
-import React from 'react';
-import Cookies from 'js-cookie';
-import './style.css'
 
+import './style.css'
+import React from 'react';
+import { useEffect } from 'react';
 
 const LoginForm = () => {
   const handleLogin = () => {
-    // Перенаправляем пользователя на сервер для начала авторизации через GitHub
-    //window.location.href = 'http://188.225.11.37:8080/api/v1/';
     window.location.href = 'http://localhost:8080/oauth2/authorization/github';
   };
+
+  const getCookieValue = (name) => {
+    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    return match ? match[2] : null;
+  };
+
+  useEffect(() => {
+    const cookieNames = ['trackId', 'userId', 'JSESSIONID', 'SessionId'];
+    cookieNames.forEach((cookieName) => {
+      const cookieValue = getCookieValue(cookieName);
+      if (cookieValue) {
+        localStorage.setItem(cookieName, cookieValue);
+        console.log(`Кука ${cookieName} перемещена в localStorage: ${cookieValue}`);
+      } else {
+        console.warn(`Кука ${cookieName} не найдена.`);
+      }
+    });
+  }, []);
 
   return (
     <div className="background">
       <div className="login-container">
         <div className="login-image">
-          <img src="/images/logoMmcs.png" alt="Login Illustration" />
+          <img src="/images/logo3.png" alt="Login Illustration" />
         </div>
         <div className="login-content">
           <h2 className="welcome-text">Добро пожаловать на портал выбора команд ПД</h2>
@@ -24,9 +40,7 @@ const LoginForm = () => {
     </div>
   );
 };
-
 export default LoginForm;
-
 
  
 

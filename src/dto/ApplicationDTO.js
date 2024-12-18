@@ -1,14 +1,14 @@
 export default class ApplicationDto {
     constructor({
       id = null,
-      student = null,
-      team = null,
+      studentId = null,
+      teamId = null,
       status = '',
     } = {}) {
       this.id = id; 
-      this.student = student; 
-      this.team = team; 
-      this.status = status; 
+      this.studentId = studentId; 
+      this.teamId = teamId; 
+      this.statusId = status; 
     }
   }
 

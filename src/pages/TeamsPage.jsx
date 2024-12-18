@@ -8,25 +8,70 @@ import { getSavedTrackId } from "../hooks/cookieUtils";
 import useCurrentUser from "../hooks/useCurrentUser";
 import useTeamFilters from "../hooks/useTeamFilters";
 import useTeams from "../hooks/useTeams";
+import { getCurrentStudentId } from "../api/apiStudentsController";
+import { createApplication } from "../api/apiApplication";
+import useSuccessMessage from "../hooks/useSuccessMessage";
+;
+
 
 const TeamsPage = () => {
   const [filters, setFilters] = useState({});
   const [searchInput, setSearchInput] = useState("");
+  const { successMessage, showSuccessMessage } = useSuccessMessage();
+  const [applicationsStatus, setApplicationsStatus] = useState({}); 
 
   const trackId = getSavedTrackId();
-  const currentUser = useCurrentUser();
-  const filterParams = useTeamFilters(trackId);
   const { teams, loading } = useTeams(filters, searchInput, trackId);
 
   const handleApplyFilters = (newFilters) => setFilters(newFilters);
   const handleSearch = (input) => setSearchInput(input);
+
+  const handleApplicationSubmit = async (teamId) => {
+    try {
+      const studentId = await getCurrentStudentId();
+      const applicationDto = { student_id: studentId, team_id: teamId, status: "Sent" };
+      await createApplication(applicationDto);
+      showSuccessMessage("Заявка в команду подана");
+
+
+      setApplicationsStatus((prev) => ({ ...prev, [teamId]: true }));
+    } catch (err) {
+      console.error("Ошибка отправки заявки:", err);
+    }
+  };
+
+
+  useEffect(() => {
+    const fetchApplicationStatuses = async () => {
+      try {
+        const studentId = await getCurrentStudentId();
+        const statuses = {};
+
+  
+        teams.forEach((team) => {
+          const hasApplied = team.applications?.some(
+            (application) => application.student_id === studentId
+          );
+          statuses[team.id] = hasApplied || false;
+        });
+
+        setApplicationsStatus(statuses);
+      } catch (err) {
+        console.error("Ошибка загрузки статусов заявок:", err);
+      }
+    };
+
+    if (!loading && teams.length > 0) {
+      fetchApplicationStatuses();
+    }
+  }, [teams, loading]);
 
   return (
     <>
       <Navbar />
       <SearchBar onSearch={handleSearch} />
       <div className="container">
-        <Filter filterParams={filterParams} onApplyFilters={handleApplyFilters} />
+        <Filter filterParams={useTeamFilters(trackId)} onApplyFilters={handleApplyFilters} />
         <MainContent>
           <h1>Команды</h1>
           <div className="cards">
@@ -40,10 +85,11 @@ const TeamsPage = () => {
                   type={team.project_type}
                   resume={team.project_description}
                   isCaptain={false}
-                  onApply={() => console.log("Заявка подана")}
+                  onApply={() => handleApplicationSubmit(team.id)}
                   onCancel={() => console.log("Заявка отменена")}
                   tags={team.technologies}
                   profileLink={`/teams/${team.id}`}
+                  showApplyButton={!applicationsStatus[team.id]} // Используем статусы из состояния
                 />
               ))
             )}

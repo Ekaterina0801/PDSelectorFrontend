@@ -1,31 +1,32 @@
 import { useState, useEffect } from "react";
 import { fetchStudentById } from "../api/apiStudentsController";
 
-const useStudentData = (studentId, currentUser) => {
-  const [studentData, setStudentData] = useState(null);
-  const [myTeams, setMyTeams] = useState([]);
-  const [createdTeams, setCreatedTeams] = useState([]);
-  const [submittedRequests, setSubmittedRequests] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [isCurrentUser, setIsCurrentUser] = useState(false);
 
-  useEffect(() => {
+const useStudentData = (studentId, currentUser) => {
+    const [studentData, setStudentData] = useState(null);
+    const [myTeams, setMyTeams] = useState([]);
+    const [createdTeams, setCreatedTeams] = useState([]);
+    const [submittedRequests, setSubmittedRequests] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [isCurrentUser, setIsCurrentUser] = useState(false);
+  
+
     const loadStudentData = async () => {
       if (!studentId) return;
-
+  
       setLoading(true);
       try {
         const fetchedStudent = await fetchStudentById(studentId);
         setStudentData(fetchedStudent);
-
-        if (currentUser && currentUser.id === fetchedStudent.id) {
+  
+        if (currentUser && currentUser.student && currentUser.student.id === fetchedStudent.id) {
           setIsCurrentUser(true);
         }
-
-        setMyTeams([fetchedStudent.team]);
+  
+        setMyTeams(fetchedStudent.team || []);
         setSubmittedRequests(fetchedStudent.applications || []);
-        setCreatedTeams(fetchedStudent.created_teams || []);
+        setCreatedTeams(fetchedStudent.current_team?[fetchedStudent.current_team]: []);
       } catch (error) {
         setError("Ошибка при загрузке данных студента.");
         console.error(error);
@@ -33,19 +34,34 @@ const useStudentData = (studentId, currentUser) => {
         setLoading(false);
       }
     };
-
-    loadStudentData();
-  }, [studentId, currentUser]);
-
-  return {
-    studentData,
-    myTeams,
-    createdTeams,
-    submittedRequests,
-    loading,
-    error,
-    isCurrentUser,
+  
+    useEffect(() => {
+      loadStudentData();
+  
+      return () => {
+        setStudentData(null);
+        setMyTeams([]);
+        setCreatedTeams([]);
+        setSubmittedRequests([]);
+        setLoading(true);
+        setError(null);
+      };
+    }, [studentId, currentUser]);
+  
+    const refreshStudentData = () => {
+      loadStudentData(); 
+    };
+  
+    return {
+      studentData,
+      myTeams,
+      createdTeams,
+      submittedRequests,
+      loading,
+      error,
+      isCurrentUser,
+      refreshStudentData
+    };
   };
-};
-
-export default useStudentData;
+  
+  export default useStudentData;

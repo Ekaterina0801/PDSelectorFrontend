@@ -1,35 +1,25 @@
 import React from 'react';
 import './styles/style.css';
 import './App.css';
-import TeamProfilePage from './pages/TeamProfilePage';
-import TeamsPage from './pages/TeamsPage';
-import AdminPage from './pages/AdminPage';
-import StudentsPage from './pages/StudentsPage';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import AuthPage from './pages/AuthPage';
-import LoginForm from './components/login-form/LoginForm';
 import Header from './components/header/Header';
-import StudentProfilePage from './pages/StudentProfile';
-import Registration from './pages/RegistrationPage';
+import routes from './routes';
+import { Provider } from 'react-redux';
+import store from './store';
 function App() {
   return (
+    <Provider store={store}>
       <div className="App">
-        <Header/>
+        <Header />
         <Router>
-            <Routes>
-            <Route path="/login" element={<LoginForm />} />
-              <Route path="/registration" element={<Registration />} />
-              <Route path="/teams" element={<TeamsPage />} /> 
-              <Route path="/profile" element={<StudentProfilePage />} /> 
-              <Route path="/admin" element={<AdminPage />} /> 
-              <Route path="/teams/:teamId" element={<TeamProfilePage />} /> 
-              <Route path="/students/:studentId" element={<StudentProfilePage />} /> 
-              <Route path="/students" element={<StudentsPage />} /> 
-              <Route path="/auth" element={<AuthPage />} /> 
-            </Routes>
+          <Routes>
+            {routes.map((route, index) => (
+              <Route key={index} path={route.path} element={route.element} />
+            ))}
+          </Routes>
         </Router>
       </div>
+    </Provider>
   );
 }
-
 export default App;
