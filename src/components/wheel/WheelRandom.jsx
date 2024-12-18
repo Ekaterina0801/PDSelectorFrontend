@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import "./style.css";
 import * as d3 from "d3";
 import confetti from 'canvas-confetti';
+import Modal from "../modal/Modal";
+
 function WheelRandom(teamsData) {
   const [data, setData] = useState([]); //команды из БД
   const [rotation, setRotation] = useState(0);
@@ -10,6 +12,9 @@ function WheelRandom(teamsData) {
   const [onButton, setOnButton] = useState(false);
   const [sectorsAngles, setSectorsAngles] = useState([]);
   const [winSector, setWinSector] = useState();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [comandWinner, setComandWinner] = useState();
+  
 
   useEffect(() => {
     let newData = [];
@@ -25,7 +30,6 @@ function WheelRandom(teamsData) {
     let angle = 360 / newData.length;
 
     for (let item of teamsData.teamsData) {
-      //let angleSector = angle*item.quantity_of_students;
       let infoSector = { name: item.name, angle: angle };
       dataAngles.push(infoSector);
     }
@@ -140,6 +144,10 @@ function WheelRandom(teamsData) {
         setTimeout(() => {
           setOnButton(true);
           confetti("tsparticles");
+
+          
+
+          setIsModalOpen(true);
         }, 3000);
     }
   }, [rotation]);
@@ -175,16 +183,66 @@ function WheelRandom(teamsData) {
     }
   };
 
+  useEffect(() => {
+    {/*console.log("winSectorwinSectorwinSectorwinSector: ", winSector);*/}
+    for (let item of teamsData.teamsData) {
+      if(item.name==winSector){
+        setComandWinner(item);
+      }
+    }
+  }, [winSector]);
+
+  const renderModal = () => (
+    <>
+    {console.log("comandWinner: ", comandWinner)}
+      <h3>Информация о команде</h3>
+      <div className="form-group-modal">
+        <label>Название: </label>
+        <span>{comandWinner.name}</span>
+      </div>
+      <div className="form-group-modal">
+        <label>Информация: </label>
+        <span>{comandWinner.project_description}</span>
+      </div>
+      <div className="form-group-modal">
+        <label>Текущее количество участников: </label>
+        <span>{comandWinner.quantity_of_students}</span>
+      </div>
+      <div className="form-group-modal">
+      <label>Технологии: </label>
+      {comandWinner.technologies.length > 0 ? (
+            comandWinner.technologies.map((tag, index) => (
+              <span key={index} className="card-tag">
+                {tag.name}
+              </span>
+            ))
+          ) : (
+            <p className="no-tags">Нет указанных технологий</p>
+          )}
+      </div>
+      <div className="modal-footer">
+        <button type="button" onClick={() => setIsModalOpen(false)}>
+          Закрыть
+        </button>
+      </div>
+      </>
+  );
+
   return (
     <div className="wheelRandomComand">
       <svg id="gfg" width="40" height="40"></svg>
       <div ref={svgRef}></div>
-
       <button className="action-button-wheel" onClick={handleSpin}>
         Вращать колесо
       </button>
       <p className="winner">Победитель:</p>
       {onButton && <p className="winner">{winSector}</p>}
+      {isModalOpen &&
+      <Modal show={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        {renderModal()}
+      </Modal>
+      }
+      
     </div>
   );
 }
