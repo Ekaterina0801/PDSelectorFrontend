@@ -10,7 +10,8 @@ const Filter = ({ filterParams, onApplyFilters }) => {
 
   const availableProjectTypes = useMemo(() => filterParams.projectTypes || [], [filterParams]);
   const availableTechnologies = useMemo(() => filterParams.technologies || [], [filterParams]);
-
+  {console.log("availableProjectTypes: ", availableProjectTypes)}
+  {console.log("availableTechnologies: ", availableTechnologies)}
 
   const toggleSelection = (setState, value) => {
     setState((prev) =>
@@ -52,13 +53,13 @@ const Filter = ({ filterParams, onApplyFilters }) => {
       <div className="filter-group">
         <h3>Тип проекта</h3>
         {availableProjectTypes.map((type) => (
-          <label key={type}>
+          <label key={type.id}>
             <input
               type="checkbox"
-              checked={selectedProjectTypes.includes(type)}
-              onChange={() => toggleSelection(setSelectedProjectTypes, type)}
+              checked={selectedProjectTypes.includes(type.id)}
+              onChange={() => toggleSelection(setSelectedProjectTypes, type.id)}
             />
-            {type}
+            {type.name}
           </label>
         ))}
       </div>

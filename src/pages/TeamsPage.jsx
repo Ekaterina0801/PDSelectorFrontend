@@ -82,7 +82,7 @@ const TeamsPage = () => {
                 <Card
                   key={team.id}
                   name={team.name}
-                  type={team.project_type}
+                  type={team.project_type.name}
                   resume={team.project_description}
                   isCaptain={false}
                   onApply={() => handleApplicationSubmit(team.id)}

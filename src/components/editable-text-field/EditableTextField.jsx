@@ -5,7 +5,10 @@ import { isEqual } from "lodash";
 import { fetchFilterParamsByTrackId } from "../../api/apiTeamsController";
 import { getSavedTrackId } from "../../hooks/cookieUtils";
 import DropDownTechnologies from "../drop-down-technologies/DropDownTechnologies";
-
+import { useTechnologies } from "../../hooks/useTechnologies";
+import { useNewTeam } from "../../hooks/useNewTeam";
+import { useParams } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const EditableDescription = ({
   initialDescription,
@@ -18,7 +21,7 @@ const EditableDescription = ({
   const [newTech, setNewTech] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [allTechnologies, setAllTechnologies] = useState(initialTechnologies);
+  //const [allTechnologies, setAllTechnologies] = useState(initialTechnologies);
   /*
   const all_technologies = [
     { id: 0, name: "C++" },
@@ -42,6 +45,23 @@ const EditableDescription = ({
     { id: 18, name: "Godot" },
   ];*/
 
+  const { studentId } = useParams();
+  const { allTechnologies, loadingTechnologies, errorTechnologies } = useTechnologies();
+  const currentTrackId = Cookies.get("trackId");
+  const { newTeam, handleChange, handleSubmit } = useNewTeam(currentTrackId, studentId, allTechnologies);
+
+  const handleTechnologyChange = (event) => {
+        const { value, checked } = event.target;
+
+        const selectedTech = allTechnologies.find((tech) => tech.id.toString() === value);
+        
+        const updatedTechnologies = checked
+          ? [...technologies, selectedTech]
+          : technologies.filter((tech) => tech.id !== selectedTech.id); 
+
+          setTechnologies(updatedTechnologies);
+  };
+
   useEffect(() => {
     if (!isEditing) {
       setDescription(initialDescription);
@@ -53,7 +73,7 @@ const EditableDescription = ({
       if (!trackId) return;
       try {
         const params = await fetchFilterParamsByTrackId(trackId);
-        setAllTechnologies(params.technologies);
+        //setAllTechnologies(params.technologies);
         console.log("Test: ", params.technologies);
         console.log("Полученные параметры фильтра:", params);
       } catch (error) {
@@ -93,23 +113,23 @@ const EditableDescription = ({
     setIsDropdownOpen((prev) => !prev);
   };
 
-  console.log("technologies: ", technologies);
-
   return (
     <div className="editable-description">
       {isEditing ? (
         <>
+        <label>Описание: </label>
           <textarea
             className="description-textarea"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
-          <div className="technologies">
+
+          {/*<div className="technologies">
             <ul>
               {technologies.map((tech, index) => (
                 <li key={tech.id||index} className="technology-item">
                   {console.log("TECH: ", tech)}
-                  {tech}
+                  {tech.name}
                   <button
                     className="button-remove-tech"
                     onClick={() => handleRemoveTechnology(index)}
@@ -135,7 +155,30 @@ const EditableDescription = ({
                 <FaPlus />
               </button>
             </div>
-          </div>
+          </div>*/}
+        <label>Технологии: </label>
+        <div className="technologies-list">
+          {technologies && technologies.length > 0 ? (
+            allTechnologies.map((tech) => (
+              <div key={tech.id} className="technology-checkbox">
+                <input
+                  type="checkbox"
+                  id={`tech-${tech.id}`}
+                  name="technologies"
+                  value={tech.id} 
+                  checked={technologies.some((t) => t.id === tech.id)}  
+                  onChange={handleTechnologyChange}
+                />
+                <label htmlFor={`tech-${tech.id}`}>{tech.name}</label>
+              </div>
+            ))
+          ) : (
+            <p>Нет доступных технологий</p>
+          )}
+        </div>
+
+
+
           <button className="button-save" onClick={handleSave}>
             <FaSave /> Сохранить
           </button>

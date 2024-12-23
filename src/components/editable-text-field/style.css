@@ -10,6 +10,7 @@
   margin-bottom: 20px;
   border: 1px solid var(--purple-light);
   transition: transform 0.3s, box-shadow 0.3s;
+  margin-top: 20px;
 }
 
 .description-text {
@@ -19,11 +20,11 @@
 }
 
 .description-textarea {
-  width: calc(100% - 40px);
+  width: 100%;
   max-width: 800px;
   height: 100px;
   resize: none;
-  border-radius: 20px;
+  border-radius: 4px;
   text-align: left;
   padding: 20px;
   margin-bottom: 20px;

@@ -1,9 +1,13 @@
 import { useState } from "react";
+import { useTechnologies } from "../../hooks/useTechnologies";
+import { useNewTeam } from "../../hooks/useNewTeam";
+import { useParams } from "react-router-dom";
+import Cookies from "js-cookie";
 import "./style.css";
 const ProfileEditForm = ({ studentData, onSave, onCancel }) => {
     const [formData, setFormData] = useState(studentData);
   
-    const handleChange = (e) => {
+    const handleChangeInfo = (e) => {
       const { name, value } = e.target;
       setFormData({ ...formData, [name]: value });
     };
@@ -11,7 +15,27 @@ const ProfileEditForm = ({ studentData, onSave, onCancel }) => {
     const handleSave = () => {
       onSave(formData);
     };
-  
+    const { studentId } = useParams();
+    const { allTechnologies, loadingTechnologies, errorTechnologies } = useTechnologies();
+    const currentTrackId = Cookies.get("trackId");
+    const { newTeam, handleChange, handleSubmit } = useNewTeam(currentTrackId, studentId, allTechnologies);
+
+    const handleTechnologyChange = (event) => {
+          const { value, checked } = event.target;
+
+          const selectedTech = allTechnologies.find((tech) => tech.id.toString() === value);
+          
+          const updatedTechnologies = checked
+            ? [...formData.technologies, selectedTech]
+            : formData.technologies.filter((tech) => tech.id !== selectedTech.id); 
+
+
+            setFormData((prevData) => ({
+              ...prevData,
+              technologies: updatedTechnologies,
+            }));
+    };
+
     return (
         <div className="profile-container">
       <div className="profile-edit-form">
@@ -22,7 +46,7 @@ const ProfileEditForm = ({ studentData, onSave, onCancel }) => {
             type="text"
             name="fullName"
             value={formData.fullName}
-            onChange={handleChange}
+            onChange={handleChangeInfo}
           />
         </label>
         <label>
@@ -31,7 +55,7 @@ const ProfileEditForm = ({ studentData, onSave, onCancel }) => {
             type="number"
             name="course"
             value={formData.course}
-            onChange={handleChange}
+            onChange={handleChangeInfo}
           />
         </label>
         <label>
@@ -40,7 +64,7 @@ const ProfileEditForm = ({ studentData, onSave, onCancel }) => {
             type="text"
             name="group"
             value={formData.group}
-            onChange={handleChange}
+            onChange={handleChangeInfo}
           />
         </label>
         <label>
@@ -49,25 +73,32 @@ const ProfileEditForm = ({ studentData, onSave, onCancel }) => {
             type="text"
             name="contact"
             value={formData.contact}
-            onChange={handleChange}
+            onChange={handleChangeInfo}
           />
         </label>
-        <label>
-          Технологии:
-          <input
-            type="text"
-            name="technologies"
-            value={formData.technologies}
-            onChange={(e) =>
-              handleChange({
-                target: {
-                  name: "technologies",
-                  value: e.target.value.split(",").map((tech) => tech.trim()),
-                },
-              })
-            }
-          />
-        </label>
+
+        <label>Технологии:  </label>      
+        <div className="technologies-list">
+          {formData.technologies && formData.technologies.length > 0 ? (
+            allTechnologies.map((tech) => (
+              <div key={tech.id} className="technology-checkbox">
+                <input
+                  type="checkbox"
+                  id={`tech-${tech.id}`}
+                  name="technologies"
+                  value={tech.id} 
+                  checked={formData.technologies.some((t) => t.id === tech.id)}  
+                  onChange={handleTechnologyChange}
+                />
+                <label htmlFor={`tech-${tech.id}`}>{tech.name}</label>
+              </div>
+            ))
+          ) : (
+            <p>Нет доступных технологий</p>
+          )}
+        </div>
+         
+
         <div className="form-buttons">
           <button className="save-button" onClick={handleSave}>
             Сохранить

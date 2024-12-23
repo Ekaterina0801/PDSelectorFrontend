@@ -31,7 +31,7 @@ function TeamForm({ newTeam, technologies, onChange, onSubmit, trackId }) {
         />
 
         <label htmlFor="projectDescription">Описание проекта:</label>
-        <textarea
+        <input
           id="projectDescription"
           name="projectDescription"
           value={newTeam.projectDescription}

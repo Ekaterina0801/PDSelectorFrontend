@@ -28,8 +28,8 @@ const TeamProfilePage = () => {
   
 
   const handleSave = ({ description, technologies }) => {
-    setTeamDescription(description);
-    setTeamTechnologies(technologies);
+    //setTeamDescription(description);
+    //setTeamTechnologies(technologies);
   };
 
   const handleApplicationStatusChange = async (applicationId, status) => {
@@ -96,7 +96,7 @@ const TeamProfilePage = () => {
       <Navbar />
       <h1>Профиль команды {name}</h1>
       <div className="container">
-        {<Sidebar onItemClick={setCurrentContent}  items={sidebarItems} />}
+        {/*<Sidebar onItemClick={setCurrentContent}  items={sidebarItems} />*/}
         <MainContent>
           <h2>Описание команды</h2>
           {successMessage && <div className="success-message">{successMessage}</div>}
