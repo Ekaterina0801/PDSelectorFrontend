@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 
 const LoginForm = () => {
   const handleLogin = () => {
-    window.location.href = 'http://localhost:8080/oauth2/authorization/github';
+    window.location.href = 'http://localhost:8080/oauth2/authorization/azure';
   };
 
   const getCookieValue = (name) => {

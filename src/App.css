@@ -77,3 +77,7 @@ button:hover {
   background-color: var(--purple-light);
   transform: scale(1.03);
 }
+
+h1,h2,h3{
+  margin: 10px;
+}

@@ -1,5 +1,6 @@
 /* Sidebar Styles */
 .sidebar {
+    margin: 20px;
     width: 240px;
     padding: 20px;
     background: #f9f9f9;

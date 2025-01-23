@@ -28,14 +28,13 @@ export const fetchStudents = async ({ input, course, groupNumber, hasTeam, techn
       throw new Error(`HTTP Error: ${response.status}`);
     }
 
-    // Обрабатываем успешный ответ
+
     const data = await response.json();
-    console.log(data); // Логируем данные только для отладки
+    console.log(data);
     return data;
   } catch (error) {
-    // Обрабатываем неожиданные ошибки
     console.error("Error fetching students:", error);
-    throw error; // Пробрасываем ошибку для дальнейшей обработки
+    throw error; 
   }
 };
 
@@ -62,7 +61,6 @@ export const deleteStudent = async (studentId) => {
 
 
 export const fetchStudentById = async (studentId) => {
-  console.log('st',studentId);
   try {
     const response = await fetch(`${API_BASE_URL}/students/${studentId}`, {
       method: 'GET',
@@ -79,16 +77,34 @@ export const fetchStudentById = async (studentId) => {
   }
 };
 
-
-export const updateStudent = async (trackId, studentData) => {
+// Обновление заявки
+export const updateStudent = async (studentData, studentId) => {
   try {
-    const response = await axios.put(`${API_BASE_URL}/students?trackId=${trackId}`, studentData);
-    return response.data;
+   
+    console.log("Отправляемые данные студента:", studentData);
+
+    const response = await fetch(`${API_BASE_URL}/students/${studentId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',  
+      },
+      body: JSON.stringify(studentData), 
+      credentials: 'include', 
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text(); 
+      throw new Error(`Ошибка сервера: ${response.status} - ${errorText}`);
+    }
+
+    return await response.json(); 
   } catch (error) {
-    console.error('Ошибка при обновлении студента:', error);
+    console.error("Ошибка при обновлении студента:", error);
     throw error;
   }
 };
+
 
 export const fetchCurrentUser = async () => {
   try {

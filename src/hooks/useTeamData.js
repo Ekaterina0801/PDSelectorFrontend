@@ -10,9 +10,11 @@ const useTeamData = (teamId, currentUser) => {
     technologies: [],
     students: [],
     requests: [],
+    project_type: null,
     captainName: null,
     isCaptain: false,
   });
+  const [isCaptain, setIsCaptain] = useState(true);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -23,26 +25,9 @@ const useTeamData = (teamId, currentUser) => {
       setLoading(true);
       try {
         const fetchedTeam = await fetchTeamById(teamId);
-        const teamDto = new TeamDto(fetchedTeam);
-        console.log('teamdto', teamDto);
-
-        const isCurrentUserCaptain = teamDto.captain.id === currentUser.id;
-        let captainId = null;
-
-        if (teamDto.captain) {
-          console.log('ddd',teamDto);
-          captainId = teamDto.captain.id;
-        }
-
-        setTeamData({
-          name: teamDto.name,
-          description: teamDto.project_description,
-          technologies: teamDto.technologies || [],
-          students: teamDto.students || [],
-          requests: teamDto.applications || [],
-          captainId,
-          isCaptain: isCurrentUserCaptain,
-        });
+        const isCurrentUserCaptain = fetchedTeam.captain.id === currentUser;
+        setIsCaptain(isCurrentUserCaptain);
+        setTeamData(fetchedTeam);
       } catch (err) {
         setError("Ошибка при загрузке данных команды.");
         console.error(err);
@@ -54,7 +39,12 @@ const useTeamData = (teamId, currentUser) => {
     loadTeamData();
   }, [teamId, currentUser]);
 
-  return { ...teamData, loading, error };
+  useEffect(() => {
+    console.log('teamdata', teamData);
+  }, [teamData]); 
+
+  return { teamData, isCaptain, loading, error };
 };
 
 export default useTeamData;
+

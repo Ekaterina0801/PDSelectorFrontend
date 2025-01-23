@@ -3,7 +3,7 @@ export default class TeamDto {
       id = null,
       name = '',
       project_description = '',
-      project_type = '',
+      project_type = null,
       quantity_of_students = 0,
       captain = null,
       is_full = false,

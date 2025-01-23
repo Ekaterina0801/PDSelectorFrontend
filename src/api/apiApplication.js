@@ -87,6 +87,7 @@ export const deleteApplication = async (applicationId) => {
 
 // Обновление заявки
 export const updateApplication = async (applicationData) => {
+  console.log('fff',applicationData);
   try {
     const response = await fetch(`${API_BASE_URL}/applications`, {
       method: 'PUT',

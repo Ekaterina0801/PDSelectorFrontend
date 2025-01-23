@@ -10,7 +10,6 @@ const AuthPage = () => {
   useEffect(() => {
     const token = Cookies.get('access_token');
     if (token) {
-      // Если токен получен, перенаправляем на профиль
       navigate('/profile');
     } else {
       console.error('Ошибка: токен отсутствует');

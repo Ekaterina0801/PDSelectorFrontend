@@ -1,4 +1,3 @@
-// hooks/useStudents.js
 import { useState, useEffect } from "react";
 import { fetchStudents } from "../api/apiStudentsController";
 import { getSavedTrackId } from "./cookieUtils";

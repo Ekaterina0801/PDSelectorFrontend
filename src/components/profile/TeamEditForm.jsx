@@ -1,19 +1,42 @@
-import { useState } from "react";
-import "./style.css";
+import { useState, useEffect } from "react";
 import Modal from "../forms/modal/Modal";
 
-const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => {
+
+const TeamEditForm = ({
+  teamData,
+  onSave,
+  onCancel,
+  allTechnologies,
+  projectTypes,
+}) => {
   const [formData, setFormData] = useState({
-    ...studentData,
-    technologies: studentData.technologies || [],
+    ...teamData,
+    technologies: teamData.technologies || [],
+    project_type: teamData.project_type || null, 
   });
+  
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState("");
+
+  useEffect(() => {
+    setFormData({
+      ...teamData,
+      technologies: teamData.technologies || [],
+      project_type: teamData.project_type || null, 
+    });
+  }, [teamData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+
+  const handleProjectTypeChange = (e) => {
+    const { value } = e.target;
+    console.log(value);
+    setFormData((prev) => ({ ...prev, project_type: projectTypes.find(type => type.id === (value*1)) }));
+  };
+  
 
   const handleRemoveTechnology = (idToRemove) => {
     const updatedTechnologies = formData.technologies.filter(
@@ -28,83 +51,74 @@ const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => 
   };
 
   const handleSave = () => {
-    const flatStudentData = {
-      about_self: formData.about_self,
-      contacts: formData.contacts,
-      course: formData.course,
-      group_number: formData.group_number,
-      technologies: formData.technologies, 
-      user: formData.user
+    const flatTeamData = {
+      name: formData.name,
+      project_description: formData.project_description,
+      project_type: formData.project_type,
+      technologies: formData.technologies,
     };
-    
-    onSave(flatStudentData);
+
+    onSave(flatTeamData);
   };
 
   const handleTechnologyChange = (tech) => {
     const isSelected = formData.technologies.some((t) => t.id === tech.id);
-
     const updatedTechnologies = isSelected
-      ? formData.technologies.filter((t) => t.id !== tech.id) 
-      : [...formData.technologies, tech]; 
+      ? formData.technologies.filter((t) => t.id !== tech.id)
+      : [...formData.technologies, tech];
 
     setFormData({ ...formData, technologies: updatedTechnologies });
   };
 
+  const currentProjectType = projectTypes.find(type => type.id === formData.project_type);
+
   return (
     <div className="profile-container">
       <div className="profile-edit-form">
-        <h2>Редактировать профиль</h2>
+        <h2>Редактировать команду</h2>
 
         <label>
-          ФИО:
+          Название команды:
           <input
             type="text"
-            name="fullName"
-            value={formData.user?.fio || ""}
+            name="name"
+            value={formData.name || ""}
             onChange={handleChange}
           />
         </label>
 
         <label>
-          Курс:
-          <input
-            type="number"
-            name="course"
-            value={formData.course || ""}
-            onChange={handleChange}
-          />
-        </label>
-
-        <label>
-          Группа:
+          Описание проекта:
           <input
             type="text"
-            name="group"
-            value={formData.group_number || ""}
+            name="project_description"
+            value={formData.project_description || ""}
             onChange={handleChange}
           />
         </label>
 
         <label>
-          О себе:
-          <input
-            type="text"
-            name="about_self"
-            value={formData.about_self || ""}
-            onChange={handleChange}
-          />
+          Тип проекта:
+          <div className="technologies-list">
+            {projectTypes && projectTypes.length > 0 ? (
+              projectTypes.map((type) => (
+                <div key={type.id}>
+                  <input
+                    type="radio"
+                    id={`projectType-${type.id}`}
+                    name="project_type" 
+                    value={type.id} 
+                    checked={formData.project_type.id.toString() === type.id.toString()} 
+                    onChange={handleProjectTypeChange}
+                  />
+                  <label htmlFor={`projectType-${type.id}`}>{type.name}</label>
+                </div>
+              ))
+            ) : (
+              <p>Нет доступных типов проекта</p>
+            )}
+          </div>
         </label>
-
-        <label>
-          Контакты:
-          <input
-            type="text"
-            name="contact"
-            value={formData.contacts || ""}
-            onChange={handleChange}
-          />
-        </label>
-
         <label>
           <span className="text-capture">Технологии:</span>
           <div className="card-tags">
@@ -127,7 +141,9 @@ const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => 
         </label>
 
         <div className="form-buttons">
-          <button onClick={() => toggleModal("add")}>Добавить технологию</button>
+          <button onClick={() => toggleModal("add")}>
+            Добавить технологию
+          </button>
           <button className="save-button" onClick={handleSave}>
             Сохранить
           </button>
@@ -149,7 +165,9 @@ const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => 
                       type="checkbox"
                       id={`tech-${tech.id}`}
                       name="technologies"
-                      checked={formData.technologies.some((t) => t.id === tech.id)}
+                      checked={formData.technologies.some(
+                        (t) => t.id === tech.id
+                      )}
                       onChange={() => handleTechnologyChange(tech)}
                     />
                     <label htmlFor={`tech-${tech.id}`}>{tech.name}</label>
@@ -166,4 +184,4 @@ const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => 
   );
 };
 
-export default ProfileEditForm;
+export default TeamEditForm;

@@ -11,7 +11,7 @@ import useTeams from "../hooks/useTeams";
 import { getCurrentStudentId } from "../api/apiStudentsController";
 import { createApplication } from "../api/apiApplication";
 import useSuccessMessage from "../hooks/useSuccessMessage";
-;
+
 
 
 const TeamsPage = () => {
@@ -82,14 +82,14 @@ const TeamsPage = () => {
                 <Card
                   key={team.id}
                   name={team.name}
-                  type={team.project_type}
+                  type={team.project_type.name}
                   resume={team.project_description}
                   isCaptain={false}
                   onApply={() => handleApplicationSubmit(team.id)}
                   onCancel={() => console.log("Заявка отменена")}
                   tags={team.technologies}
                   profileLink={`/teams/${team.id}`}
-                  showApplyButton={!applicationsStatus[team.id]} // Используем статусы из состояния
+                  showApplyButton={applicationsStatus[team.id]} 
                 />
               ))
             )}

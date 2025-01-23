@@ -2,7 +2,6 @@ import Navbar from "../components/navbar/Navbar";
 import Sidebar from "../components/sidebar/Sidebar";
 import Card from "../components/card/Card";
 import TextFieldEdit from "../components/text-field-edit/TextFieldEdit";
-//import DataAboutStudent from "../components/data-about-student/DataAboutStudent";
 import MainContent from "../components/main-section/MainSection";
 import FilterYear from "../components/forms/FilterYear"
 

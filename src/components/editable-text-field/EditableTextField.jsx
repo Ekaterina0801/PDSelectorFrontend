@@ -19,28 +19,6 @@ const EditableDescription = ({
   const [isEditing, setIsEditing] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [allTechnologies, setAllTechnologies] = useState(initialTechnologies);
-  /*
-  const all_technologies = [
-    { id: 0, name: "C++" },
-    { id: 1, name: "C#" },
-    { id: 2, name: "Python" },
-    { id: 3, name: "Java" },
-    { id: 4, name: "Ruby" },
-    { id: 5, name: "Kotlin" },
-    { id: 6, name: "Dart" },
-    { id: 7, name: "JavaScript" },
-    { id: 8, name: "CSS" },
-    { id: 9, name: "SQL" },
-    { id: 10, name: "HTML" },
-    { id: 11, name: "Android" },
-    { id: 12, name: "iOS" },
-    { id: 13, name: "Ruby On Rails" },
-    { id: 14, name: "Docker" },
-    { id: 15, name: "Unity" },
-    { id: 16, name: "PHP" },
-    { id: 17, name: "Node.js" },
-    { id: 18, name: "Godot" },
-  ];*/
 
   useEffect(() => {
     if (!isEditing) {

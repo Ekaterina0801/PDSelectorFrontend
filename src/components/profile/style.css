@@ -99,11 +99,25 @@
     transition: background-color 0.3s ease, transform 0.3
   }  
 
-  /* Edit Form */
 .profile-edit-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+  display: flex;
+  flex-direction: column; 
+  gap: 5px; 
+  width: 100%; 
+  box-sizing: border-box; 
+}
+
+.profile-edit-form label {
+  width: 100%; 
+}
+
+.profile-edit-form input {
+  width: 100%;
+}
+
+
+  .profile-edit-form input{
+    margin: 10px;
   }
   
   .form-header {
@@ -114,8 +128,8 @@
     color: #5e2ca5;
   }
   
-  /* Form Group */
   .form-group {
+    align-items: center;
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -141,42 +155,68 @@
     outline: none;
   }
   
-  /* Buttons */
-  .form-buttons {
+
+  
+
+  .form-buttons{
+    align-items: center;
     display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
   }
-  
-  .save-button,
-  .cancel-button {
-    width: 48%;
-    padding: 12px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    text-transform: uppercase;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-  }
-  
-  .save-button {
-    background-color: #4caf50;
-    color: white;
-  }
-  
-  .save-button:hover {
-    background-color: #45a049;
-    transform: translateY(-2px);
-  }
-  
-  .cancel-button {
-    background-color: #d9534f;
-    color: white;
-  }
-  
-  .cancel-button:hover {
-    background-color: #c9302c;
-    transform: translateY(-2px);
-  }
+.form-buttons {
+  display: flex;
+  justify-content: center; 
+  gap: 15px;
+  margin-top: 20px; 
+}
+
+.form-buttons button {
+  padding: 12px 30px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+
+.save-button {
+  background-color: #4caf50;
+  color: white;
+}
+
+.save-button:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+}
+
+
+.cancel-button {
+  background-color: #d9534f;
+  color: white;
+}
+
+.cancel-button:hover {
+  background-color: #c9302c;
+  transform: translateY(-2px);
+}
+
+.add-technology-button {
+  color: white;
+  border: none;
+  font-size: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.add-technology-button:hover {
+  transform: scale(1.1);
+}

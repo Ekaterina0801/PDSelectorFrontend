@@ -18,6 +18,8 @@ import Cookies from "js-cookie";
 import Modal from "../components/forms/modal/Modal";
 import { useModal } from "../hooks/useModal";
 import { useTechnologies } from "../hooks/useTechnologies";
+import { updateStudent } from "../api/apiStudentsController";
+import { useProjectTypes } from "../hooks/useProjectTypes";
 const sidebarItems = [
   { name: "Мои команды", icon: "👥" },
   { name: "Мой профиль", icon: "👤" },
@@ -30,6 +32,9 @@ const sidebarItems = [
 const StudentProfilePage = () => {
   const { studentId } = useParams();
   const currentUser = useCurrentUser();
+  const [message, setMessage] = useState("");
+  const {allTypes, loadingTypes, errorTypes} = useProjectTypes();
+  console.log('types', allTypes);
   const {
     studentData,
     myTeams,
@@ -41,23 +46,33 @@ const StudentProfilePage = () => {
     refreshStudentData,
     technologies
   } = useStudentData(studentId, currentUser);
+   
 
   const { allTechnologies, loadingTechnologies, errorTechnologies } = useTechnologies();
   const currentTrackId = Cookies.get("trackId");
-  const { newTeam, handleChange, handleSubmit } = useNewTeam(currentTrackId, studentId, allTechnologies);
+  const { newTeam, handleChange, handleSubmit } = useNewTeam(currentTrackId, studentId, allTechnologies, allTypes);
 
   const { successMessage, showSuccessMessage } = useSuccessMessage();
   const { showModal, toggleModal } = useModal();
 
-  const [currentContent, setCurrentContent] = useState("Профиль");
+  const [currentContent, setCurrentContent] = useState("Мой профиль");
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [isCreatingTeam, setIsCreatingTeam] = useState(false);
 
 
-  const handleProfileSave = (updatedData) => {
-    console.log("Сохраненные данные:", updatedData);
-    setIsEditingProfile(false);
+  const handleProfileSave = async (updatedData) => {
+    try {
+      await updateStudent(updatedData, studentId);
+      setIsEditingProfile(false);
+      refreshStudentData();
+    } catch (error) {
+      console.error("Ошибка при сохранении профиля:", error);
+    }
+    finally{
+
+    }
   };
+  
 
   const handleProfileEdit = () => setIsEditingProfile(true);
   const handleProfileCancel = () => setIsEditingProfile(false);
@@ -78,6 +93,7 @@ const StudentProfilePage = () => {
 
   const handleTeamCreate = async (e) => {
     e.preventDefault();
+
     try {
       await handleSubmit(e);
       setIsCreatingTeam(false);
@@ -96,17 +112,17 @@ const StudentProfilePage = () => {
   };
 
   const renderProfileContent = () => {
-    if (isEditingProfile) {
-      return <ProfileEditForm studentData={studentData} onSave={handleProfileSave} onCancel={handleProfileCancel} />;
+    if (isCurrentUser&&isEditingProfile) {
+      return <ProfileEditForm studentData={studentData} onSave={handleProfileSave} onCancel={handleProfileCancel} allTechnologies={allTechnologies}/>;
     }
-    return <ProfileCard studentData={studentData} onEdit={handleProfileEdit} />;
+    return <ProfileCard studentData={studentData} onEdit={handleProfileEdit} isCurrentUser={isCurrentUser}/>;
   };
 
   const renderMyTeams = () => (
     <div className="cards">
       {myTeams.length > 0 ? (
         myTeams.map((team) => (
-          <Card key={team.id} name={team.name} type={team.project_type} resume={team.project_description} tags={team.technologies} profileLink={`/teams/${team.id}`} />
+          <Card key={team.id} name={team.name} type={team.project_type.name} resume={team.project_description} tags={team.technologies} profileLink={`/teams/${team.id}`} />
         ))
       ) : (
         <p>У вас нет команд</p>
@@ -151,6 +167,7 @@ const StudentProfilePage = () => {
               onCancel={() => setIsCreatingTeam(false)}
               technologies={allTechnologies}
               currentTrackId={currentTrackId}
+              projectTypes={allTypes}
             />
           )}
         </Modal>
@@ -158,7 +175,7 @@ const StudentProfilePage = () => {
       <button onClick={handleCreateTeamClick}>Создать команду</button>
       {createdTeams.length > 0 ? (
         createdTeams.map((team) => (
-          <Card key={team.id} name={team.name} type={team.project_type} resume={team.project_description} tags={team.technologies} profileLink={`/teams/${team.id}`} />
+          <Card key={team.id} name={team.name} type={team.project_type.name} resume={team.project_description} tags={team.technologies} profileLink={`/teams/${team.id}`} />
         ))
       ) : (
         <p>Вы не создали команд.</p>
@@ -167,11 +184,11 @@ const StudentProfilePage = () => {
   );
 
   const renderMainContent = () => {
-    if (loading) return <p>Загрузка...</p>;
+    
     if (error) return <p>{error}</p>;
-
+    if (loading) return <p>Загрузка...</p>;
     switch (currentContent) {
-      case "Профиль":
+      case "Мой профиль":
         return renderProfileContent();
       case "Мои команды":
         return renderMyTeams();
@@ -188,7 +205,7 @@ const StudentProfilePage = () => {
     <>
       <Navbar />
       <div className="container">
-        {!isCurrentUser && <Sidebar onItemClick={setCurrentContent} items={sidebarItems} />}
+        {isCurrentUser && <Sidebar onItemClick={setCurrentContent} items={sidebarItems} />}
         <MainContent>
           <h2>{currentContent}</h2>
           {successMessage && <div className="success-message">{successMessage}</div>}

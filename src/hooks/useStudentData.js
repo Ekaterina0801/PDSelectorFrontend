@@ -19,8 +19,9 @@ const useStudentData = (studentId, currentUser) => {
       try {
         const fetchedStudent = await fetchStudentById(studentId);
         setStudentData(fetchedStudent);
-  
-        if (currentUser && currentUser.student && currentUser.student.id === fetchedStudent.id) {
+        console.log('curr',currentUser);
+        console.log('st', fetchedStudent);
+        if (currentUser && currentUser === fetchedStudent.id) {
           setIsCurrentUser(true);
         }
   

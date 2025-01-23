@@ -117,18 +117,32 @@ export const deleteTeam = async (teamId) => {
   };
 
   // Создание новой команды
-export const updateTeam = async (teamData, trackId) => {
-  try {
-    const response = await axios.put(
-      `${API_BASE_URL}/teams?trackId=${trackId}`,
-      teamData
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Ошибка при обновлении команды:", error);
-    throw error;
-  }
-};
+  export const updateTeam = async (teamData, teamId) => {
+    try {
+     
+      console.log("Отправляемые данные команды:", teamData);
+  
+      const response = await fetch(`${API_BASE_URL}/teams/${teamId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',  
+        },
+        body: JSON.stringify(teamData), 
+        credentials: 'include', 
+      });
+  
+      if (!response.ok) {
+        const errorText = await response.text(); 
+        throw new Error(`Ошибка сервера: ${response.status} - ${errorText}`);
+      }
+  
+      return await response.json(); 
+    } catch (error) {
+      console.error("Ошибка при обновлении команды:", error);
+      throw error;
+    }
+  };
 
 
 

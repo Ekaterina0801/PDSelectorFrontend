@@ -34,7 +34,7 @@ const Filter = ({ filterParams, onApplyFilters }) => {
       {/* Фильтр по заполненности */}
       <div className="filter-group">
         <h3>Заполненность</h3>
-        {["Полностью укомплектован", "Есть свободные места", "Все"].map((label, index) => (
+        {["Полностью укомплектован", "Есть свободные места"].map((label, index) => (
           <label key={index}>
             <input
               type="radio"
@@ -52,13 +52,13 @@ const Filter = ({ filterParams, onApplyFilters }) => {
       <div className="filter-group">
         <h3>Тип проекта</h3>
         {availableProjectTypes.map((type) => (
-          <label key={type}>
+          <label key={type.id}>
             <input
               type="checkbox"
-              checked={selectedProjectTypes.includes(type)}
-              onChange={() => toggleSelection(setSelectedProjectTypes, type)}
+              checked={selectedProjectTypes.includes(type.id)}
+              onChange={() => toggleSelection(setSelectedProjectTypes, type.id)}
             />
-            {type}
+            {type.name}
           </label>
         ))}
       </div>

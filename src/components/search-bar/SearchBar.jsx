@@ -6,7 +6,7 @@ const SearchBar = ({ onSearch }) => {
   const [searchInput, setSearchInput] = useState("");
 
   const handleSearch = () => {
-    onSearch(searchInput); // Передаем строку поиска родительскому компоненту
+    onSearch(searchInput); 
   };
 
   return (
@@ -15,7 +15,7 @@ const SearchBar = ({ onSearch }) => {
         <input
           type="text"
           value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)} // Обновляем локальное состояние
+          onChange={(e) => setSearchInput(e.target.value)} 
           placeholder="Поиск"
         />
         <button className="search-button" onClick={handleSearch}>

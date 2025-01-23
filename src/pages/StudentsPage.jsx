@@ -8,6 +8,7 @@ import { fetchStudents } from "../api/apiStudentsController";
 import Header from "../components/header/Header";
 import { getSavedTrackId } from "../hooks/cookieUtils";
 import { fetchFilterParamsByTrackId } from "../api/apiTeamsController";
+import useStudentFilters from "../hooks/useStudentFilters";
 const StudentsPage = () => {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -46,7 +47,7 @@ const StudentsPage = () => {
       console.log('trackId', trackId);
       if (!trackId) return;
       try {
-        const params = await fetchFilterParamsByTrackId(trackId);
+        const params = await useStudentFilters(trackId);
         setFilterParams(params);
         console.log("Полученные параметры фильтра:", params);
       } catch (error) {
@@ -58,13 +59,13 @@ const StudentsPage = () => {
     Promise.all([loadStudents(), loadFilters()]).finally(() => {
       setLoading(false);
     });
-  }, [filters, searchInput]); // Dependencies include filters and search input
+  }, [filters, searchInput]); 
 
   return (
     <>
       <Header />
       <Navbar />
-      <SearchBar onSearch={handleSearch} /> {/* Pass handler for search */}
+      <SearchBar onSearch={handleSearch} /> 
       <div className="container">
         <Filter filterParams={filterParams} onApplyFilters={handleApplyFilters} /> {/* Pass filter parameters */}
         <MainContent>
@@ -76,7 +77,7 @@ const StudentsPage = () => {
               students.map((student) => (
                 <Card
                   key={student.id}
-                  name={student.user?.fio || "Имя отсутствует"} // Safe access
+                  name={student.user?.fio || "Имя отсутствует"} 
                   resume={student.about_self || "Описание отсутствует"}
                   tags={student.technologies || []}
                   showActionsForCaptain={false}
