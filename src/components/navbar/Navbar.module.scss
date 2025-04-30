@@ -1,0 +1,188 @@
+@use "@/styles/index" as ui;
+.NavbarItems {
+    max-width: 1600px;
+    background-color: ui.$color-primary;
+    border-radius: 20px;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 10px auto;
+    z-index: 1000;
+  }
+  
+  .logo {
+    img {
+      max-width: 120px;
+      height: auto;
+    }
+  }
+  
+  .HamburgerCrossIcons {
+    display: none;
+    font-size: ui.$font-size-2xl;
+    cursor: pointer;
+    color: white;
+  }
+  
+  .MenuItems {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+  
+    & .active {
+      display: flex;
+    }
+  
+    & li {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 15px;
+      transition: background-color 0.3s ease;
+      border-radius: 8px;
+      font-weight: bold;
+  
+      &:hover {
+        background-color: ui.$color-primary-light;
+        color: ui.$color-primary;
+      }
+  
+      & .nav-link {
+        text-decoration: none;
+        color: ui.$color-primary;
+        font-weight: 600;
+        font-size: 16px;
+        white-space: nowrap;
+        transition: color 0.3s ease;
+  
+        &:hover {
+          color: ui.$color-primary;
+        }
+        &.active {
+          color: ui.$color-primary-light;
+          font-weight: bold;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+  
+  .trackSelector {
+    position: relative;
+    cursor: pointer;
+    width: 100%;
+    max-width: 250px;
+    margin: 10px auto 0;
+    color: ui.$color-primary;
+  }
+  
+  .selectIcon {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 14px;
+    background-color: ui.$color-white;
+    color: var(--purple);
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: box-shadow 0.2s ease;
+  
+    &:hover {
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    &.open svg {
+      transform: rotate(180deg);
+    }
+    & svg {
+      transition: transform 0.3s ease;
+    }
+  }
+  
+  .dropdown {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    right: 0;
+    background-color: white;
+    border-radius: 8px;
+    padding: 10px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    z-index: 1001;
+    width: 100%;
+  
+    & ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    & li {
+      padding: 10px 15px;
+      cursor: pointer;
+      color: var(--purple);
+      transition: background-color 0.2s ease;
+  
+      &:hover {
+        background-color: var(--purple-light);
+        color: var(--white);
+        font-weight: 600;
+      }
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .HamburgerCrossIcons {
+      display: block;
+    }
+    .MenuItems {
+      display: none;
+      flex-direction: column;
+      position: fixed;
+      top: 70px;
+      left: 0;
+      right: 0;
+      background-color: ui.$color-primary;
+      padding: 20px;
+      border-radius: 0 0 15px 15px;
+      z-index: 1001;
+  
+      &.active {
+        display: flex;
+      }
+      & li {
+        margin-bottom: 15px;
+        justify-content: center;
+        width: 100%;
+      }
+    }
+    .trackSelector {
+      width: 100%;
+      max-width: none;
+      margin-top: 10px;
+      & .dropdown {
+        top: calc(100% + 5px);
+        left: 10px;
+        right: 10px;
+      }
+    }
+  }
+  
+  body {
+    padding-top: 80px;
+  }
+  
+  .filtersModalContent {
+    padding-top: 20px;
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+  }

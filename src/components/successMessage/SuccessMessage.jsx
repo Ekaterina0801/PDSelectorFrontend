@@ -1,11 +1,13 @@
 import ReactDOM from 'react-dom';
 
+import styles from './SuccessMessage.module.scss';
+
 const SuccessMessage = ({ message }) => {
   return ReactDOM.createPortal(
-    <div className="success-message">
+    <div className={styles.successMessage}>
       {message}
     </div>,
-    document.body 
+    document.body
   );
 };
 

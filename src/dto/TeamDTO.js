@@ -3,7 +3,7 @@ export default class TeamDto {
       id = null,
       name = '',
       project_description = '',
-      project_type = null,
+      projectType = null,
       quantity_of_students = 0,
       captain = null,
       is_full = false,
@@ -15,7 +15,7 @@ export default class TeamDto {
       this.id = id; 
       this.name = name; 
       this.project_description = project_description; 
-      this.project_type = project_type; 
+      this.projectType = projectType; 
       this.quantity_of_students = quantity_of_students; 
       this.captain = captain; 
       this.is_full = is_full; 

@@ -1,19 +1,21 @@
-import "./style.css"
+import React from 'react';
+import styles from './Modal.module.scss';
+
 function Modal({ show, onClose, children }) {
   if (!show) return null;
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
-        <button className="modal-close" onClick={onClose}>
+    <div className={styles.modalOverlay}>
+      <div className={styles.modalContent}>
+        <button className={styles.modalClose} onClick={onClose}>
           &times;
         </button>
-        <div className="modal-body">{children}</div>
+        <div className={styles.modalBody}>
+          {children}
+        </div>
       </div>
     </div>
   );
 }
 
 export default Modal;
-
-  

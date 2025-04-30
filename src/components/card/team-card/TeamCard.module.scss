@@ -1,0 +1,11 @@
+@use '../BaseCard.module.scss'  as base;
+@use "@/styles/index" as ui;
+.teamCard {
+  &--highlight {
+    border-color: ui.$color-warning;
+  }
+}
+
+.teamCard--highlight {
+  border-color: ui.$color-warning;
+}

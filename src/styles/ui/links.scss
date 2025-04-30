@@ -1,0 +1,12 @@
+@use "@/styles/tokens" as t;
+@mixin nav-link($weight: 500) {
+  text-decoration: none;
+  color: t.$color-grey-700;
+  font-weight: $weight;
+  transition: color t.$transition-medium, transform t.$transition-fast;
+
+  &:hover {
+    color: t.$color-primary-light;
+    transform: translateX(5px);
+  }
+}

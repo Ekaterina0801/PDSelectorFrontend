@@ -1,0 +1,63 @@
+@use "@/styles/tokens" as t;
+@use "@/styles/ui/buttons" as bt;
+@use "@/styles/ui/forms" as f;
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: t.$spacing-lg;
+    margin: t.$spacing-lg 0;
+  
+    button {
+      @include bt.btn;
+      padding: t.$spacing-sm t.$spacing-md;
+      font-size: 1rem;
+  
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+  
+    span {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+  }
+  
+  .sort-pagination-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: t.$spacing-md;
+    background: t.$color-white;
+    padding: t.$spacing-md;
+    border-radius: t.$radius-md;
+    box-shadow: t.$shadow-light;
+    border: 1px solid t.$color-primary-light;
+  
+    .sort-block {
+      display: flex;
+      align-items: center;
+      gap: t.$spacing-sm;
+  
+      label {
+        font-weight: 600;
+        color: t.$color-primary;
+      }
+  
+      select {
+        @include f.form-control(t.$radius-sm);
+        background-color: lighten(t.$color-primary-light, 40%);
+        color: t.$color-primary;
+        cursor: pointer;
+        transition: border-color 0.2s, box-shadow 0.2s;
+  
+        &:hover {
+          border-color: t.$color-primary;
+          box-shadow: t.$shadow-light;
+        }
+      }
+    }
+  }

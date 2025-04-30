@@ -1,28 +1,39 @@
-import React from 'react';
-import './style.css';
-const Sidebar = ({ items, onItemClick }) => {
-    return (
-        <div className="sidebar">
-            <ul className="sidebar-links">
-                {items.map((item, index) => (
-                    <li key={index} className="sidebar-item">
-                        <a 
-                            href={item.link || "#"}  // Если есть ссылка, используем ее, иначе просто #
-                            onClick={(e) => {
-                                e.preventDefault(); // Чтобы предотвратить стандартное поведение ссылки, если используется onItemClick
-                                onItemClick(item.name);
-                            }}
-                            className="sidebar-link"
-                        >
-                            <span className="sidebar-icon">{item.icon}</span> {/* Отображение иконки */}
-                            <span className="sidebar-name">{item.name}</span>
-                        </a>
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
+import PropTypes from 'prop-types';
+import { FaTimes } from 'react-icons/fa';
+import styles from './Sidebar.module.scss';
+
+
+const Sidebar = ({ items, selected, onItemClick }) => (
+  <nav className={styles.sidebar}>
+    <ul className={styles.list}>
+      {items.map(item => (
+        <li
+          key={item.name}
+          className={item.name === selected ? styles.active : ''}
+        >
+          <button
+            className={styles.link}
+            onClick={() => onItemClick(item.name)}
+          >
+            <span className={styles.icon}>{item.icon}</span>
+            <span className={styles.text}>{item.name}</span>
+          </button>
+        </li>
+      ))}
+    </ul>
+  </nav>
+);
+
+Sidebar.propTypes = {
+  items: PropTypes.arrayOf(
+    PropTypes.shape({ name: PropTypes.string, icon: PropTypes.node })
+  ).isRequired,
+  selected: PropTypes.string,
+  onItemClick: PropTypes.func.isRequired
+};
+
+Sidebar.defaultProps = {
+  selected: ''
 };
 
 export default Sidebar;
-

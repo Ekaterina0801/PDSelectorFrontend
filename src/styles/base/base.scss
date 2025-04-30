@@ -1,0 +1,15 @@
+@use "@/styles/tokens" as t;
+body {
+  background-color: t.$color-background;
+  color: t.$color-grey-700;
+  font-family: "Rubik";
+  font-size: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+

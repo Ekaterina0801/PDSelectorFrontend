@@ -1,0 +1,83 @@
+@use "@/styles/index" as ui;
+.searchBar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+    .searchContainer {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 70%;
+  
+      input {
+        @include ui.form-control(ui.$radius-lg);
+      }
+      
+      .searchButton {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: ui.$color-primary;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s;
+        font-size: 1rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
+        &:hover {
+          background-color: ui.$color-primary-light;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+      }
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .searchBar {
+      .searchContainer {
+        width: 90%;
+  
+        input {
+          font-size: 0.9rem;
+          padding: 8px 35px 8px 12px;
+        }
+  
+        .searchButton {
+          right: 6px;
+          width: 28px;
+          height: 28px;
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .searchBar {
+      .searchContainer {
+        width: 100%;
+  
+        input {
+          font-size: 0.85rem;
+          padding: 8px 30px 8px 10px;
+        }
+  
+        .searchButton {
+          right: 5px;
+          width: 25px;
+          height: 25px;
+          font-size: 0.8rem;
+        }
+      }
+    }
+  }
+  

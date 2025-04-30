@@ -1,0 +1,17 @@
+@forward "./tokens";
+@forward "./mixins";
+
+// дальше переадресуем «ui-модули» (кнопки, формы, карточки…)
+@forward "ui/buttons";
+@forward "ui/forms";
+@forward "ui/cards";
+@forward "ui/overlay";
+@forward "ui/links";
+@forward "ui/tags";
+// и базовые настройки, reset, grid и т. п.
+@forward "base/base";
+@forward "base/grid";
+@forward "base/header";
+@forward "base/pagination";
+@forward "base/reset";
+@forward "base/typography";

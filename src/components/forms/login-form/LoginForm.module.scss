@@ -1,0 +1,70 @@
+@use "@/styles/index" as ui;
+.background {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    background: url('/images/back-reg.jpg') no-repeat center/cover;
+  }
+  
+  .loginContainer {
+    display: flex;
+    width: 80vw;
+    max-width: 800px;
+    background: ui.$color-white;
+    border-radius: 20px;
+    box-shadow: ui.$shadow-light;
+    overflow: hidden;
+    min-height: 500px;
+  }
+  
+  .loginImage {
+    flex: 1.5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+  
+    img {
+      max-width: 250px;
+      width: 100%;
+      border-radius: 15px;
+    }
+  }
+  
+  .loginContent {
+    flex: 2;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .welcomeText {
+    font-size: 2rem;
+    font-weight: 600;
+    color: ui.$color-primary;
+    margin-bottom: 30px;
+  }
+  
+  .loginButton {
+    width: 100%;
+    padding: 16px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #fff;
+    background: ui.$color-primary;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+  
+    &:hover {
+      background: ui.$color-primary-light;
+      color: ui.$color-primary;
+    }
+  }
+  

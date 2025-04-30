@@ -1,0 +1,16 @@
+@use "@/styles/tokens" as t;
+@mixin tag(
+  $bg: t.$color-primary-light,
+  $color: t.$color-primary,
+  $pad-v: t.$spacing-xs,
+  $pad-h: t.$spacing-sm,
+  $radius: t.$radius-lg
+) {
+  background-color: $bg;
+  color: $color;
+  padding: $pad-v $pad-h;
+  border-radius: $radius;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.2s, transform 0.2s;
+}

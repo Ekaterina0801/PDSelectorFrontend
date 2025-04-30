@@ -10,7 +10,7 @@ export const fetchTeams = async ({ input, trackId, isFull, projectType, technolo
     console.log("input", input);
     if (trackId) queryParams.append("track_id", trackId);
     if (isFull !== undefined) queryParams.append("is_full", isFull);
-    if (projectType) queryParams.append("project_type", projectType);
+    if (projectType) queryParams.append("projectType", projectType);
     if (technologies && technologies.length > 0) {
       technologies.forEach((techId) => queryParams.append("technologies", techId));
     }

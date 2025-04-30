@@ -1,0 +1,34 @@
+@use "@/styles/tokens" as t;
+// общий миксин для круглых кнопок-иконок
+@mixin btn-icon($size: 30px) {
+  background: t.$color-primary;
+  color: t.$color-white;
+  border: none;
+  border-radius: 50%;
+  width: $size; height: $size;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: background-color t.$transition-medium, transform t.$transition-fast;
+  box-shadow: t.$shadow-light;
+
+  &:hover {
+    background-color: t.$color-primary-light;
+    transform: scale(1.05);
+  }
+}
+
+// миксин для прямых кнопок
+@mixin btn($radius: t.$radius-sm, $bg: t.$color-primary) {
+  background: $bg;
+  color: t.$color-white;
+  border: none;
+  border-radius: $radius;
+  padding: t.$spacing-sm t.$spacing-md;
+  cursor: pointer;
+  transition: background-color t.$transition-medium, transform t.$transition-fast;
+  box-shadow: t.$shadow-light;
+
+  &:hover {
+    background-color: scale-color($bg, $lightness: 10%);
+  }
+}

@@ -1,0 +1,136 @@
+@use "@/styles/index" as ui;
+.profileContainer {
+  display: flex;
+  justify-content: center;
+  padding: ui.$spacing-lg;
+}
+
+.profileEditForm {
+  width: 100%;
+  max-width: 600px;
+  background: ui.$color-white;
+  border-radius: ui.$radius-md;
+  padding: ui.$spacing-lg;
+  box-shadow: ui.$shadow-strong;
+  border: 1px solid ui.$color-primary-light;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+
+  h2 {
+    margin-bottom: ui.$spacing-lg;
+    font-size: 1.5rem;
+    color: ui.$color-primary;
+    font-weight: 700;
+  }
+
+  label {
+    display: block;
+    margin-bottom: ui.$spacing-md;
+    font-size: 0.95rem;
+    color: ui.$color-grey-800;
+
+    input[type="text"],
+    input[type="number"] {
+      @include ui.form-control(ui.$radius-sm);
+      margin-top: ui.$spacing-xs;
+    }
+
+    .textCapture {
+      display: block;
+      margin-bottom: ui.$spacing-xs;
+      font-weight: 600;
+      color: ui.$color-grey-700;
+    }
+
+    .cardTags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: ui.$spacing-xs;
+      margin-top: ui.$spacing-xs;
+
+      .cardTag {
+        @include ui.tag();
+        display: inline-flex;
+        align-items: center;
+        gap: ui.$spacing-xs;
+
+        .removeIcon {
+          cursor: pointer;
+          font-size: 0.9rem;
+        }
+      }
+
+      .noTags {
+        color: ui.$color-grey-500;
+        font-style: italic;
+      }
+    }
+  }
+
+  .formButtons {
+    display: flex;
+    justify-content: flex-end;
+    gap: ui.$spacing-sm;
+    margin-top: ui.$spacing-lg;
+
+    button {
+      @include ui.btn(ui.$radius-sm, ui.$color-primary);
+      font-size: 0.9rem;
+      padding: ui.$spacing-xs ui.$spacing-md;
+
+      &.saveButton {
+        background-color: ui.$color-success;
+      }
+      &.cancelButton {
+        background-color: ui.$color-danger;
+      }
+
+      &:hover {
+        transform: translateY(-1px);
+      }
+    }
+  }
+}
+
+.technologiesList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: ui.$spacing-sm;
+  margin-top: ui.$spacing-md;
+
+  .technologyCheckbox {
+    display: flex;
+    align-items: center;
+    gap: ui.$spacing-xs;
+    input {
+      width: auto;
+      margin: 0;
+    }
+
+    label {
+      font-size: 0.95rem;
+      color: ui.$color-grey-800;
+    }
+  }
+}
+
+.modalContent {
+  background: ui.$color-white;
+  padding: ui.$spacing-lg;
+  border-radius: ui.$radius-md;
+  max-width: 500px;
+  margin: auto;
+
+  h2 {
+    margin-bottom: ui.$spacing-md;
+    color: ui.$color-primary;
+    font-size: 1.3rem;
+  }
+}
+
+// Adaptivity
+@include ui.respond-to(md) {
+  .profileEditForm {
+    padding: ui.$spacing-md;
+  }
+}

@@ -1,0 +1,72 @@
+@use '../BaseCard.module.scss'  as base;
+@use "@/styles/index" as ui;
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  gap: ui.$spacing-lg;
+  padding: ui.$spacing-lg;
+}
+
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid ui.$color-primary;
+  box-shadow: ui.$shadow-light;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.info {
+  text-align: center;
+  margin: 0 auto;
+}
+
+.track,
+.course {
+  font-size: 1.1rem;
+  color: #666;
+  margin-top: 4px;
+}
+
+.cardContent {
+  padding: ui.$spacing-lg;
+  display: flex;
+  flex-direction: column;
+  gap: ui.$spacing-md;
+}
+
+.card-body {
+  flex: 1;
+  text-align: left;
+}
+
+.card-actions {
+  padding: ui.$spacing-md;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.8), white 20%);
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+  border-top: 1px solid ui.$color-primary-light;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.card-button {
+  @include base.action-button(); 
+  width: 100%;
+  padding: ui.$spacing-md 0;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .avatar {
+    width: 100px;
+    height: 100px;
+  }
+}

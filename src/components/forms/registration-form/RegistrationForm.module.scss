@@ -1,0 +1,126 @@
+@use "@/styles/index" as ui;
+.background {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    background: url('/images/back-reg.jpg') no-repeat center/cover;
+  }
+  
+  .loginContainer {
+    display: flex;
+    width: 80vw;
+    max-width: 800px;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    overflow: hidden;
+    min-height: 500px;
+  }
+  
+  .loginImage {
+    flex: 1.5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+  
+    img {
+      max-width: 250px;
+      width: 100%;
+      border-radius: 15px;
+    }
+  }
+  
+  .loginContent {
+    flex: 2;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .welcomeText {
+    font-size: 2rem;
+    font-weight: 600;
+    color: ui.$color-primary;
+    margin-bottom: 30px;
+  }
+  
+  .registrationForm {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  
+    label {
+      text-align: left;
+      font-weight: 500;
+      color: #333;
+    }
+  
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+      transition: border-color 0.3s;
+  
+      &:focus {
+        border-color: ui.$color-primary;
+        outline: none;
+        box-shadow: 0 0 8px rgba(106,27,154,0.2);
+      }
+    }
+  }
+  
+  .inputError {
+    border-color: red !important;
+  }
+  
+  .errorText {
+    color: red;
+    font-size: 12px;
+    margin-top: -8px;
+  }
+  
+  .formButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  
+    button {
+      padding: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 30px;
+      cursor: pointer;
+      border: none;
+      transition: background 0.3s;
+    }
+  }
+  
+  .registerButton {
+    background: var(--purple);
+    color: #fff;
+  
+    &:hover {
+      background: #4b007d;
+    }
+  }
+  
+  .skipButton {
+    background: #ff5722;
+    color: #fff;
+  
+    &:hover {
+      background: #e64a19;
+    }
+  }
+  

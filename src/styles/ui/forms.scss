@@ -1,0 +1,16 @@
+@use "@/styles/tokens" as t;
+@mixin form-control($radius: t.$radius-md) {
+  width: 100%;
+  padding: t.$spacing-sm;
+  border: 1px solid t.$color-primary-light;
+  border-radius: $radius;
+  font-size: 1rem;
+  outline: none;
+  box-shadow: t.$shadow-light;
+  transition: border-color t.$transition-medium, box-shadow t.$transition-medium;
+
+  &:focus {
+    border-color: t.$color-primary;
+    box-shadow: t.$shadow-strong;
+  }
+}

@@ -1,0 +1,8 @@
+@use "@/styles/index" as ui;
+.mainContent {
+  flex: 1;
+  margin-top: 100px;
+  align-items: flex-start;
+  padding:   ui.$spacing-lg;
+  width: 100%;
+}

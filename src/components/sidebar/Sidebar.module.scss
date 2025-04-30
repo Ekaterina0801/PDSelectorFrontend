@@ -1,0 +1,55 @@
+@use "@/styles/index" as ui;
+
+.sidebar {
+  background: ui.$color-white;
+  border-radius: ui.$radius-md;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: ui.$spacing-lg;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.list li {
+  margin-bottom: ui.$spacing-md;
+}
+
+.list li:last-child {
+  margin-bottom: 0;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: ui.$spacing-sm;
+  background: none;
+  border: none;
+  padding: 0;
+  width: 100%;
+  font: inherit;
+  text-align: left;
+  color: ui.$color-text;
+  cursor: pointer;
+  border-radius: ui.$radius-sm;
+  transition: background 0.2s, color 0.2s;
+
+  &:hover {
+    background: ui.$color-grey-600;
+  }
+}
+
+.icon {
+  flex-shrink: 0;
+}
+
+.text {
+  flex: 1;
+}
+
+.active .link {
+  color: ui.$color-primary;
+  font-weight: 700;
+}

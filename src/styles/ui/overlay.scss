@@ -1,0 +1,28 @@
+@use "@/styles/tokens" as t;
+@mixin fullscreen-overlay($z: 1000) {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  display: flex; justify-content: center; align-items: center;
+  z-index: $z;
+}
+
+@mixin slide-in-up($duration: .4s) {
+  animation: slideIn $duration ease-out;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+@mixin respond-to($breakpoint) {
+    @if $breakpoint == sm {
+      @media (max-width: t.$breakpoint-sm) { @content; }
+    } @else if $breakpoint == md {
+      @media (max-width: t.$breakpoint-md) { @content; }
+    } @else if $breakpoint == lg {
+      @media (max-width: t.$breakpoint-lg) { @content; }
+    }
+  }
+

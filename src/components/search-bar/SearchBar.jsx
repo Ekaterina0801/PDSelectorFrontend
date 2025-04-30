@@ -1,24 +1,28 @@
 import React from 'react';
-import './style.css';
 import { useState } from 'react';
 
+import styles from './SearchBar.module.scss';
+
 const SearchBar = ({ onSearch }) => {
-  const [searchInput, setSearchInput] = useState("");
+  const [searchInput, setSearchInput] = useState('');
 
   const handleSearch = () => {
-    onSearch(searchInput); 
+    onSearch(searchInput);
   };
 
   return (
-    <div className="search-bar">
-      <div className="search-container">
+    <div className={styles.searchBar}>
+      <div className={styles.searchContainer}>
         <input
           type="text"
           value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)} 
+          onChange={e => setSearchInput(e.target.value)}
           placeholder="Поиск"
         />
-        <button className="search-button" onClick={handleSearch}>
+        <button
+          className={styles.searchButton}
+          onClick={handleSearch}
+        >
           🔍
         </button>
       </div>

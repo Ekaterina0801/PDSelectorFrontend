@@ -1,0 +1,100 @@
+@use "@/styles/index" as ui;
+
+// === GRID-КОНТЕЙНЕР ===
+.container {
+  @include ui.container();
+  display: flex;
+  gap: ui.$spacing-lg;
+
+  @include ui.respond-to(lg) {
+    flex-direction: column;
+  }
+}
+
+.sidebarWrapper {
+  @include ui.col(3);
+  @include ui.col-responsive;
+  @include ui.respond-to(lg) {
+    display: none;
+  }
+}
+
+// === ОСНОВНОЙ КОНТЕНТ ===
+.contentColumn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: ui.$spacing-lg;
+}
+
+.pageTitle {
+  margin: 0 0 ui.$spacing-md;
+  font-size: 2rem;
+  font-weight: 700;
+  color: ui.$color-primary;
+}
+
+.cards {
+  display: grid;
+  gap: ui.$spacing-md;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+
+.successMessage {
+  color: ui.$color-success;
+  font-weight: 600;
+  margin-bottom: ui.$spacing-md;
+}
+
+.error {
+  color: ui.$color-danger;
+  font-weight: 600;
+  margin-bottom: ui.$spacing-md;
+}
+
+// === НИЖНЯЯ НАВИГАЦИЯ ===
+.bottomNav {
+  display: none;
+
+  @include ui.respond-to(lg) {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: ui.$color-white;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+    padding: ui.$spacing-sm 0;
+    justify-content: space-around;
+    z-index: 2000;
+  }
+}
+
+.navItem {
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font: inherit;
+  color: ui.$color-grey-600;
+  cursor: pointer;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: ui.$color-primary;
+  }
+}
+
+.navIcon {
+  font-size: 1.4rem;
+  margin-bottom: 4px;
+}
+
+.navLabel {
+  font-size: 0.75rem;
+}
+
+.active {
+  color: ui.$color-primary;
+}

@@ -1,0 +1,223 @@
+@use "@/styles/index" as ui;
+
+// обёртка
+.container {
+  @include ui.container(100%);
+  display: flex;
+  gap: ui.$spacing-lg;
+  justify-content: center;
+  padding-top: ui.$spacing-lg;
+
+  @include ui.respond-to(lg) {
+    flex-direction: column;
+    align-items: center;
+  }
+  }
+  
+// десктоп-сайдбар
+.filtersColumn {
+  @include ui.col(3);
+  @include ui.col-responsive;
+  padding-right: ui.$spacing-md;
+
+  @include ui.respond-to(lg) {
+    display: none;
+  }
+}
+
+// основной блок
+.contentColumn {
+  @include ui.col(9);
+  @include ui.col-responsive;
+  display: flex;
+  flex-direction: column;
+  gap: ui.$spacing-lg;
+  align-items: center;
+}
+
+// кнопка открытия фильтров до 1024px
+.mobileFiltersButton {
+  display: none;
+
+  @include ui.respond-to (lg) {
+    display: flex;
+    position: sticky;
+    top: calc(ui.$spacing-md + 4rem);
+    z-index: 1500;
+    width: calc(100% - 2 * ui.$spacing-md);
+    margin: ui.$spacing-md auto;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+
+    padding: ui.$spacing-sm;
+    background: ui.$color-primary;
+    color: ui.$color-white;
+    font-weight: 700;
+    border: none;
+    border-radius: ui.$radius-md;
+    box-shadow: ui.$shadow-light;
+    cursor: pointer;
+    transition: background 0.2s ease;
+
+    svg {
+      flex-shrink: 0;
+    }
+    &:hover {
+      background: ui.$color-primary;
+    }
+  }
+}
+
+// шапка контента
+.contentHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: ui.$spacing-md;
+  width: 100%;
+  margin-bottom: ui.$spacing-md;
+
+  @include ui.respond-to (md) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.pageTitle {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  color: ui.$color-primary;
+  text-align: left;
+
+  @include ui.respond-to (md) {
+    text-align: center;
+    width: 100%;
+  }
+}
+
+.sortControls {
+  display: flex;
+  align-items: center;
+  gap: ui.$spacing-sm;
+
+  @include ui.respond-to (md) {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+.sortLabel {
+  font-weight: 600;
+  color: ui.$color-primary;
+}
+
+.sortSelect {
+  @include ui.form-control(ui.$radius-sm);
+
+  @include ui.respond-to (sm) {
+    width: 100%;
+  }
+}
+
+.resetButton {
+  @include ui.btn(ui.$radius-sm, ui.$color-primary);
+  margin-left: ui.$spacing-sm;
+
+  @include ui.respond-to (sm) {
+    margin: ui.$spacing-sm auto 0;
+  }
+}
+
+// сетка карточек
+.teamsGrid {
+  display: grid;
+  gap: ui.$spacing-md;
+  grid-template-columns: repeat(auto-fit, minmax(280px, auto));
+  justify-content: center;
+  justify-items: center;
+
+  @include ui.respond-to (sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.paginationControls {
+  display: flex;
+  gap: ui.$spacing-md;
+}
+
+.paginationButton {
+  @include ui.btn(ui.$radius-sm, ui.$color-primary);
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.pageIndicator {
+  font-weight: 600;
+}
+
+.error,
+.emptyState {
+  text-align: center;
+  font-weight: 600;
+  margin: ui.$spacing-lg 0;
+}
+
+.error {
+  color: ui.$color-danger;
+}
+
+.emptyState {
+  color: ui.$color-warning;
+}
+
+// модалка
+.filtersModal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 2000;
+}
+
+.filtersModalOpen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.filtersModalContent {
+  width: 90%;
+  max-width: 360px;
+  margin: auto;
+  padding: ui.$spacing-lg;
+  background: ui.$color-white;
+  border-radius: ui.$radius-md;
+  box-shadow: ui.$shadow-light;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.filtersModalClose {
+  position: absolute;
+  top: ui.$spacing-sm;
+  right: ui.$spacing-sm;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.filtersModalHeader {
+  margin-bottom: ui.$spacing-md;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: ui.$color-primary;
+  text-align: center;
+}

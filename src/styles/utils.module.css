@@ -1,0 +1,10 @@
+.flex { display: flex; }
+.flexCenter { display: flex; justify-content: center; align-items: center; }
+.flexCol { display: flex; flex-direction: column; }
+.mb-1 { margin-bottom: spacing; }
+.mr-1 { margin-right: spacing; }
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -1,10 +1,10 @@
-import LoginForm from "./components/login-form/LoginForm"
+import LoginForm from "./components/forms/login-form/LoginForm"
 import Registration from './pages/RegistrationPage';
-import TeamsPage from './pages/TeamsPage';
-import StudentProfilePage from "./pages/StudentProfile";
+import TeamsPage from './pages/teams-page/TeamsPage';
+import StudentProfilePage from "./pages/student-profile-page/StudentProfile";
 import AdminPage from './pages/AdminPage';
-import TeamProfilePage from './pages/TeamProfilePage';
-import StudentsPage from './pages/StudentsPage';
+import TeamProfilePage from './pages/team-profile-page/TeamProfilePage';
+import StudentsPage from './pages/students-page/StudentsPage';
 import AuthPage from './pages/AuthPage';
 
 const routes = [

@@ -1,0 +1,34 @@
+@use "@/styles/tokens" as t;
+.header {
+    width: 100%;
+    background-color: t.$color-primary;
+    color: t.$color-white;
+    padding: t.$spacing-md t.$spacing-lg;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: t.$shadow-strong;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  .header-logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+  
+  .header-nav {
+    display: flex;
+    gap: t.$spacing-lg;
+  
+    a {
+      color: t.$color-white;
+      font-weight: 600;
+      transition: color 0.3s;
+  
+      &:hover {
+        color: t.$color-primary-light;
+      }
+    }
+  }

@@ -1,84 +1,90 @@
-import React, {useState, useRef, useEffect} from 'react';
-import './style.css';
-import { NavLink } from 'react-router-dom';
-import { FaChevronDown } from 'react-icons/fa';
-import useTracks from '../../hooks/useTracks';
-import { saveTrackId } from '../../hooks/cookieUtils';
-import { getCurrentStudentId } from '../../api/apiStudentsController';
-const Navbar = () => {
-  const { tracks, selectedTrack, setSelectedTrack } = useTracks();
+import React, { useState, useRef, useEffect } from "react";
+import { NavLink } from "react-router-dom";
+import { FaChevronDown } from "react-icons/fa";
+import { observer } from "mobx-react";
+import authStore from "../../stores/authStore";
+import trackStore from "../../stores/trackStore";
+
+import styles from './Navbar.module.scss';
+const Navbar = observer(() => {
+  const { tracks, fetchTracks } = trackStore;
+  const trackId = authStore.trackId;
+  const studentId = authStore.studentId;
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [currentStudentId, setCurrentStudentId] = useState(null);
-
-  useEffect(() => {
-    const fetchUserId = async () => {
-        const userId = await getCurrentStudentId(); 
-        if (userId) {
-            setCurrentStudentId(userId); 
-        }
-    };
-    
-    fetchUserId(); 
-}, []); 
-
+  const [menuOpen, setMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  const handleTrackChange = (trackId) => {
-      setSelectedTrack(trackId);
-      saveTrackId(trackId);
-      setIsDropdownOpen(false);
-      window.location.reload();
-  }
+  useEffect(() => {
+    fetchTracks();
+  }, [fetchTracks]);
 
-  const selectedTrackName = tracks.find(track => track.id === Number(selectedTrack))?.name || "Выберите трек";
+  const toggleMenu = () => setMenuOpen(prev => !prev);
+
+  const handleTrackChange = id => {
+    authStore.setTrackId(id);
+    setIsDropdownOpen(false);
+  };
+
+  const selectedTrackName =
+    tracks.find(t => t.id === parseInt(trackId, 10))?.name || 'Выберите трек';
 
   return (
-      <div className="navbar">
-          <div className="logo"><img src="/images/logo4.png" alt="Logo" /></div>
-          <div className="nav-links">
-              <NavLink
-                  to="/teams"
-                  className={({ isActive }) => (isActive ? "active-link" : "")}
-              >
-                  Команды
-              </NavLink>
-              <NavLink
-                  to="/students"
-                  className={({ isActive }) => (isActive ? "active-link" : "")}
-              >
-                  Участники
-              </NavLink>
-              {currentStudentId && (
-                  <NavLink
-                      to={`/students/${currentStudentId}`}
-                      className={({ isActive }) => (isActive ? "active-link" : "")}
-                  >
-                      Профиль
-                  </NavLink>
-              )}
-          </div>
-          <div className="track-selector" ref={dropdownRef}>
-              <div
-                  className={`select-icon ${isDropdownOpen ? 'open' : ''}`}
-                  onClick={() => setIsDropdownOpen((prev) => !prev)} 
-              >
-                  <span>{selectedTrackName}</span>
-                  <FaChevronDown />
-              </div>
-              {isDropdownOpen && (
-                  <div className="dropdown">
-                      <ul>
-                          {tracks.map((track) => (
-                              <li key={track.id} onClick={() => handleTrackChange(track.id)}>
-                                  {track.name}
-                              </li>
-                          ))}
-                      </ul>
-                  </div>
-              )}
-          </div>
+    <nav className={styles.NavbarItems}>
+      <div className={styles.logo}>
+        <h3>Конструктор команд</h3>
       </div>
+      <div className={styles.HamburgerCrossIcons} onClick={toggleMenu}>
+        <i className={menuOpen ? 'fas fa-times' : 'fas fa-bars'} />
+      </div>
+      <ul className={`${styles.MenuItems} ${menuOpen ? styles.active : ''}`}>
+        <li>
+          <NavLink to="/teams" className="nav-link">
+            Команды
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/students" className="nav-link">
+            Участники
+          </NavLink>
+        </li>
+        {studentId && (
+          <li>
+            <NavLink to={`/students/${studentId}`} end className="nav-link">
+              Профиль
+            </NavLink>
+          </li>
+        )}
+        <li style={{ width: '100%', position: 'relative' }}>
+          <div className={styles.trackSelector} ref={dropdownRef}>
+            <div
+              className={`${styles.selectIcon} ${
+                isDropdownOpen ? styles.open : ''
+              }`}
+              onClick={() => setIsDropdownOpen(prev => !prev)}
+            >
+              <span>{selectedTrackName}</span>
+              <FaChevronDown />
+            </div>
+            {isDropdownOpen && (
+              <div className={styles.dropdown}>
+                <ul>
+                  {tracks.map(track => (
+                    <li
+                      key={track.id}
+                      onClick={() => handleTrackChange(track.id)}
+                    >
+                      {track.name}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        </li>
+      </ul>
+    </nav>
   );
-};
+});
 
 export default Navbar;

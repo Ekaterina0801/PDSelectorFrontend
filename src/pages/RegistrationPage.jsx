@@ -2,19 +2,19 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { API_BASE_URL } from "../config/apiConfig";
-import RegistrationForm from "../components/login-form/RegistrationForm";
-
+import RegistrationForm from "../components/forms/registration-form/RegistrationForm";
+import authStore from "../stores/authStore";
+import studentStore from "../stores/studentStore";
 const Registration = () => {
   const navigate = useNavigate();
 
   const handleFormSubmit = async (formData) => {
     try {
-      const userId = await getUserIdFromServer();
-      const studentData = { ...formData, user_id: userId };
-      console.log(studentData);
-      await axios.post(`${API_BASE_URL}/students`, studentData, {
-        withCredentials: true,
-      });
+      await authStore.checkAuth();
+      console.log("userId", authStore.user.id);
+      const studentData = { ...formData, user_id: authStore.user.id };
+      console.log('student',studentData);
+      await studentStore.createStudent(authStore.trackId,studentData);
 
       alert("Регистрация завершена!");
       navigate("/teams");
@@ -27,13 +27,6 @@ const Registration = () => {
   const handleSkip = () => {
     console.log("Пользователь продолжил без регистрации");
     navigate("/teams"); 
-  };
-
-  const getUserIdFromServer = async () => {
-    const response = await axios.get(`${API_BASE_URL}/users/me`, {
-      withCredentials: true,
-    });
-    return response.data.id;
   };
 
   return <RegistrationForm onSubmit={handleFormSubmit} onSkip={handleSkip} />;

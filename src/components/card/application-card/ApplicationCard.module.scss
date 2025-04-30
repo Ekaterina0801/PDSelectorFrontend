@@ -1,0 +1,31 @@
+@use "@/styles/index" as ui;
+@use '../BaseCard.module.scss'  as base;
+.appBackground {
+  background: #f7f7f7;
+}
+
+.statusTag {
+
+  @include base.action-button(); 
+
+  background-color: ui.$color-warning;
+  display: inline-block;
+  margin-top:    ui.$spacing-sm;
+}
+
+.approve {
+  @include base.action-button(); 
+  background: ui.$color-success;
+}
+
+.reject,
+.cancel {
+  @include base.action-button(); 
+  background: ui.$color-danger;
+}
+
+.apply,
+.view {
+  @include base.action-button(); 
+  background: ui.$color-primary;
+}

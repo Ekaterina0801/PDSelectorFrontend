@@ -1,6 +1,6 @@
 import { useState } from "react";
-import "./style.css";
 import Modal from "../forms/modal/Modal";
+import styles from "./ProfileEditForm.module.scss";
 
 const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => {
   const [formData, setFormData] = useState({
@@ -8,51 +8,46 @@ const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => 
     technologies: studentData.technologies || [],
   });
   const [showModal, setShowModal] = useState(false);
-  const [modalType, setModalType] = useState("");
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleRemoveTechnology = (idToRemove) => {
-    const updatedTechnologies = formData.technologies.filter(
-      (tech) => tech.id !== idToRemove
-    );
-    setFormData({ ...formData, technologies: updatedTechnologies });
+  const handleRemoveTechnology = idToRemove => {
+    setFormData(prev => ({
+      ...prev,
+      technologies: prev.technologies.filter(t => t.id !== idToRemove),
+    }));
   };
 
-  const toggleModal = (type = "") => {
-    setModalType(type);
-    setShowModal((prev) => !prev);
-  };
+  const toggleModal = () => setShowModal(prev => !prev);
 
   const handleSave = () => {
-    const flatStudentData = {
+    const flatData = {
       about_self: formData.about_self,
       contacts: formData.contacts,
       course: formData.course,
       group_number: formData.group_number,
-      technologies: formData.technologies, 
-      user: formData.user
+      technologies: formData.technologies,
+      user: formData.user,
     };
-    
-    onSave(flatStudentData);
+    onSave(flatData);
   };
 
-  const handleTechnologyChange = (tech) => {
-    const isSelected = formData.technologies.some((t) => t.id === tech.id);
-
-    const updatedTechnologies = isSelected
-      ? formData.technologies.filter((t) => t.id !== tech.id) 
-      : [...formData.technologies, tech]; 
-
-    setFormData({ ...formData, technologies: updatedTechnologies });
+  const handleTechnologyChange = tech => {
+    const exists = formData.technologies.some(t => t.id === tech.id);
+    setFormData(prev => ({
+      ...prev,
+      technologies: exists
+        ? prev.technologies.filter(t => t.id !== tech.id)
+        : [...prev.technologies, tech],
+    }));
   };
 
   return (
-    <div className="profile-container">
-      <div className="profile-edit-form">
+    <div className={styles.profileContainer}>
+      <div className={styles.profileEditForm}>
         <h2>Редактировать профиль</h2>
 
         <label>
@@ -60,7 +55,7 @@ const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => 
           <input
             type="text"
             name="fullName"
-            value={formData.user?.fio || ""}
+            value={formData.user?.fio || ''}
             onChange={handleChange}
           />
         </label>
@@ -70,7 +65,7 @@ const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => 
           <input
             type="number"
             name="course"
-            value={formData.course || ""}
+            value={formData.course || ''}
             onChange={handleChange}
           />
         </label>
@@ -79,8 +74,8 @@ const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => 
           Группа:
           <input
             type="text"
-            name="group"
-            value={formData.group_number || ""}
+            name="group_number"
+            value={formData.group_number || ''}
             onChange={handleChange}
           />
         </label>
@@ -90,7 +85,7 @@ const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => 
           <input
             type="text"
             name="about_self"
-            value={formData.about_self || ""}
+            value={formData.about_self || ''}
             onChange={handleChange}
           />
         </label>
@@ -99,21 +94,21 @@ const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => 
           Контакты:
           <input
             type="text"
-            name="contact"
-            value={formData.contacts || ""}
+            name="contacts"
+            value={formData.contacts || ''}
             onChange={handleChange}
           />
         </label>
 
         <label>
-          <span className="text-capture">Технологии:</span>
-          <div className="card-tags">
+          <span className={styles.textCapture}>Технологии:</span>
+          <div className={styles.cardTags}>
             {formData.technologies.length > 0 ? (
-              formData.technologies.map((tech) => (
-                <span key={tech.id} className="card-tag">
+              formData.technologies.map(tech => (
+                <span key={tech.id} className={styles.cardTag}>
                   {tech.name}
                   <span
-                    className="remove-icon"
+                    className={styles.removeIcon}
                     onClick={() => handleRemoveTechnology(tech.id)}
                   >
                     🗑
@@ -121,38 +116,48 @@ const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => 
                 </span>
               ))
             ) : (
-              <p className="no-tags">-</p>
+              <p className={styles.noTags}>-</p>
             )}
           </div>
         </label>
 
-        <div className="form-buttons">
-          <button onClick={() => toggleModal("add")}>Добавить технологию</button>
-          <button className="save-button" onClick={handleSave}>
+        <div className={styles.formButtons}>
+          <button onClick={toggleModal}>Добавить технологию</button>
+          <button
+            className={styles.saveButton}
+            onClick={handleSave}
+          >
             Сохранить
           </button>
-          <button className="cancel-button" onClick={onCancel}>
+          <button
+            className={styles.cancelButton}
+            onClick={onCancel}
+          >
             Отменить
           </button>
         </div>
       </div>
 
-      {showModal && modalType === "add" && (
-        <Modal show={showModal} onClose={() => toggleModal()}>
-          <div>
+      {showModal && (
+        <Modal show={showModal} onClose={toggleModal}>
+          <div className={styles.modalContent}>
             <h2>Добавить технологию</h2>
-            <div className="technologies-list">
-              {allTechnologies && allTechnologies.length > 0 ? (
-                allTechnologies.map((tech) => (
-                  <div key={tech.id} className="technology-checkbox">
+            <div className={styles.technologiesList}>
+              {allTechnologies?.length ? (
+                allTechnologies.map(tech => (
+                  <div
+                    key={tech.id}
+                    className={styles.technologyCheckbox}
+                  >
                     <input
                       type="checkbox"
                       id={`tech-${tech.id}`}
-                      name="technologies"
-                      checked={formData.technologies.some((t) => t.id === tech.id)}
+                      checked={formData.technologies.some(t => t.id === tech.id)}
                       onChange={() => handleTechnologyChange(tech)}
                     />
-                    <label htmlFor={`tech-${tech.id}`}>{tech.name}</label>
+                    <label htmlFor={`tech-${tech.id}`}>
+                      {tech.name}
+                    </label>
                   </div>
                 ))
               ) : (
