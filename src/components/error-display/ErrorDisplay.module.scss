@@ -1,24 +1,63 @@
-@use '@/styles/index' as ui;
+@use "@/styles/index" as ui;
+@use "sass:meta";
 
-.container {
-  @include ui.container(100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+.backdrop {
+  @include ui.fullscreen-overlay(1000);
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal {
+  background: ui.$color-white;
+  border-radius: ui.$radius-md;
   padding: ui.$spacing-lg;
+  box-shadow: ui.$shadow-strong;
+  max-width: 500px;
+  width: 90%;
   text-align: center;
-  color: ui.$color-danger;
-  min-height: 200px;
+  position: relative;
+  @include ui.slide-in-up(0.4s);
+}
+
+.closeButton {
+  position: absolute;
+  top: ui.$spacing-sm;
+  right: ui.$spacing-sm;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  color: ui.$color-grey-600;
+
+  &:hover {
+    color: ui.$color-danger;
+  }
 }
 
 .image {
-  max-width: 200px;
-  width: 100%;
+    width: 150px;            
+    max-width: 100%;         
+    height: auto;
   margin-bottom: ui.$spacing-md;
+  margin: auto;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: ui.$color-danger;
 }
 
 .message {
-  font-size: 1.1rem;
+  margin: ui.$spacing-md 0;
+  font-size: 1rem;
+  color: ui.$color-text;
+}
+
+.actionButton {
+  @include ui.btn(ui.$radius-sm, ui.$color-primary);
+  padding: ui.$spacing-sm ui.$spacing-lg;
   font-weight: 600;
+  margin-top: ui.$spacing-sm;
 }

@@ -10,7 +10,6 @@
   cursor: pointer;
   transition: background-color t.$transition-medium, transform t.$transition-fast;
   box-shadow: t.$shadow-light;
-
   &:hover {
     background-color: t.$color-primary-light;
     transform: scale(1.05);
@@ -25,6 +24,8 @@
   border-radius: $radius;
   padding: t.$spacing-sm t.$spacing-md;
   cursor: pointer;
+  font-weight: 600;
+  margin: auto;
   transition: background-color t.$transition-medium, transform t.$transition-fast;
   box-shadow: t.$shadow-light;
 

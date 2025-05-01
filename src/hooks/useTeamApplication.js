@@ -4,13 +4,6 @@ import { useLocalObservable } from 'mobx-react-lite';
 import applicationStore from '../stores/applicationStore';
 import useSuccessMessage from './useSuccessMessage';
 
-/**
- * Hook to manage student application for a team.
- * @param {string} teamId - ID of the team.
- * @param {string} studentId - ID of the student (current user).
- * @param {boolean} isCaptain - Whether the current user is the team's captain.
- * @returns {object} { showButton, buttonText, buttonClass, onAction }
- */
 export function useTeamApplication({ teamId, studentId, isCaptain }) {
     const { showSuccessMessage } = useSuccessMessage();
     const store = useLocalObservable(() => applicationStore);
@@ -83,6 +76,7 @@ export function useTeamApplication({ teamId, studentId, isCaptain }) {
       showButton: true,
       buttonText,
       buttonClass,
+      error: store.error,
       onAction,
     };
   }

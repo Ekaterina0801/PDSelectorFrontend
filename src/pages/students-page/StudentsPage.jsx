@@ -11,6 +11,7 @@ import authStore from "../../stores/authStore";
 import Loader from "../../components/spinner/Loader";
 import MainContent from "../../components/main-section/MainSection";
 import styles from './StudentsPage.module.scss';
+import ErrorModal from "../../components/error-display/ErrorDisplay";
 const StudentsPage = observer(() => {
   const { trackId, isLoading } = authStore;
   const { students, loading, error, allFilters, filters, hasError } = studentStore;
@@ -60,7 +61,7 @@ const StudentsPage = observer(() => {
 
   const renderStudents = () => {
     if (loading) return <Loader />;
-    if (hasError) return <ErrorDisplay message={error} />;
+    if (!studentStore.loading&&studentStore.error) return <ErrorModal message={studentStore.error} onClose={() => studentStore.setError(null)} />;
     if (!students.length) {
       return <div className={styles.emptyState}>Студенты не найдены</div>;
     }
@@ -85,8 +86,6 @@ const StudentsPage = observer(() => {
       <Navbar />
       <MainContent>
         <SearchBar onSearch={handleSearch} />
-
-        {/* кнопка открытия фильтров на планшете/мобиле */}
         <button
           className={styles.mobileFiltersButton}
           onClick={() => setShowMobileFilters(true)}
@@ -96,7 +95,6 @@ const StudentsPage = observer(() => {
         </button>
 
         <div className={styles.container}>
-          {/* десктоп-сайдбар */}
           <aside className={styles.filtersColumn}>
             <StudentFilter
               availableFilters={allFilters}
@@ -104,8 +102,6 @@ const StudentsPage = observer(() => {
               onApply={handleApplyFilters}
             />
           </aside>
-
-          {/* основной контент */}
           <section className={styles.contentColumn}>
             <div className={styles.contentHeader}>
               <h1 className={styles.pageTitle}>Участники</h1>
@@ -131,7 +127,6 @@ const StudentsPage = observer(() => {
             </div>
 
             {renderStudents()}
-
             <div className={styles.paginationControls}>
               <button
                 className={styles.paginationButton}

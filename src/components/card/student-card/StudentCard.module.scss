@@ -1,72 +1,192 @@
 @use '../BaseCard.module.scss'  as base;
 @use "@/styles/index" as ui;
-.cardContent {
+
+.studentCard {
   display: flex;
   flex-direction: column;
-  gap: ui.$spacing-lg;
-  padding: ui.$spacing-lg;
-}
-
-.avatar {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 4px solid ui.$color-primary;
+  background: ui.$color-white;
+  border-radius: ui.$radius-lg;
   box-shadow: ui.$shadow-light;
-  transition: transform 0.3s ease;
+  border: 1px solid ui.$color-primary-light;
+  overflow: hidden;
+  
 
-  &:hover {
-    transform: scale(1.05);
+  .header {
+    height: 250px;
+    box-sizing: border-box;
+    padding: ui.$spacing-md;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: ui.$spacing-sm;
   }
-}
 
-.info {
-  text-align: center;
-  margin: 0 auto;
-}
-
-.track,
-.course {
-  font-size: 1.1rem;
-  color: #666;
-  margin-top: 4px;
-}
-
-.cardContent {
-  padding: ui.$spacing-lg;
-  display: flex;
-  flex-direction: column;
-  gap: ui.$spacing-md;
-}
-
-.card-body {
-  flex: 1;
-  text-align: left;
-}
-
-.card-actions {
-  padding: ui.$spacing-md;
-  background: linear-gradient(to bottom, rgba(255,255,255,0.8), white 20%);
-  border-bottom-left-radius: 24px;
-  border-bottom-right-radius: 24px;
-  border-top: 1px solid ui.$color-primary-light;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.card-button {
-  @include base.action-button(); 
-  width: 100%;
-  padding: ui.$spacing-md 0;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-@media (max-width: 768px) {
   .avatar {
-    width: 100px;
-    height: 100px;
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid ui.$color-primary;
+    box-shadow: ui.$shadow-light;
+  }
+
+  .name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: ui.$color-primary;
+    text-align: center;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .course {
+    font-size: 1rem;
+    color: ui.$color-text;
+    text-align: center;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .body {
+    flex: 1;
+    padding: ui.$spacing-md;
+    display: flex;
+    flex-direction: column;
+    gap: ui.$spacing-md;
+  }
+
+  .resume {
+    flex: 1;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    color: ui.$color-text;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: ui.$spacing-xs;
+  }
+
+  .tag {
+    background: ui.$color-primary-light;
+    color: ui.$color-primary;
+    padding: ui.$spacing-xs ui.$spacing-sm;
+    border-radius: ui.$radius-lg;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: background 0.2s, transform 0.2s;
+
+    &:hover {
+      background: ui.$color-primary;
+      color: ui.$color-white;
+      transform: translateY(-2px);
+    }
+  }
+
+  .noTags {
+    color: ui.$color-text;
+    font-style: italic;
+  }
+
+  .footer {
+    padding: ui.$spacing-md;
+    background: ui.$color-white;
+    border-top: 1px solid ui.$color-primary-light;
+    display: flex;
+    justify-content: center;
+  }
+
+  .actionLink {
+    text-decoration: none;
+    width: 100%;
+  }
+
+  .actionButton {
+    width: 100%;
+    @include ui.btn(ui.$radius-sm, ui.$color-primary);
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  @include ui.respond-to(lg) {
+    .header {
+      padding: ui.$spacing-sm;
+    }
+    .avatar {
+      width: 80px;
+      height: 80px;
+    }
+    .name {
+      font-size: 1.1rem;
+      -webkit-line-clamp: 2;
+    }
+    .course {
+      font-size: 0.9rem;
+    }
+    .body {
+      padding: ui.$spacing-sm;
+    }
+    .resume {
+      font-size: 0.9rem;
+    }
+    .tag {
+      font-size: 0.75rem;
+      padding: ui.$spacing-xs ui.$spacing-xs;
+    }
+    .footer {
+      padding: ui.$spacing-sm;
+    }
+    .actionButton {
+      font-size: 0.9rem;
+      padding: ui.$spacing-xs 0;
+    }
+  }
+
+  // === Мобильные (<768px) ===
+  @include ui.respond-to(md) {
+    .header {
+      padding: ui.$spacing-xs;
+    }
+    .avatar {
+      width: 64px;
+    }
+    .name {
+      font-size: 1rem;
+      -webkit-line-clamp: 2;
+    }
+    .course {
+      font-size: 0.8rem;
+    }
+    .body {
+      padding: ui.$spacing-xs;
+    }
+    .resume {
+      font-size: 0.85rem;
+      -webkit-line-clamp: 3; /* чуть больше строк, если нужно */
+    }
+    .tag {
+      font-size: 0.7rem;
+      padding: ui.$spacing-xs ui.$spacing-xs;
+    }
+    .footer {
+      padding: ui.$spacing-xs;
+    }
+    .actionButton {
+      font-size: 0.85rem;
+      padding: ui.$spacing-xs 0;
+    }
   }
 }

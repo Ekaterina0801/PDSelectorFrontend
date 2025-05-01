@@ -1,7 +1,7 @@
 @use "@/styles/tokens" as t;
 @use "@/styles/ui/buttons" as bt;
 @use "@/styles/ui/forms" as f;
-.pagination {
+@mixin pagination {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -11,7 +11,6 @@
     button {
       @include bt.btn;
       padding: t.$spacing-sm t.$spacing-md;
-      font-size: 1rem;
   
       &:disabled {
         opacity: 0.5;
@@ -20,12 +19,11 @@
     }
   
     span {
-      font-size: 1rem;
       font-weight: 600;
     }
   }
   
-  .sort-pagination-controls {
+  @mixin sort-pagination-controls {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -36,6 +34,7 @@
     border-radius: t.$radius-md;
     box-shadow: t.$shadow-light;
     border: 1px solid t.$color-primary-light;
+    margin: auto;
   
     .sort-block {
       display: flex;

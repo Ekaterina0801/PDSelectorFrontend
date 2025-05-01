@@ -1,7 +1,6 @@
 @use "@/styles/tokens" as t;
 body {
   background-color: t.$color-background;
-  color: t.$color-grey-700;
   font-family: "Rubik";
   font-size: 16px;
   display: flex;

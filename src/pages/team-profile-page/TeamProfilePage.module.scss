@@ -7,10 +7,6 @@
     gap: ui.$spacing-md;
   }
   
-  .studentListItem {
-    margin-bottom: ui.$spacing-md;
-  }
-  
   .loading {
     text-align: center;
     font-size: 1.25rem;
@@ -31,18 +27,28 @@
     font-weight: 600;
     margin: ui.$spacing-lg 0;
   }
-  
   .studentsGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: ui.$spacing-md;
+  
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+
+    @include ui.respond-to(lg) {
+      grid-template-columns: repeat(2, minmax(240px, 1fr));
+    }
+  
+    @include ui.respond-to(md) {
+      grid-template-columns: 1fr;
+    }
   }
+  
   
   .pageTitle {
     font-size: 1.75rem;
     font-weight: 700;
     color: ui.$color-primary;
     margin: ui.$spacing-md 0;
+    margin: auto;
   }
   
   .successMessage {

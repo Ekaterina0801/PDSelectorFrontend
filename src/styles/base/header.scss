@@ -1,16 +1,12 @@
 @use "@/styles/tokens" as t;
 .header {
     width: 100%;
-    background-color: t.$color-primary;
     color: t.$color-white;
     padding: t.$spacing-md t.$spacing-lg;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    box-shadow: t.$shadow-strong;
-    position: sticky;
     top: 0;
-    z-index: 1000;
   }
   
   .header-logo {

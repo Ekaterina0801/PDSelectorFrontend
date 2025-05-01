@@ -1,7 +1,6 @@
 @use "./tokens" as t;
 
 
-// общий контейнер/обёртка карточек
 @mixin cards-layout($gap: t.$spacing-md) {
   display: flex;
   flex-wrap: wrap;
@@ -9,16 +8,6 @@
   justify-content: center;
 }
 
-
-// общий контейнер/обёртка карточек
-@mixin cards-layout($gap: t.$spacing-md) {
-  display: flex;
-  flex-wrap: wrap;
-  gap: $gap;
-  justify-content: center;
-}
-
-// центровка абсолютного элемента
 @mixin abs-center {
   position: absolute;
   top: 50%; left: 50%;

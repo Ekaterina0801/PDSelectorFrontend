@@ -1,4 +1,4 @@
-@use "sass:meta";                      
+@use "sass:meta";
 @use "@/styles/index" as ui;
 @mixin action-button {
   background-color: ui.$color-primary;
@@ -7,7 +7,7 @@
   border-radius: 10px;
   padding: 10px 16px;
   cursor: pointer;
-  font-size: 0.95rem;
+  font-size: 1.1rem;
   font-weight: 600;
   transition: all 0.3s ease;
   box-shadow: ui.$shadow-strong;
@@ -20,17 +20,17 @@
 
 .card {
   width: 100%;
-  max-width: 800px;
   background: #fff;
-  border-radius: 24px;
+  border-radius: ui.$radius-lg;
   box-shadow: ui.$shadow-light;
   padding: ui.$spacing-lg;
   margin: calc(ui.$spacing-lg / 2) auto;
   border: 1px solid ui.$color-primary-light;
   transition: all 0.3s ease;
-  font-size: 18px;
+  align-items: center;
 
   &-header {
+    text-align: center;
     margin-bottom: ui.$spacing-md;
   }
 
@@ -42,8 +42,7 @@
   }
 
   &-type {
-    font-size: 1.2rem;
-    color: #666;
+    font-size: 1.3rem;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -51,6 +50,7 @@
 
   &-body {
     margin-bottom: ui.$spacing-md;
+    font-size: 20px;
   }
 
   &-resume {
@@ -58,6 +58,11 @@
     line-height: 1.5;
     margin-bottom: ui.$spacing-md;
     text-align: left;
+    font-size: 20px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 
     .type-capture {
       margin-right: 4px;
@@ -70,25 +75,35 @@
   &-tags {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    gap: 8px;
-
-    .text-capture {
-      font-weight: 600;
-      color: ui.$color-primary;
-      margin-right: 8px;
-    }
+    gap: ui.$spacing-xs;
+    margin-bottom: ui.$spacing-md;
   }
 
   &-tag {
+    display: inline-block;
     background-color: ui.$color-primary-light;
     color: ui.$color-primary;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 1rem;
+    padding: ui.$spacing-xs ui.$spacing-sm;
+    margin: 0 ui.$spacing-xs ui.$spacing-xs 0;
+    border-radius: ui.$radius-md;
+    font-size: 0.875rem;
     font-weight: 600;
-    transition: background-color 0.2s, transform 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: default;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    transition: 
+      background-color 0.2s ease, 
+      transform 0.2s ease, 
+      box-shadow 0.2s ease;
+
+    &:hover {
+      background-color: ui.$color-primary-light;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
   }
+
 
   &-noTags {
     color: #888;
@@ -101,12 +116,11 @@
     gap: 12px;
   }
 
-  
-
   .action-link {
     text-decoration: none;
   }
 
-.action-button {
-  @include action-button();
-}}
+  .action-button {
+    @include action-button();
+  }
+}

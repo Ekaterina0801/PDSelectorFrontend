@@ -1,7 +1,5 @@
-// src/pages/StudentsPage.module.scss
 @use '@/styles/index' as ui;
 
-// обёртка контента
 .container {
   @include ui.container(100%);
   display: flex;
@@ -9,14 +7,12 @@
   justify-content: center;
   padding-top: ui.$spacing-lg;
 
-  // на планшетах и ниже — стопка и выравнивание по центру
   @include ui.respond-to(lg) {
     flex-direction: column;
     align-items: center;
   }
 }
 
-// десктоп-сайдбар
 .filtersColumn {
   @include ui.col(3);
   @include ui.col-responsive;
@@ -27,7 +23,7 @@
   }
 }
 
-// основной блок
+
 .contentColumn {
   @include ui.col(9);
   @include ui.col-responsive;
@@ -37,7 +33,7 @@
   align-items: center;
 }
 
-// кнопка открытия фильтров до 1024px
+
 .mobileFiltersButton {
   display: none;
 
@@ -45,7 +41,6 @@
     display: flex;
     position: sticky;
     top: calc(ui.$spacing-md + 4rem);
-    z-index: 1500;
     width: calc(100% - 2 * ui.$spacing-md);
     margin: ui.$spacing-md auto;
     justify-content: center;
@@ -62,7 +57,7 @@
   }
 }
 
-// заголовок + сортировка
+
 .contentHeader {
   display: flex;
   justify-content: space-between;
@@ -91,27 +86,7 @@
 }
 
 .sortControls {
-  display: flex;
-  align-items: center;
-  gap: ui.$spacing-sm;
-
-  @include ui.respond-to(md) {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
-.sortLabel {
-  font-weight: 600;
-  color: ui.$color-primary;
-}
-
-.sortSelect {
-  @include ui.form-control(ui.$radius-sm);
-
-  @include ui.respond-to(sm) {
-    width: 100%;
-  }
+  @include ui.sort-pagination-controls;
 }
 
 .resetButton {
@@ -122,40 +97,31 @@
     margin: ui.$spacing-sm auto 0;
   }
 }
-
-// сетка карточек
 .studentsGrid {
-  display: grid;
-  gap: ui.$spacing-md;
-  grid-template-columns: repeat(auto-fit, minmax(280px, auto));
-  justify-content: center;
-  justify-items: center;
-
-  @include ui.respond-to(sm) {
-    grid-template-columns: 1fr;
+    display: grid;
+    gap: ui.$spacing-md;
+  
+    // По умолчанию – auto-fit: флекс-колонки, которые заполнят доступное место
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  
+    // <=1024px (планшеты и небольшие десктопы) – фиксируем 2 колонки
+    @include ui.respond-to(lg) {
+      grid-template-columns: repeat(2, minmax(240px, 1fr));
+    }
+  
+    // <=768px (мобильники) – одна колонка
+    @include ui.respond-to(md) {
+      grid-template-columns: 1fr;
+    }
   }
-}
+  
+  
 
-// пагинация
+
 .paginationControls {
-  display: flex;
-  gap: ui.$spacing-md;
+  @include ui.pagination
 }
 
-.paginationButton {
-  @include ui.btn(ui.$radius-sm, ui.$color-primary);
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-}
-
-.pageIndicator {
-  font-weight: 600;
-}
-
-// состояния «пусто» и «ошибка»
 .emptyState,
 .error {
   text-align: center;
@@ -171,7 +137,7 @@
   color: ui.$color-warning;
 }
 
-// модалка фильтров
+
 .filtersModal {
   display: none;
   position: fixed;

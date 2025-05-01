@@ -63,7 +63,7 @@ export default function Filter({ availableFilters, currentFilters, onApply }) {
 
   return (
     <div className={styles.filterSection}>
-      <h2 className={styles.filterSection__title}>Фильтры</h2>
+      <h3 className={styles.filterSection__title}>Фильтры</h3>
 
       <div className={styles.filterSection__group}>
         <h3 className={styles.filterSection__groupTitle}>Заполненность</h3>

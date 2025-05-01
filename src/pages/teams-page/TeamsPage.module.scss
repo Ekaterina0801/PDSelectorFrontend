@@ -1,6 +1,5 @@
 @use "@/styles/index" as ui;
 
-// обёртка
 .container {
   @include ui.container(100%);
   display: flex;
@@ -10,11 +9,10 @@
 
   @include ui.respond-to(lg) {
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
   }
   }
   
-// десктоп-сайдбар
 .filtersColumn {
   @include ui.col(3);
   @include ui.col-responsive;
@@ -25,17 +23,15 @@
   }
 }
 
-// основной блок
 .contentColumn {
   @include ui.col(9);
   @include ui.col-responsive;
   display: flex;
   flex-direction: column;
   gap: ui.$spacing-lg;
-  align-items: center;
+  align-items: stretch;
 }
 
-// кнопка открытия фильтров до 1024px
 .mobileFiltersButton {
   display: none;
 
@@ -43,7 +39,6 @@
     display: flex;
     position: sticky;
     top: calc(ui.$spacing-md + 4rem);
-    z-index: 1500;
     width: calc(100% - 2 * ui.$spacing-md);
     margin: ui.$spacing-md auto;
     justify-content: center;
@@ -69,7 +64,6 @@
   }
 }
 
-// шапка контента
 .contentHeader {
   display: flex;
   justify-content: space-between;
@@ -98,27 +92,7 @@
 }
 
 .sortControls {
-  display: flex;
-  align-items: center;
-  gap: ui.$spacing-sm;
-
-  @include ui.respond-to (md) {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
-.sortLabel {
-  font-weight: 600;
-  color: ui.$color-primary;
-}
-
-.sortSelect {
-  @include ui.form-control(ui.$radius-sm);
-
-  @include ui.respond-to (sm) {
-    width: 100%;
-  }
+  @include ui.sort-pagination-controls;
 }
 
 .resetButton {
@@ -130,11 +104,10 @@
   }
 }
 
-// сетка карточек
 .teamsGrid {
   display: grid;
   gap: ui.$spacing-md;
-  grid-template-columns: repeat(auto-fit, minmax(280px, auto));
+  grid-template-columns: 2fr;
   justify-content: center;
   justify-items: center;
 
@@ -144,9 +117,9 @@
 }
 
 .paginationControls {
-  display: flex;
-  gap: ui.$spacing-md;
-}
+    @include ui.pagination;
+  }
+  
 
 .paginationButton {
   @include ui.btn(ui.$radius-sm, ui.$color-primary);
@@ -176,7 +149,6 @@
   color: ui.$color-warning;
 }
 
-// модалка
 .filtersModal {
   display: none;
   position: fixed;

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import { useParams } from "react-router-dom";
-import useCurrentUser from "../../hooks/useCurrentUser";
 import ApplicationCard from "../../components/card/application-card/ApplicationCard";
 import useSuccessMessage from "../../hooks/useSuccessMessage";
 import TeamEditForm from "../../components/profile/TeamEditForm";
@@ -13,31 +12,31 @@ import authStore from "../../stores/authStore";
 import TeamProfileCard from "../../components/profile-card/TeamProfileCard";
 import MainContent from "../../components/main-section/MainSection";
 import { useTeamApplication } from "../../hooks/useTeamApplication";
-import { useTeamInvitation } from "../../hooks/useTeamInvitation";
-import styles from './TeamProfilePage.module.scss';
+import styles from "./TeamProfilePage.module.scss";
 import projectTypeStore from "../../stores/projectTypeStore";
 import technologyStore from "../../stores/technologyStore";
+import applicationStore from "../../stores/applicationStore";
+import ErrorModal from "../../components/error-display/ErrorDisplay";
+import Loader from "../../components/spinner/Loader";
 
 const TeamProfilePage = observer(() => {
   const { teamId } = useParams();
-  const [currentContent, setCurrentContent] = useState('Текущие участники');
+  const [currentContent, setCurrentContent] = useState("Текущие участники");
   const [showEditForm, setShowEditForm] = useState(false);
   const { currentUser, studentId } = authStore;
   const { successMessage } = useSuccessMessage();
 
   useEffect(() => {
-   
     return () => teamStore.clearTeam();
   }, [teamId]);
 
   useEffect(() => {
     async function loadAll() {
       teamStore.fetchTeamById(teamId);
-  
+
       await projectTypeStore.fetchProjectTypes();
-    
+
       await technologyStore.fetchTechnologies();
-  
     }
     loadAll();
   }, [teamId]);
@@ -57,21 +56,26 @@ const TeamProfilePage = observer(() => {
   );
 
   const renderMainContent = () => {
-    if (teamStore.loading) return <div className={styles.loading}>Загрузка...</div>;
-    if (teamStore.error) return <div className={styles.error}>{teamStore.error}</div>;
+    if (teamStore.loading)
+      return <Loader></Loader>
+    if (!teamStore.loading&&teamStore.error)
+      return <ErrorModal message={error} onClose={() => applicationStore.setError(null)} />;
+    if (!applicationStore.loading&&applicationStore.error)
+      return <ErrorModal message={appHook.error} onClose={() => {applicationStore.setError(null)}} />;
 
-    const data = currentContent === 'Текущие участники'
-      ? teamStore.team?.students || []
-      : teamStore.team?.applications || [];
+    const data =
+      currentContent === "Текущие участники"
+        ? teamStore.team?.students || []
+        : teamStore.team?.applications || [];
 
     if (!data.length) {
-      return <div className={styles.noResults}>Нет данных.</div>;
+      return <div className={styles.noResults}>Нет данных</div>;
     }
 
     return (
       <div className={styles.studentsGrid}>
-        {data.map(item =>
-          currentContent === 'Текущие участники' ? (
+        {data.map((item) =>
+          currentContent === "Текущие участники" ? (
             <StudentListItem key={item.id} student={item} />
           ) : (
             <ApplicationCard
@@ -83,7 +87,7 @@ const TeamProfilePage = observer(() => {
               studentId={item.student?.id || item.user?.id}
               teamDescription={teamStore.team?.project_description}
               technologies={item.technologies || []}
-              status={item.status || 'sent'}
+              status={item.status || "sent"}
               showCaptainOptions={true}
               onApprove={appHook.onAction}
               onReject={appHook.onAction}
@@ -102,7 +106,10 @@ const TeamProfilePage = observer(() => {
         {isCaptain && (
           <Sidebar
             onItemClick={setCurrentContent}
-            items={[{ name: 'Текущие участники' }, { name: 'Заявки в команду' }]}
+            items={[
+              { name: "Текущие участники" },
+              { name: "Заявки в команду" },
+            ]}
           />
         )}
 
@@ -113,9 +120,9 @@ const TeamProfilePage = observer(() => {
                 name: teamStore.team?.name,
                 project_description: teamStore.team?.project_description,
                 projectType: teamStore.team?.project_type?.name,
-                technologies: teamStore.team?.technologies
+                technologies: teamStore.team?.technologies,
               }}
-              onSave={data => teamStore.updateTeam(data, teamId)}
+              onSave={(data) => teamStore.updateTeam(data, teamId)}
               onCancel={() => setShowEditForm(false)}
               allTechnologies={technologyStore.technologies}
               projectTypes={projectTypeStore.projectTypes}
@@ -124,10 +131,13 @@ const TeamProfilePage = observer(() => {
 
           <TeamProfileCard
             team={teamStore.team}
-            captain={{ avatarUrl: teamStore.team?.captain?.avatarUrl, fio: teamStore.team?.captain?.fio }}
+            captain={{
+              avatarUrl: teamStore.team?.captain?.avatarUrl,
+              fio: teamStore.team?.captain?.fio,
+            }}
             isCaptain={isCaptain}
             showEditForm={showEditForm}
-            onEditClick={() => setShowEditForm(prev => !prev)}
+            onEditClick={() => setShowEditForm((prev) => !prev)}
             showButton={appHook.showButton}
             buttonText={appHook.buttonText}
             buttonClass={appHook.buttonClass}
@@ -136,7 +146,9 @@ const TeamProfilePage = observer(() => {
 
           <h2 className={styles.pageTitle}>{currentContent}</h2>
           {renderMainContent()}
-          {successMessage && <div className={styles.successMessage}>{successMessage}</div>}
+          {successMessage && (
+            <div className={styles.successMessage}>{successMessage}</div>
+          )}
         </div>
       </MainContent>
     </>
