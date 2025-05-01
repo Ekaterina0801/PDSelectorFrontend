@@ -83,7 +83,7 @@ const TeamEditForm = ({
 
         <label>
           Описание проекта:
-          <input
+          <textarea
             type="text"
             name="project_description"
             value={formData.project_description || ''}
@@ -94,21 +94,24 @@ const TeamEditForm = ({
         <label>
           Тип проекта:
           <div className={styles.technologiesList}>
-            {projectTypes.map(type => (
-              <div key={type.id}>
-                <input
-                  type="radio"
-                  id={`projectType-${type.id}`}
-                  name="projectType"
-                  value={type.id}
-                  checked={formData.project_type?.id === type.id}
-                  onChange={handleProjectTypeChange}
-                />
-                <label htmlFor={`projectType-${type.id}`}>
-                  {type.name}
-                </label>
-              </div>
-            ))}
+            <ul id="projectTypeUl" className="filter-switch">
+              {projectTypes.map(type => (
+                <li class="filter-switch-item" key={type.id}>
+                  <input
+                    type="radio"
+                    id={`projectType-${type.id}`}
+                    name="projectType"
+                    value={type.id}
+                    checked={formData.projectType?.id === type.id}
+                    onChange={handleProjectTypeChange}
+                    className="sr-only"
+                  />
+                  <label htmlFor={`projectType-${type.id}`}>
+                    {type.name}
+                  </label>
+                </li>
+              ))}
+            </ul>
           </div>
         </label>
 

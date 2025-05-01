@@ -108,18 +108,18 @@ const TeamProfilePage = observer(() => {
 
         <div className={styles.contentColumn}>
           {showEditForm && (
-            <TeamEditForm
-              teamData={{
-                name: teamStore.team?.name,
-                project_description: teamStore.team?.project_description,
-                projectType: teamStore.team?.project_type?.name,
-                technologies: teamStore.team?.technologies
-              }}
-              onSave={data => teamStore.updateTeam(data, teamId)}
-              onCancel={() => setShowEditForm(false)}
-              allTechnologies={technologyStore.technologies}
-              projectTypes={projectTypeStore.projectTypes}
-            />
+              <TeamEditForm
+                teamData={{
+                  name: teamStore.team?.name,
+                  project_description: teamStore.team?.project_description,
+                  projectType: teamStore.team?.project_type?.name,
+                  technologies: teamStore.team?.technologies
+                }}
+                onSave={data => teamStore.updateTeam(data, teamId)}
+                onCancel={() => setShowEditForm(false)}
+                allTechnologies={technologyStore.technologies}
+                projectTypes={projectTypeStore.projectTypes}
+              />
           )}
 
           <TeamProfileCard

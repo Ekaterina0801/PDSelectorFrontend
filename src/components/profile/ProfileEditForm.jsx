@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Modal from "../forms/modal/Modal";
-import styles from "./ProfileEditForm.module.scss";
+import styles from "./TeamEditForm.module.scss";
 
 const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => {
   const [formData, setFormData] = useState({
@@ -82,7 +82,7 @@ const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => 
 
         <label>
           О себе:
-          <input
+          <textarea
             type="text"
             name="about_self"
             value={formData.about_self || ''}
