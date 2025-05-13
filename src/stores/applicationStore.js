@@ -38,7 +38,7 @@ class ApplicationStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = JSON.parse(err.message).detail || 'Ошибка при загрузке заявок';
+        this.error = JSON.parse(err.message).message|| 'Ошибка при загрузке заявок';
       });
     } finally {
       runInAction(() => {
@@ -57,7 +57,7 @@ class ApplicationStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = JSON.parse(err.message).detail || 'Ошибка при загрузке заявки';
+        this.error = JSON.parse(err.message).message || 'Ошибка при загрузке заявки';
       });
     } finally {
       runInAction(() => {
@@ -77,7 +77,7 @@ class ApplicationStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = JSON.parse(err.message).detail || 'Ошибка при загрузке заявки';
+        this.error = err.message || 'Ошибка при загрузке заявки';
       });
     } finally {
       runInAction(() => {
@@ -96,7 +96,7 @@ class ApplicationStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = JSON.parse(err.message).detail || 'Ошибка при загрузке заявок команды';
+        this.error = JSON.parse(err.message).message || 'Ошибка при загрузке заявок команды';
       });
     } finally {
       runInAction(() => {
@@ -116,8 +116,8 @@ class ApplicationStore {
       });
     } catch (err) {
       runInAction(() => {
-        console.log('createApplication error', err);
-        this.error = JSON.parse(err.message).detail || 'Ошибка при создании заявки';
+        console.log('createApplication error', JSON.parse(err.message));
+        this.error =JSON.parse(err.message).message|| 'Ошибка при создании заявки';
       });
     } finally {
       runInAction(() => {
@@ -141,7 +141,8 @@ class ApplicationStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = JSON.parse(err.message).detail || 'Ошибка при обновлении заявки';
+        console.log('updateApplication error', err);
+        this.error =JSON.parse(err.message).message|| 'Ошибка при обновлении заявки';
       });
     } finally {
       runInAction(() => {
@@ -161,7 +162,7 @@ class ApplicationStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = JSON.parse(err.message).detail || 'Ошибка при удалении заявки';
+        this.error = JSON.parse(err.message).message || 'Ошибка при удалении заявки';
       });
     } finally {
       runInAction(() => {

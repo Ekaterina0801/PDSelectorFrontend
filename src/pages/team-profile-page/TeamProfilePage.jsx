@@ -18,83 +18,125 @@ import technologyStore from "../../stores/technologyStore";
 import applicationStore from "../../stores/applicationStore";
 import ErrorModal from "../../components/error-display/ErrorDisplay";
 import Loader from "../../components/spinner/Loader";
+import NoDataDisplay from "../../components/nodata-display/NoDataDisplay";
+import cn from "classnames";
+const sidebarItems = [
+  { name: "Текущие участники", icon: "👥" },
+  { name: "Заявки в команду", icon: "📄" },
+];
 
 const TeamProfilePage = observer(() => {
   const { teamId } = useParams();
-  const [currentContent, setCurrentContent] = useState("Текущие участники");
+  const { currentUser, studentId, isAdmin } = authStore;
+  const { showSuccessMessage } = useSuccessMessage();
+
+  const [currentSection, setCurrentSection] = useState(sidebarItems[0].name);
   const [showEditForm, setShowEditForm] = useState(false);
-  const { currentUser, studentId } = authStore;
-  const { successMessage } = useSuccessMessage();
 
   useEffect(() => {
-    return () => teamStore.clearTeam();
+    teamStore.clearTeam();
+    teamStore.fetchTeamById(teamId);
+    projectTypeStore.fetchProjectTypes();
+    technologyStore.fetchTechnologies();
+    //console.log('applicationStore', teamStore.team?.applications);
   }, [teamId]);
 
-  useEffect(() => {
-    async function loadAll() {
-      teamStore.fetchTeamById(teamId);
+  const team = teamStore.team;
+  console.log('apps', team?.applications);
+  const loading = teamStore.loading;
+  const error = teamStore.error;
 
-      await projectTypeStore.fetchProjectTypes();
+  const isCaptain = team?.captain?.id === currentUser?.id;
 
-      await technologyStore.fetchTechnologies();
-    }
-    loadAll();
-  }, [teamId]);
-
-  const isCaptain = !teamStore.team?.captain?.id === currentUser?.id;
   const appHook = useTeamApplication({ teamId, studentId, isCaptain });
 
-  const StudentListItem = ({ student }) => (
-    <div className={styles.studentListItem}>
-      <StudentCard
-        name={student.user.fio}
-        course={student.course}
-        about_self={student.about_self}
-        technologies={student.technologies}
+  if (loading || !team) {
+    return (
+      <>
+        <Navbar />
+        <MainContent>
+          <Loader />
+        </MainContent>
+      </>
+    );
+  }
+  if (!applicationStore.loading && applicationStore.error) return (
+  <>
+    <Navbar />
+    <MainContent>
+      <ErrorModal
+        message={applicationStore.error}
+        onClose={() => {
+          applicationStore.setError(null);
+        }}
       />
-    </div>
-  );
+    
+    </MainContent>
+  </>);
 
-  const renderMainContent = () => {
-    if (teamStore.loading)
-      return <Loader></Loader>
-    if (!teamStore.loading&&teamStore.error)
-      return <ErrorModal message={error} onClose={() => applicationStore.setError(null)} />;
-    if (!applicationStore.loading&&applicationStore.error)
-      return <ErrorModal message={appHook.error} onClose={() => {applicationStore.setError(null)}} />;
+  if (error) {
+    return (
+      <>
+        <Navbar />
+        <MainContent>
+          <ErrorModal
+            message={error}
+            onClose={() => teamStore.setError(null)}
+          />
+        </MainContent>
+      </>
+    );
+  }
 
-    const data =
-      currentContent === "Текущие участники"
-        ? teamStore.team?.students || []
-        : teamStore.team?.applications || [];
+  const renderContent = () => {
+    const list =
+      currentSection === sidebarItems[0].name
+        ? team.students
+        : team.applications;
 
-    if (!data.length) {
-      return <div className={styles.noResults}>Нет данных</div>;
+    if (!list || list.length === 0) {
+      return (
+        <NoDataDisplay
+          message={
+            currentSection === sidebarItems[0].name
+              ? "Нет участников"
+              : "Нет заявок"
+          }
+        />
+      );
     }
 
     return (
       <div className={styles.studentsGrid}>
-        {data.map((item) =>
-          currentContent === "Текущие участники" ? (
-            <StudentListItem key={item.id} student={item} />
-          ) : (
+        {currentSection === sidebarItems[0].name
+          ? list.map((s) => (
+              <StudentCard
+                key={s.id}
+                name={s.user.fio}
+                track={team.currentTrack?.name}
+                course={s.course}
+                about_self={s.about_self}
+                technologies={s.technologies}
+                profileLink={`/students/${s.id}`}
+              />
+            ))
+          : list.map(app => (
             <ApplicationCard
-              key={item.id}
-              applicationId={item.id}
-              studentName={item.student?.fio || item.user?.fio}
-              teamName={teamStore.team?.name}
+              key={app.id}
+              applicationId={app.id}
+              studentName={app.student?.fio || app.user?.fio}
+              teamName={team.name}
               teamId={teamId}
-              studentId={item.student?.id || item.user?.id}
-              teamDescription={teamStore.team?.project_description}
-              technologies={item.technologies || []}
-              status={item.status || "sent"}
-              showCaptainOptions={true}
+            studentId={app.student?.id ?? app.user?.id}
+              teamDescription={team.project_description}
+              technologies={app.technologies}
+              status={app.status}
+              showCaptainOptions={isCaptain}
               onApprove={appHook.onAction}
               onReject={appHook.onAction}
               onCancel={appHook.onAction}
             />
-          )
-        )}
+          ))}
       </div>
     );
   };
@@ -103,53 +145,77 @@ const TeamProfilePage = observer(() => {
     <>
       <Navbar />
       <MainContent>
-        {isCaptain && (
-          <Sidebar
-            onItemClick={setCurrentContent}
-            items={[
-              { name: "Текущие участники" },
-              { name: "Заявки в команду" },
-            ]}
-          />
-        )}
+        <div className={styles.container}>
+          {(isCaptain || isAdmin) && (
+            <aside className={styles.sidebarWrapper}>
+              <Sidebar
+                items={sidebarItems}
+                selected={currentSection}
+                onItemClick={setCurrentSection}
+              />
+            </aside>
+          )}
 
-        <div className={styles.contentColumn}>
-          {showEditForm && (
-            <TeamEditForm
-              teamData={{
-                name: teamStore.team?.name,
-                project_description: teamStore.team?.project_description,
-                projectType: teamStore.team?.project_type?.name,
-                technologies: teamStore.team?.technologies,
+          <section className={styles.contentColumn}>
+            {showEditForm && (
+              <TeamEditForm
+                teamData={{
+                  name: team.name,
+                  project_description: team.project_description,
+                  projectType: team.project_type?.name,
+                  technologies: team.technologies,
+                }}
+                onSave={(data) => {
+                  teamStore.updateTeam(data, teamId);
+                  setShowEditForm(false);
+                }}
+                onCancel={() => setShowEditForm(false)}
+                allTechnologies={technologyStore.technologies}
+                projectTypes={projectTypeStore.projectTypes}
+              />
+            )}
+
+            <TeamProfileCard
+              team={team}
+              captain={{
+                avatarUrl: team.captain.avatarUrl,
+                fio: team.captain.fio,
               }}
-              onSave={(data) => teamStore.updateTeam(data, teamId)}
-              onCancel={() => setShowEditForm(false)}
-              allTechnologies={technologyStore.technologies}
-              projectTypes={projectTypeStore.projectTypes}
+              isCaptain={isCaptain}
+              showEditForm={showEditForm}
+              onEditClick={() => setShowEditForm((prev) => !prev)}
+              showButton={appHook.showButton}
+              buttonText={appHook.buttonText}
+              buttonClass={appHook.buttonClass}
+              onAction={appHook.onAction}
             />
-          )}
 
-          <TeamProfileCard
-            team={teamStore.team}
-            captain={{
-              avatarUrl: teamStore.team?.captain?.avatarUrl,
-              fio: teamStore.team?.captain?.fio,
-            }}
-            isCaptain={isCaptain}
-            showEditForm={showEditForm}
-            onEditClick={() => setShowEditForm((prev) => !prev)}
-            showButton={appHook.showButton}
-            buttonText={appHook.buttonText}
-            buttonClass={appHook.buttonClass}
-            onAction={appHook.onAction}
-          />
+            <h2 className={styles.pageTitle}>{currentSection}</h2>
+            {renderContent()}
 
-          <h2 className={styles.pageTitle}>{currentContent}</h2>
-          {renderMainContent()}
-          {successMessage && (
-            <div className={styles.successMessage}>{successMessage}</div>
-          )}
+            {showSuccessMessage && (
+              <div className={styles.successMessage}>{showSuccessMessage}</div>
+            )}
+          </section>
         </div>
+
+        {(isCaptain || isAdmin) && (
+          <nav className={styles.bottomNav}>
+            {sidebarItems.map((item) => (
+              <button
+                key={item.name}
+                className={cn(
+                  styles.navItem,
+                  currentSection === item.name && styles.active
+                )}
+                onClick={() => setCurrentSection(item.name)}
+              >
+                <span className={styles.navIcon}>{item.icon}</span>
+                <span className={styles.navLabel}>{item.name}</span>
+              </button>
+            ))}
+          </nav>
+        )}
       </MainContent>
     </>
   );

@@ -9,80 +9,72 @@ export default function ApplicationCard({
   studentId,
   teamDescription,
   technologies = [],
-  status,
+  status = '',
   onApprove,
   onReject,
   onCancel,
   onSending,
   onViewDetails,
-  approveText    = 'Одобрить',
-  rejectText     = 'Отклонить заявку',
-  cancelText     = 'Отменить заявку',
-  sendingText    = 'Подать заявку снова',
-  viewDetailsText= 'Подробнее',
+  approveText     = 'Одобрить',
+  rejectText      = 'Отклонить заявку',
+  cancelText      = 'Отменить заявку',
+  sendingText     = 'Подать заявку снова',
   showCaptainOptions = false,
+  isAdmin
 }) {
-  const [appStatus, setAppStatus] = useState(status);
+  const [appStatus, setAppStatus] = useState(status.toLowerCase());
 
   const statusMap = {
-    Sent:      { text: 'Отправлена', color: styles.warning },
-    Accepted:  { text: 'Принята',    color: styles.success },
-    Rejected:  { text: 'Отклонена',  color: styles.danger },
-    Cancelled: { text: 'Отменена',   color: styles.danger },
+    sent:      { text: 'Отправлена', className: styles.warning },
+    accepted:  { text: 'Принята',    className: styles.success },
+    rejected:  { text: 'Отклонена',  className: styles.danger },
+    cancelled: { text: 'Отменена',   className: styles.danger },
   };
-  const { text: statusText, color: statusColor } = statusMap[appStatus] || {};
+
+  const { text: statusText, className: statusClass } = statusMap[appStatus] || {};
 
   const handlers = {
-    approve: () => { onApprove?.(applicationId); setAppStatus('Accepted'); },
-    reject:  () => { onReject?.(applicationId);  setAppStatus('Rejected');  },
-    cancel:  () => { onCancel?.(applicationId);  setAppStatus('Cancelled'); },
-    resend:  () => { onSending?.(applicationId); setAppStatus('Sent');      },
+    approve: () => { onApprove?.(applicationId); setAppStatus('accepted'); },
+    reject:  () => { onReject?.(applicationId);  setAppStatus('rejected');  },
+    cancel:  () => { onCancel?.(applicationId);  setAppStatus('cancelled'); },
+    resend:  () => { onSending?.(applicationId); setAppStatus('sent');      },
     viewDetails: () => { onViewDetails?.(applicationId); },
   };
 
   return (
     <div className={`${base.card} ${styles.appBackground}`}>
-      {/* Header */}
       <div className={base['card-header']}>
         <h3 className={base['card-name']}>Студент: {studentName}</h3>
         {teamName && (
-          <p className={base['card-type']}>
-            Команда: {teamName}
-          </p>
+          <h3 className={base['card-name']}>Команда: {teamName}</h3>
         )}
       </div>
 
-      {/* Body */}
       <div className={base['card-body']}>
         {teamDescription && (
-          <p className={base['card-resume']}>
-            Описание: {teamDescription}
-          </p>
+          <p className={base['card-resume']}>Описание: {teamDescription}</p>
         )}
-
         <div className={base['card-tags']}>
           {technologies.length > 0
-            ? technologies.map((tech, i) => (
+            ? technologies.map((tech,i) => (
                 <span key={i} className={base['card-tag']}>
                   {typeof tech === 'object' ? tech.name : tech}
                 </span>
               ))
-            : <span className={base.noTags}>-</span>}
+            : <span className={base.noTags}>-</span>
+          }
         </div>
 
-        {/* Status */}
-        <span
-          className={styles.statusTag}
-          style={{ backgroundColor: statusColor }}
-        >
-          {statusText}
-        </span>
+        {statusText && (
+          <span className={`${styles.statusTag} ${statusClass}`}>
+            {statusText}
+          </span>
+        )}
       </div>
 
-      {/* Actions */}
       <div className={base['card-actions']}>
-        {appStatus === 'Sent' && (
-          showCaptainOptions
+        {appStatus === 'sent' && (
+          showCaptainOptions || isAdmin
             ? <>
                 <button
                   className={`${base['action-button']} ${styles.approve}`}
@@ -105,7 +97,7 @@ export default function ApplicationCard({
               </button>
         )}
 
-        {appStatus === 'Cancelled' && (
+        {appStatus === 'cancelled' && (
           <button
             className={`${base['action-button']} ${styles.apply}`}
             onClick={handlers.resend}
@@ -114,20 +106,9 @@ export default function ApplicationCard({
           </button>
         )}
 
-        {/* Подробнее */}
-        <button
-          className={`${base['action-button']} ${styles.view}`}
-          onClick={handlers.viewDetails}
-        >
-          {viewDetailsText}
-        </button>
-
-        {/* Перейти к команде */}
         <a href={`/teams/${teamId}`} className={base['action-link']}>
           <button className={base['action-button']}>К команде</button>
         </a>
-
-        {/* Перейти к студенту */}
         <a href={`/students/${studentId}`} className={base['action-link']}>
           <button className={base['action-button']}>К студенту</button>
         </a>

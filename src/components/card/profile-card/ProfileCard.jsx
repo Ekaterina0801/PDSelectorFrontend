@@ -10,7 +10,8 @@ const ProfileCard = ({
   showButton,
   applicationStatus,
   onApply,
-  isLoading
+  isLoading, 
+  isAdmin
 }) => {
   if (!studentData) return <Loader />;
 
@@ -56,6 +57,8 @@ const ProfileCard = ({
       <section className={styles.details}>
         <Detail label="Группа" value={studentData.group_number || '—'} />
         <Detail label="Контакты" value={studentData.contacts || '—'} />
+        <Detail label="О себе" value={studentData.about_self || '—'} />
+        <Detail label="Команда" value={studentData.currentTeam?.name||"Нет команды"} />
         <div className={styles.detail}>
           <p className={styles.label}>Технологии:</p>
           <div className={styles.tags}>
@@ -71,7 +74,7 @@ const ProfileCard = ({
       </section>
 
       <footer className={styles.footer}>
-        {isCurrentUser ? (
+        {isCurrentUser || isAdmin ? (
           <button className={styles.editButton} onClick={onEdit}>
             Редактировать профиль
           </button>

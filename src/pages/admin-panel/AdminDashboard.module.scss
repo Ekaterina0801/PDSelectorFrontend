@@ -1,0 +1,141 @@
+@use "@/styles/index" as ui;
+
+.container {
+  display: flex;
+  gap: ui.$spacing-lg;
+  padding: ui.$spacing-lg;
+
+  @include ui.respond-to("lg") {
+    flex-direction: column;
+  }
+}
+
+.sidebarWrapper {
+  width: 240px;
+
+  @include ui.respond-to("lg") {
+    display: none;
+  }
+}
+
+.content {
+  flex: 1;
+}
+
+.title {
+  margin-bottom: ui.$spacing-md;
+  font-size: 1.8rem;
+  color: ui.$color-primary;
+  text-align: center;
+}
+
+/* ——— Панель фильтров и сортировки ——— */
+.sortPaginationControls {
+  @include ui.sort-pagination-controls;
+}
+
+/* Одиночное поле фильтра */
+.controlBlock {
+  display: flex;
+  flex-direction: column;
+
+  label {
+    margin-bottom: ui.$spacing-xs;
+    font-size: ui.$font-size-base*0.85;
+    color: ui.$color-grey-600;
+  }
+
+  input,
+  select {
+    height: 2.5rem;
+    padding: 0 ui.$spacing-sm;
+    font-size: ui.$font-size-base*0.85;
+    border: 1px solid ui.$color-grey-300;
+    border-radius: ui.$radius-sm;
+    transition: border-color ui.$transition-fast, box-shadow ui.$transition-fast;
+
+    &:focus {
+      outline: none;
+      border-color: ui.$color-primary;
+      box-shadow: 0 0 0 3px rgba(ui.$color-primary, 0.15);
+    }
+  }
+}
+
+/* Кнопка "Выгрузить студентов" */
+.exportButton {
+  margin-top: auto;
+  align-self: start;
+  background-color: ui.$color-primary;
+  color: ui.$color-white;
+  border: none;
+  border-radius: ui.$radius-sm;
+  padding: ui.$spacing-sm ui.$spacing-lg;
+  font-size: ui.$font-size-base*0.85;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color ui.$transition-fast, transform 0.1s;
+
+  &:hover {
+    background-color: ui.$color-primary;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+/* Пагинация */
+.pagination {
+  @include ui.pagination;
+}
+
+/* Нижняя навигация для мобильных */
+.bottomNav {
+  display: none;
+
+  @include ui.respond-to("lg") {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(8px);
+    border-top: 1px solid ui.$color-grey-300;
+    padding: ui.$spacing-sm env(safe-area-inset-bottom) ui.$spacing-sm;
+    justify-content: space-around;
+    z-index: 2000;
+  }
+}
+
+.navItem {
+  flex: 1;
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: ui.$spacing-xs;
+  font: inherit;
+  color: ui.$color-grey-600;
+  transition: color ui.$transition-fast;
+
+  &:hover {
+    color: ui.$color-primary;
+  }
+
+  &.active {
+    color: ui.$color-primary;
+    font-weight: 600;
+  }
+}
+
+.navIcon {
+  font-size: 1.6rem;
+}
+
+.navLabel {
+  font-size: 0.75rem;
+}

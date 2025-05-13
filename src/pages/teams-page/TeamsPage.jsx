@@ -11,6 +11,8 @@ import { FaFilter, FaTimes } from "react-icons/fa";
 import MainContent from "../../components/main-section/MainSection";
 import styles from './TeamsPage.module.scss';
 import ErrorDisplay from "../../components/error-display/ErrorDisplay";
+import NoDataDisplay from "../../components/nodata-display/NoDataDisplay";
+import ErrorModal from "../../components/error-display/ErrorDisplay";
 const TeamsPage = observer(() => {
   const { trackId, isLoading } = authStore;
   const { teams, loading, error, allFilters, filters } = teamStore;
@@ -66,13 +68,9 @@ const TeamsPage = observer(() => {
 
   const renderTeams = () => {
     if (loading) return <Loader />;
-    if (error) return <ErrorDisplay message={error} />;
+    if (!teamStore.loading&&teamStore.error) return <ErrorModal message={teamStore.error} onClose={() => teamStore.setError(null)} />;
     if (!teams.length)
-      return (
-        <div className={styles.emptyState}>
-          Нет команд по выбранным фильтрам
-        </div>
-      );
+      return <NoDataDisplay message="Команд нет" />;
 
     return (
       <div className={styles.teamsGrid}>
@@ -96,7 +94,6 @@ const TeamsPage = observer(() => {
       <MainContent>
         <SearchBar onSearch={handleSearch} />
 
-        {/* кнопка открытия фильтров на планшете/мобиле */}
         <button
           className={styles.mobileFiltersButton}
           onClick={() => setShowMobileFilters(true)}
@@ -107,7 +104,6 @@ const TeamsPage = observer(() => {
         </button>
 
         <div className={styles.container}>
-          {/* десктоп-сайдбар */}
           <aside className={styles.filtersColumn}>
             <Filter
               availableFilters={allFilters}
@@ -116,7 +112,6 @@ const TeamsPage = observer(() => {
             />
           </aside>
 
-          {/* основной контент */}
           <section className={styles.contentColumn}>
             <div className={styles.contentHeader}>
               <h1 className={styles.pageTitle}>Команды</h1>
@@ -169,7 +164,6 @@ const TeamsPage = observer(() => {
           </section>
         </div>
 
-        {/* модалка фильтров */}
         <div
           className={[
             styles.filtersModal,

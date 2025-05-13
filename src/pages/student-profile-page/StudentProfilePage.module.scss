@@ -1,6 +1,5 @@
 @use "@/styles/index" as ui;
 
-// === GRID-КОНТЕЙНЕР ===
 .container {
   @include ui.container();
   display: flex;
@@ -19,7 +18,6 @@
   }
 }
 
-// === ОСНОВНОЙ КОНТЕНТ ===
 .contentColumn {
   flex: 1;
   display: flex;
@@ -32,6 +30,11 @@
   font-size: 2rem;
   font-weight: 700;
   color: ui.$color-primary;
+  text-align: center;
+}
+
+.createButton{
+    @include ui.btn();
 }
 
 .cards {
@@ -52,7 +55,7 @@
   margin-bottom: ui.$spacing-md;
 }
 
-// === НИЖНЯЯ НАВИГАЦИЯ ===
+
 .bottomNav {
   display: none;
 
@@ -62,39 +65,78 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    background: ui.$color-white;
-    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
-    padding: ui.$spacing-sm 0;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: saturate(180%) blur(10px);
+    border-top: 1px solid ui.$color-grey-300;
+    padding: ui.$spacing-sm env(safe-area-inset-bottom) ui.$spacing-sm;
     justify-content: space-around;
+    box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.08);
     z-index: 2000;
   }
 }
 
-.navItem {
-  background: none;
-  border: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font: inherit;
-  color: ui.$color-grey-600;
-  cursor: pointer;
-  transition: color 0.2s ease;
+  
+  .navItem {
+    flex: 1;
+    max-width: 80px;
+    background: none;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: ui.$spacing-xs ui.$spacing-sm;
+    font: inherit;
+    color: ui.$color-grey-600;
+    transition: color 0.3s ease, transform 0.2s ease;
 
-  &:hover {
-    color: ui.$color-primary;
+    &:hover {
+      color: ui.$color-primary;
+      transform: translateY(-2px);
+    }
+  
+    &.active {
+      color: ui.$color-primary;
+  
+      .navIcon {
+        background: ui.$color-primary-light;
+        color: ui.$color-primary;
+        border-radius: 50%;
+      }
+      .navLabel {
+        font-weight: 600;
+        text-decoration: underline;
+      }
+    }
   }
-}
-
-.navIcon {
-  font-size: 1.4rem;
-  margin-bottom: 4px;
-}
-
-.navLabel {
-  font-size: 0.75rem;
-}
+  
+  .navIcon {
+    font-size: 1.6rem;
+    margin-bottom: 4px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .navLabel {
+    font-size: 0.75rem;
+    line-height: 1;
+  }
 
 .active {
   color: ui.$color-primary;
 }
+
+.teamsGrid {
+    display: grid;
+    gap: ui.$spacing-md;
+    grid-template-columns: 2fr;
+    justify-content: center;
+    justify-items: center;
+  
+    @include ui.respond-to (sm) {
+      grid-template-columns: 1fr;
+    }
+  }

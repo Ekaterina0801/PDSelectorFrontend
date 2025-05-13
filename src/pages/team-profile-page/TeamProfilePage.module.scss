@@ -1,58 +1,137 @@
+/* TeamProfilePage.module.scss */
 @use "@/styles/index" as ui;
 
-.contentColumn {
-    @include ui.container();
-    display: flex;
-    flex-direction: column;
-    gap: ui.$spacing-md;
-  }
-  
-  .loading {
-    text-align: center;
-    font-size: 1.25rem;
-    color: ui.$color-primary;
-    padding: ui.$spacing-lg 0;
-  }
-  
-  .error {
-    text-align: center;
-    color: ui.$color-danger;
-    font-weight: 600;
-    margin: ui.$spacing-lg 0;
-  }
-  
-  .noResults {
-    text-align: center;
-    color: ui.$color-warning;
-    font-weight: 600;
-    margin: ui.$spacing-lg 0;
-  }
-  .studentsGrid {
-    display: grid;
-    gap: ui.$spacing-md;
-  
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+.container {
+  @include ui.container();
+  display: flex;
+  gap: ui.$spacing-lg;
 
-    @include ui.respond-to(lg) {
-      grid-template-columns: repeat(2, minmax(240px, 1fr));
-    }
-  
-    @include ui.respond-to(md) {
-      grid-template-columns: 1fr;
-    }
+  @include ui.respond-to(lg) {
+    flex-direction: column;
   }
-  
-  
-  .pageTitle {
-    font-size: 1.75rem;
-    font-weight: 700;
+}
+
+.sidebarWrapper {
+  @include ui.col(3);
+  @include ui.col-responsive;
+
+  @include ui.respond-to(lg) {
+    display: none;
+  }
+}
+
+.contentColumn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: ui.$spacing-lg;
+}
+
+.pageTitle {
+  margin: 0 0 ui.$spacing-md;
+  font-size: 2rem;
+  font-weight: 700;
+  color: ui.$color-primary;
+  text-align: center;
+}
+
+.studentsGrid {
+  display: grid;
+  gap: ui.$spacing-md;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+
+  @include ui.respond-to(lg) {
+    grid-template-columns: repeat(2, minmax(240px, 1fr));
+  }
+
+  @include ui.respond-to(md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.successMessage {
+  color: ui.$color-success;
+  font-weight: 600;
+  margin-top: ui.$spacing-md;
+}
+
+.loading,
+.error,
+.noResults {
+  text-align: center;
+  font-weight: 600;
+  margin: ui.$spacing-lg 0;
+}
+
+.error {
+  color: ui.$color-danger;
+}
+
+.noResults {
+  color: ui.$color-warning;
+}
+
+/* Нижняя панель навигации */
+.bottomNav {
+  display: none;
+
+  @include ui.respond-to(lg) {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: saturate(180%) blur(10px);
+    border-top: 1px solid ui.$color-grey-300;
+    padding: ui.$spacing-sm env(safe-area-inset-bottom) ui.$spacing-sm;
+    justify-content: space-around;
+    box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.08);
+    z-index: 2000;
+  }
+}
+
+.navItem {
+  flex: 1;
+  max-width: 80px;
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: ui.$spacing-xs ui.$spacing-sm;
+  font: inherit;
+  color: ui.$color-grey-600;
+  transition: color 0.3s ease, transform 0.2s ease;
+
+  &:hover {
     color: ui.$color-primary;
-    margin: ui.$spacing-md 0;
-    margin: auto;
+    transform: translateY(-2px);
   }
-  
-  .successMessage {
-    color: ui.$color-success;
-    font-weight: 600;
-    margin-bottom: ui.$spacing-md;
+
+  &.active {
+    color: ui.$color-primary;
+
+    .navIcon {
+      background: ui.$color-primary-light;
+      color: ui.$color-primary;
+      border-radius: 50%;
+    }
+
+    .navLabel {
+      font-weight: 600;
+      text-decoration: underline;
+    }
   }
+}
+
+.navIcon {
+  font-size: 1.6rem;
+  margin-bottom: 4px;
+}
+
+.navLabel {
+  font-size: 0.75rem;
+  line-height: 1;
+}

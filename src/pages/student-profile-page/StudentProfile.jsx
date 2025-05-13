@@ -22,24 +22,27 @@ import { useTeamInvitation } from "../../hooks/useTeamInvitation";
 import { useTeamApplication } from "../../hooks/useTeamApplication";
 import Loader from "../../components/spinner/Loader";
 import styles from './StudentProfilePage.module.scss';
+import NoDataDisplay from "../../components/nodata-display/NoDataDisplay";
+import ErrorModal from "../../components/error-display/ErrorDisplay";
 
 
 const sidebarItems = [
   { name: 'Мои команды', icon: '👥' },
-  { name: 'Мой профиль', icon: '👤' },
+  { name: 'Профиль', icon: '👤' },
   { name: 'Мои заявки', icon: '📄' },
   { name: 'Созданные команды', icon: '⚙️' },
 ];
 const StudentProfilePage = observer(() => {
   const { studentId } = useParams();
   const currentStudentId = authStore.studentId;
+  const isAdmin = authStore.isAdmin;
   const isOwnProfile = Number(studentId) === currentStudentId;
 
-  const [currentSection, setCurrentSection] = useState('Мой профиль');
+  const [currentSection, setCurrentSection] = useState('Профиль');
   const [isEditing, setIsEditing]               = useState(false);
   const [isCreatingTeam, setIsCreatingTeam]     = useState(false);
 
-  const { student, loading, error } = studentStore;
+  const { student, loading} = studentStore;
   const isCaptain = student?.isCaptain;
   const { successMessage } = useSuccessMessage();
   const { showModal, toggleModal } = useModal();
@@ -68,24 +71,19 @@ const StudentProfilePage = observer(() => {
 
   useEffect(() => {
     async function loadAll() {
-      await studentStore.fetchStudentById(studentId);
-      console.log('fetched student:', studentStore.student);
-  
+      await studentStore.fetchStudentById(studentId);  
       await projectTypeStore.fetchProjectTypes();
-    
       await technologyStore.fetchTechnologies();
-  
     }
     loadAll();
   }, [studentId, applicationStore.application]);
   
   
-  // --- РЕНДЕР СЕКЦИЙ ---
   const renderProfile = () => {
     if (loading) return <Loader />;
-    if (error)   return <div className={styles.error}>{error}</div>;
+    if (!studentStore.loading&&studentStore.error) return <ErrorModal message={studentStore.error} onClose={() => studentStore.setError(null)} />;
 
-    if (isOwnProfile && isEditing) {
+    if ((isOwnProfile||isAdmin) && isEditing) {
       return (
         <ProfileEditForm
           studentData={student}
@@ -113,7 +111,7 @@ const StudentProfilePage = observer(() => {
   const renderMyTeams = () => {
     if (loading) return <Loader />;
     return student.teams.length > 0 ? (
-      <div className={styles.cards}>
+      <div className={styles.teamsGrid}>
         {student.teams.map(team => (
           <Card
             key={team.id}
@@ -126,14 +124,14 @@ const StudentProfilePage = observer(() => {
         ))}
       </div>
     ) : (
-      <p>У вас нет команд.</p>
+      <NoDataDisplay message="У вас нет команд" />
     );
   };
 
   const renderApplications = () => {
     if (loading) return <Loader />;
     return student.applications.length > 0 ? (
-      <div className={styles.cards}>
+      <div className={styles.teamsGrid}>
         {student.applications.map(req => (
           <ApplicationCard
             key={req.id}
@@ -142,6 +140,8 @@ const StudentProfilePage = observer(() => {
             teamName={req.team.name}
             teamDescription={req.team.project_description}
             technologies={req.team.technologies}
+            teamId={req.team.id}
+            studentId={req.student.id}
             status={req.status}
             showCaptainOptions={isCaptain}
             onApprove={appHook.onAction}
@@ -151,12 +151,11 @@ const StudentProfilePage = observer(() => {
         ))}
       </div>
     ) : (
-      <p>Нет поданных заявок.</p>
+      <NoDataDisplay message="У вас нет заявок" />
     );
   };
 
   const createdTeams = student?.current_team?[student.current_team]:[];
-  console.log('createdTeams:', createdTeams);
 
   const renderCreatedTeams = () => (
     
@@ -168,7 +167,7 @@ const StudentProfilePage = observer(() => {
         Создать команду
       </button>
       {createdTeams?.length > 0 ? (
-        <div className={styles.cards}>
+        <div className={styles.teamsGrid}>
           {createdTeams.map(team => (
             <TeamCard
               key={team.id}
@@ -181,14 +180,14 @@ const StudentProfilePage = observer(() => {
           ))}
         </div>
       ) : (
-        <p>Вы не создали команд.</p>
+        <NoDataDisplay message="Нет созданных команд" />
       )}
     </>
   );
 
   const renderSection = () => {
     switch (currentSection) {
-      case 'Мой профиль':       return renderProfile();
+      case 'Профиль':       return renderProfile();
       case 'Мои команды':       return renderMyTeams();
       case 'Мои заявки':        return renderApplications();
       case 'Созданные команды': return renderCreatedTeams();
@@ -206,8 +205,7 @@ const StudentProfilePage = observer(() => {
         )}
 
         <div className={styles.container}>
-          {/* Десктоп-сайдбар */}
-          {isOwnProfile && (
+          {(isOwnProfile || isAdmin) && (
             <div className={styles.sidebarWrapper}>
               <Sidebar
                 items={sidebarItems}
@@ -217,15 +215,13 @@ const StudentProfilePage = observer(() => {
             </div>
           )}
 
-          {/* Основной контент */}
           <section className={styles.contentColumn}>
-            <h1 className={styles.pageTitle}>{currentSection}</h1>
+            <h2 className={styles.pageTitle}>{currentSection}</h2>
             {renderSection()}
           </section>
         </div>
 
-        {/* Нижняя навигация для мобилки/планшета */}
-        {isOwnProfile && (
+        {(isOwnProfile || isAdmin) && (
           <nav className={styles.bottomNav}>
             {sidebarItems.map(item => (
               <button
@@ -245,7 +241,6 @@ const StudentProfilePage = observer(() => {
         )}
       </MainContent>
 
-      {/* Модалка создания команды */}
       {showModal && isCreatingTeam && (
         <Modal show onClose={() => { setIsCreatingTeam(false); toggleModal(); }}>
           <TeamForm

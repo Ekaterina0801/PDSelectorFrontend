@@ -3,6 +3,15 @@
   display: flex;
   justify-content: center;
   padding: ui.$spacing-lg;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: ui.$shadow-modal;
+  align-items: center;
+  z-index: 1000;
 }
 
 .profileEditForm {
@@ -14,7 +23,7 @@
   box-shadow: ui.$shadow-strong;
   border: 1px solid ui.$color-primary-light;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  
+  position: relative;
 
   h2 {
     margin-bottom: ui.$spacing-lg;
@@ -35,6 +44,48 @@
       margin-top: ui.$spacing-xs;
     }
 
+    textarea {
+      min-height: 100px;
+      @include ui.form-control(ui.$radius-sm);
+      margin-top: ui.$spacing-xs;
+      resize: none;
+    }
+
+    ul {
+      @include ui.form-control(ui.$radius-sm);
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      font-weight: 450;
+      color: ui.$color-primary;
+      justify-content: space-around;
+      margin: 0;
+
+      li{
+        display: flex;
+        label {
+          cursor: pointer;
+          margin: 0;
+          background-color: ui.$color-primary-light;
+          padding: 0.25rem 0.5rem;
+          border-radius: 8px;
+          box-shadow: ui.$shadow-strong;
+        }
+        label:hover {
+          color: ui.$color-grey-700;
+        }
+
+        input:checked + label {
+          color: inherit;
+        }
+
+        input:not(:checked) + label {
+          background-color: transparent;
+          box-shadow: none;
+        }
+      }
+    }
+    
     .textCapture {
       display: block;
       margin-bottom: ui.$spacing-xs;
@@ -65,11 +116,12 @@
         font-style: italic;
       }
     }
+
   }
 
   .formButtons {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     gap: ui.$spacing-sm;
     margin-top: ui.$spacing-lg;
 
@@ -96,7 +148,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: ui.$spacing-sm;
-  margin-top: ui.$spacing-md;
+  margin-top: ui.$spacing-xs;
 
   .technologyCheckbox {
     display: flex;

@@ -45,7 +45,7 @@ const handleErrors = err => {
         .then(responseBody)
         .catch(handleErrors),
   
-    del: url =>
+    delete: url =>
       superagent
         .del(`${API_BASE_URL}${url}`)
         .use(tokenPlugin)

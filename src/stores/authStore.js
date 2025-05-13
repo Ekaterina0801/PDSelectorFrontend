@@ -1,63 +1,143 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import { AuthService } from "../service/authService";
-import commonStore from "./commonStore";
 import StudentService from "../service/studentService";
-
+import commonStore from "./commonStore";
+import trackStore from "./trackStore";
 class AuthStore {
   user = null;
+  isAdmin = false;
   studentId = null;
-  trackId = null;
-  isLoading = false;
+  users = [];
+  total = 0;
+  loading = false;
   error = null;
+  trackId = null;
+  filters = {
+    page: 0,
+    size: 10,
+    sort: "fio,asc",
+    fio: null,
+    role: null,
+    course: null,
+    groupNumber: null,
+    trackId: null,
+    isEnabled: null
+  };
+  roles = [];
 
   constructor() {
     makeAutoObservable(this);
-    this.loadTrackId(); 
+    this.loadTrackId();
   }
 
   loadTrackId() {
-    const savedTrackId = localStorage.getItem("trackId");
-    if (savedTrackId) {
-      this.trackId = savedTrackId;
-    } else {
-      this.trackId = 1; 
-    }
+    const stored = localStorage.getItem("trackId");
+    this.trackId = stored ? Number(stored) : 1;
+    this.filters.trackId = this.trackId;
   }
 
+  get isTrackActive() {
+    const track = trackStore.tracks.find(t => t.id === this.trackId);
+    if (!track || !track.startDate || !track.endDate) return false;
+    const today = new Date();
+    const start = new Date(track.startDate);
+    const end   = new Date(track.endDate);
+    return today >= start && today <= end;
+  }
 
   setTrackId(trackId) {
     this.trackId = trackId;
-    localStorage.setItem("trackId", trackId); 
+    localStorage.setItem("trackId", trackId);
+    this.setFilters({ trackId });
+  }
+
+  setFilters(newFilters) {
+    this.filters = { ...this.filters, ...newFilters };
+    this.fetchUsers();
+  }
+
+  async fetchRoles() {
+    try {
+      const data = await AuthService.getRoles();
+      console.log("dataRoles", data);
+      runInAction(() => {
+        this.roles = data;
+        console.log("rolesStore", this.roles);
+      });
+    } catch {}
+  }
+
+  async fetchUsers() {
+    this.loading = true;
+    this.error = null;
+    try {
+      const {
+        page,
+        size,
+        sort,
+        fio,
+        role,
+        course,
+        groupNumber,
+        trackId,
+        isEnabled
+      } = this.filters;
+      const data = await AuthService.fetchUsers({
+        page,
+        size,
+        sort,
+        filterFio: fio,
+        filterRole: role,
+        filterCourse: course,
+        filterGroupNumber: groupNumber,
+        trackId,
+        isEnabled
+      });
+      console.log('isEnabled', isEnabled);
+      runInAction(() => {
+        this.users = data.content;
+        this.total = data.totalElements;
+      });
+    } catch (err) {
+      runInAction(() => {
+        this.error = err.message || "Ошибка при загрузке пользователей";
+      });
+    } finally {
+      runInAction(() => {
+        this.loading = false;
+      });
+    }
   }
 
   async checkAuth() {
     if (this.trackId == null) {
-      this.trackId = 1; 
+      this.trackId = 1;
     }
-
-    this.isLoading = true;
+    this.loading = true;
+    this.error = null;
     try {
       const user = await AuthService.getCurrentUser();
       const student = await StudentService.getCurrentStudentId();
-      console.log('user', user);
+      this.loadTrackId();
       runInAction(() => {
         this.user = user;
         this.studentId = student;
+        this.isAdmin = user.role === "ADMIN";
+        console.log("user", user);
+        console.log('isAdmin', this.isAdmin);
         commonStore.loadToken();
       });
-    } catch (error) {
-      console.error("Ошибка при авторизации:", error);
+    } catch (err) {
       runInAction(() => {
         this.user = null;
-        this.error = error?.message || "Ошибка авторизации";
+        this.error = err.message || "Ошибка авторизации";
       });
-
-      if (error?.status === 401 || error?.response?.status === 401) {
-        window.location.href = "/login"; 
+      if (err?.response?.status === 401) {
+        window.location.href = "/login";
       }
     } finally {
       runInAction(() => {
-        this.isLoading = false;
+        this.loading = false;
       });
     }
   }
@@ -68,10 +148,60 @@ class AuthStore {
     window.location.href = "/login";
   }
 
+  async updateUser(dto) {
+    this.loading = true;
+    this.error   = null;
+    try {
+      // не передавать туда ничего лишнего:
+      const cleaned = Object.fromEntries(
+        Object.entries(dto).filter(([_, v]) => v != null)
+      );
+      await AuthService.updateUser(cleaned);
+      await this.fetchUsers();
+    } catch (err) {
+      runInAction(() => {
+        this.error = err.message || "Ошибка при сохранении пользователя";
+      });
+    } finally {
+      runInAction(() => {
+        this.loading = false;
+      });
+    }
+  }
+  
+
+  async deleteUser(id) {
+    if (!window.confirm("Вы уверены, что хотите деактивировать этого пользователя?")) {
+      console.log("User deletion cancelled");
+      return;
+    
+    }
+    console.log("Deleting user with ID:", id);
+    this.loading = true;
+    this.error = null;
+    try {
+      await AuthService.deleteUser(id);
+      await this.fetchUsers();
+    } catch (err) {
+      runInAction(() => {
+        console.log('errroooor');
+        console.log(err);
+        this.error = err.message || "Ошибка при удалении пользователя";
+      });
+    } finally {
+      runInAction(() => {
+        this.loading = false;
+      });
+    }
+  }
+
   get isAuthenticated() {
     return !!this.user;
   }
+
+  setError(error) {
+    this.error = error;
+  }
 }
 
-const authStore = new AuthStore();
-export default authStore;
+export default new AuthStore();

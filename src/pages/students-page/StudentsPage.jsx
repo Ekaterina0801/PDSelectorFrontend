@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import Navbar from "../../components/navbar/Navbar";
 import SearchBar from "../../components/search-bar/SearchBar";
 import StudentFilter from "../../components/forms/filters/StudentFilter";
-import Header from "../../components/header/Header";
 import StudentCard from "../../components/card/student-card/StudentCard";
 import { observer } from "mobx-react";
 import studentStore from "../../stores/studentStore";
@@ -12,6 +11,7 @@ import Loader from "../../components/spinner/Loader";
 import MainContent from "../../components/main-section/MainSection";
 import styles from './StudentsPage.module.scss';
 import ErrorModal from "../../components/error-display/ErrorDisplay";
+import NoDataDisplay from "../../components/nodata-display/NoDataDisplay";
 const StudentsPage = observer(() => {
   const { trackId, isLoading } = authStore;
   const { students, loading, error, allFilters, filters, hasError } = studentStore;
@@ -63,7 +63,7 @@ const StudentsPage = observer(() => {
     if (loading) return <Loader />;
     if (!studentStore.loading&&studentStore.error) return <ErrorModal message={studentStore.error} onClose={() => studentStore.setError(null)} />;
     if (!students.length) {
-      return <div className={styles.emptyState}>Студенты не найдены</div>;
+      return <NoDataDisplay message="Студентов нет" />;
     }
     return (
       <div className={styles.studentsGrid}>
@@ -149,7 +149,6 @@ const StudentsPage = observer(() => {
           </section>
         </div>
 
-        {/* модалка фильтров */}
         <div
           className={[
             styles.filtersModal,

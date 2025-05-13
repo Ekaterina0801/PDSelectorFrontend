@@ -1,54 +1,54 @@
 @use "@/styles/tokens" as t;
 @import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap");
-
-
 html {
-  font-size: clamp(
-    1rem,
-    1vw + 1rem,
-    1.2rem
-  );
-  line-height: t.$line-height-base;
-  color: t.$color-text; 
-
-
-  h1 {
     font-size: clamp(
-      2rem,    
-      5vw,       
-      t.$font-size-4xl  
+      1rem,    
+      1vw + 1rem,   
+      1.1rem         
     );
-    font-weight: 700;
+    line-height: t.$line-height-base;
+    color: t.$color-text;
+  
+    h1 {
+
+      font-size: clamp(
+        2rem,         
+        5vw,         
+        3rem     
+      );
+      font-weight: 700;
+    }
+  
+    h2 {
+
+      font-size: clamp(
+        1.5rem,    
+        3vw,     
+        2.25rem          
+      );
+      font-weight: 700;
+    }
+  
+    h3 {
+
+      font-size: clamp(
+        1.25rem,   
+        2vw,  
+        1.5rem       
+      );
+      font-weight: 500;
+    }
+  
+    p,
+    li {
+
+      font-size: clamp(
+        0.9rem,           
+        0.8vw + 0.8rem,   
+        1.1rem             
+      );
+      line-height: t.$line-height-base;
+      font-weight: 400;
+    }
   }
-
-  h2 {
-    font-size: clamp(
-      1.75rem,
-      4vw,
-      t.$font-size-3xl
-    );
-    font-weight: 700;
-  }
-
-  h3 {
-    font-size: clamp(
-      1rem,
-      3vw,
-      t.$font-size-base
-    );
-    font-weight: 500;
-  }
-
-  p,
-li {
-  font-size: clamp(
-    0.7rem,      
-    1vw + 0.2rem,
-    1.0rem      
-  );
-  line-height: t.$line-height-base;
-  font-weight: 400;
-}
-
-}
-
+  

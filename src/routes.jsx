@@ -6,6 +6,7 @@ import AdminPage from './pages/AdminPage';
 import TeamProfilePage from './pages/team-profile-page/TeamProfilePage';
 import StudentsPage from './pages/students-page/StudentsPage';
 import AuthPage from './pages/AuthPage';
+import AdminDashboard from "./pages/admin-panel/AdminDashboard";
 
 const routes = [
   {
@@ -26,7 +27,7 @@ const routes = [
   },
   {
     path: '/admin',
-    element: <AdminPage />
+    element: <AdminDashboard />
   },
   {
     path: '/teams/:teamId',

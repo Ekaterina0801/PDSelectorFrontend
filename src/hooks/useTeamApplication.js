@@ -76,7 +76,6 @@ export function useTeamApplication({ teamId, studentId, isCaptain }) {
       showButton: true,
       buttonText,
       buttonClass,
-      error: store.error,
       onAction,
     };
   }

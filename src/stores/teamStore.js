@@ -1,5 +1,6 @@
 import { makeAutoObservable, runInAction,action } from "mobx";
 import { TeamService } from "../service/teamService";
+import trackStore from "./trackStore";
 
 
 class TeamStore {
@@ -14,7 +15,7 @@ class TeamStore {
     makeAutoObservable(this);
   }
 
-  async fetchTeams(params) {
+  async fetchTeams(params = {}) {
     this.loading = true;
     this.error = null;
 
@@ -26,13 +27,19 @@ class TeamStore {
         ...(params.projectType != null && { projectType: params.projectType }),
         technologies: params.technologies,
       };
-
       const cleanedParams = Object.fromEntries(
-        Object.entries(apiParams).filter(([_, v]) => v !== undefined)
+        Object.entries(apiParams).filter(([_, v]) => v != null)
       );
+      console.log("cleanedParams", cleanedParams);
 
       const data = await TeamService.fetchTeams(cleanedParams);
-      const allFilters = await TeamService.fetchFilterParamsByTrackId(params.trackId);
+
+      let allFilters = {};
+      // вызываем только если trackId реально указан
+      if (params.trackId != null) {
+        console.log("params.trackId", params.trackId);
+        allFilters = await TeamService.fetchFilterParamsByTrackId(params.trackId);
+      }
 
       runInAction(() => {
         this.teams = data.content;
@@ -41,6 +48,37 @@ class TeamStore {
     } catch (err) {
       runInAction(() => {
         this.error = err.message || "Ошибка при загрузке команд";
+      });
+    } finally {
+      runInAction(() => {
+        this.loading = false;
+      });
+    }
+  }
+
+  async fetchFilters(trackId) {
+    this.loading = true;
+    this.error = null;
+
+    try {
+      if (trackId == null) {
+        // при "Все" треков просто сбрасываем фильтры, не вызываем API
+        runInAction(() => {
+          this.allFilters = {
+            projectTypes: [],
+            technologies: [],
+            tracks: trackStore.tracks
+          };
+        });
+        return;
+      }
+      const filters = await TeamService.fetchFilterParamsByTrackId(trackId);
+      runInAction(() => {
+        this.allFilters = { ...filters, tracks: trackStore.tracks };
+      });
+    } catch (err) {
+      runInAction(() => {
+        this.error = err.message || "Ошибка при загрузке фильтров";
       });
     } finally {
       runInAction(() => {
@@ -152,25 +190,8 @@ class TeamStore {
     }
   }
 
-  async fetchFilters(trackId) {
-    this.loading = true;
-    this.error = null;
-
-    try {
-      const filters = await TeamService.fetchFilterParamsByTrackId(trackId);
-      runInAction(() => {
-        this.allFilters = filters;
-      });
-    } catch (err) {
-      runInAction(() => {
-        this.error = err.message || "Ошибка при загрузке фильтров";
-      });
-    } finally {
-      runInAction(() => {
-        this.loading = false;
-      });
-    }
-  }
+  
+  
 
   setFilters(newFilters) {
     const parsedFilters = {
@@ -191,6 +212,10 @@ class TeamStore {
 
   clearTeam() {
     this.team = null;
+  }
+  
+  setError(error) {
+    this.error = error;
   }
 }
 
