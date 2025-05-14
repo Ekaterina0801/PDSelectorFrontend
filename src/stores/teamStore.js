@@ -5,8 +5,13 @@ import trackStore from "./trackStore";
 
 class TeamStore {
   teams = [];
-  team = null;
-  filters = {};
+  filters = {
+    isFull: null,
+    projectType: null,
+    technologies: [],
+    searchTerm: '',
+    trackId: null
+  };
   allFilters = {};
   loading = false;
   error = null;
@@ -21,29 +26,25 @@ class TeamStore {
 
     try {
       const apiParams = {
-        input: params.searchTerm,
-        trackId: params.trackId,
+        input: params.searchTerm || undefined,
+        trackId: params.trackId || undefined,
         isFull: params.isFull ?? undefined,
-        ...(params.projectType != null && { projectType: params.projectType }),
-        technologies: params.technologies,
+        projectType: params.projectType || undefined,
+        technologies: params.technologies?.length ? params.technologies : undefined,
+        page: params.page,
+        size: params.size,
+        sort: params.sort
       };
+
       const cleanedParams = Object.fromEntries(
-        Object.entries(apiParams).filter(([_, v]) => v != null)
+        Object.entries(apiParams).filter(([_, v]) => v !== undefined)
       );
-      console.log("cleanedParams", cleanedParams);
 
       const data = await TeamService.fetchTeams(cleanedParams);
 
-      let allFilters = {};
-      // вызываем только если trackId реально указан
-      if (params.trackId != null) {
-        console.log("params.trackId", params.trackId);
-        allFilters = await TeamService.fetchFilterParamsByTrackId(params.trackId);
-      }
-
       runInAction(() => {
         this.teams = data.content;
-        this.allFilters = allFilters;
+        this.allFilters = data.availableFilters || {};
       });
     } catch (err) {
       runInAction(() => {
@@ -55,14 +56,13 @@ class TeamStore {
       });
     }
   }
-
   async fetchFilters(trackId) {
     this.loading = true;
     this.error = null;
 
     try {
       if (trackId == null) {
-        // при "Все" треков просто сбрасываем фильтры, не вызываем API
+
         runInAction(() => {
           this.allFilters = {
             projectTypes: [],
@@ -73,8 +73,9 @@ class TeamStore {
         return;
       }
       const filters = await TeamService.fetchFilterParamsByTrackId(trackId);
+      console.log('filters', filters);
       runInAction(() => {
-        this.allFilters = { ...filters, tracks: trackStore.tracks };
+        this.allFilters = filters;
       });
     } catch (err) {
       runInAction(() => {
@@ -194,17 +195,14 @@ class TeamStore {
   
 
   setFilters(newFilters) {
-    const parsedFilters = {
-      isFull: newFilters.isFull ?? null,
-      ...(newFilters.projectType && { projectType: newFilters.projectType }),
-      technologies: (newFilters.technologies || []).map(tech => tech.id || tech),
-      trackId: newFilters.trackId,
-    };
-
-    this.filters = parsedFilters;
+    runInAction(() => {
+      this.filters = {
+        ...this.filters,
+        ...newFilters
+      };
+    });
     this.fetchTeams(this.filters);
   }
-
   resetFilters() {
     this.filters = {};
     this.fetchTeams({});

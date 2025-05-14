@@ -3,80 +3,91 @@ import { useEffect } from 'react';
 import { useLocalObservable } from 'mobx-react-lite';
 import applicationStore from '../stores/applicationStore';
 import useSuccessMessage from './useSuccessMessage';
+import authStore from '../stores/authStore';
+import { runInAction } from "mobx";
+export function useTeamApplication({ teamId, isCaptain }) {
+  const { showSuccessMessage } = useSuccessMessage();
+  const { currentUser, studentId: authStudentId } = authStore;
+  const studentId = authStudentId || currentUser?.id;
 
-export function useTeamApplication({ teamId, studentId, isCaptain }) {
-    const { showSuccessMessage } = useSuccessMessage();
-    const store = useLocalObservable(() => applicationStore);
+  useEffect(() => {
+    if (!isCaptain && studentId) {
+      applicationStore.fetchApplicationByTeamIdAndStudentId(teamId, studentId);
+      return () => applicationStore.clearApplication();
+    }
+  }, [teamId, studentId, isCaptain]);
 
-    useEffect(() => {
-      if (!isCaptain) {
-        store.fetchApplicationByTeamIdAndStudentId(teamId, studentId);
-        return () => store.clearApplication();
+  const loading = applicationStore.loading;
+  const error = applicationStore.error;
+  const clearError = () => runInAction(() => { applicationStore.error = null });
+
+  if (isCaptain) {
+    // Капитан вправе принимать или отклонять заявки
+    const performCaptain = async (id, status, successMsg) => {
+      clearError();
+      try {
+        await applicationStore.updateApplication({ id, status });
+        showSuccessMessage(successMsg);
+      } catch (e) {
+        const msg = e?.response?.data?.message || e.message || 'Ошибка';
+        runInAction(() => { applicationStore.error = msg });
+        return;
       }
-    }, [teamId, studentId, isCaptain, store]);
-    if (isCaptain) {
-      return { showButton: false };
-    }
-  
-    const { application } = store;
-    console.log('application', application);
-    const status = application?.status?.toLowerCase() || '';
-  
-    let buttonText = 'Подать заявку';
-    let buttonClass = 'default'
-    let onAction;
-  
-    if (!application) {
-      onAction = async () => {
-        await store.createApplication({
-          student_id: studentId,
-          team_id: teamId,
-          status: 'sent',
-          type: 'request'
-        });
-        showSuccessMessage('Заявка отправлена');
-      };
-    } else if (status === 'sent') {
-      buttonText = 'Отменить заявку';
-      buttonClass = 'pending';
-      onAction = async () => {
-        await store.updateApplication({
-          id: application.id,
-          student_id: studentId,
-          team_id: teamId,
-          status: 'cancelled',
-          type: 'request'
-        });
-        showSuccessMessage('Заявка отменена');
-      };
-    } else if (status === 'accepted') {
-      buttonText = 'Заявка одобрена';
-      buttonClass = 'approved';
-      onAction = null;
-    } else if (status === 'rejected') {
-      buttonText = 'Заявка отклонена';
-      buttonClass = 'rejected';
-      onAction = null;
-    } else if (status === 'cancelled') {
-      buttonText = 'Заявка отменена. Подать снова';
-      buttonClass = 'cancelled';
-      onAction = async () => {
-        await store.updateApplication({
-          id: application.id,
-          student_id: studentId,
-          team_id: teamId,
-          status: 'sent',
-          type: 'request'
-        });
-        showSuccessMessage('Заявка отправлена');
-      };
-    }
-  
-    return {
-      showButton: true,
-      buttonText,
-      buttonClass,
-      onAction,
+      applicationStore.fetchApplicationsByTeamId(teamId);
     };
+
+    const onApprove = id => performCaptain(id, 'accepted', 'Заявка принята');
+    const onReject  = id => performCaptain(id, 'rejected', 'Заявка отклонена');
+    return { showButton: false, onApprove, onReject, loading, error, clearError };
   }
-  
+
+  // Студент: создаём или отменяем заявку
+  const application = applicationStore.application;
+  const status = application?.status?.toLowerCase() || '';
+
+  const performStudent = async (fn, successMsg) => {
+    clearError();
+    try {
+      await fn();
+      showSuccessMessage(successMsg);
+    } catch (e) {
+      const msg = e?.response?.data?.message || e.message || 'Ошибка';
+      runInAction(() => { applicationStore.error = msg });
+      return;
+    }
+    applicationStore.fetchApplicationByTeamIdAndStudentId(teamId, studentId);
+  };
+
+  let buttonText = 'Подать заявку';
+  let buttonClass = 'default';
+  let onAction = () => performStudent(
+    () => applicationStore.createApplication({ student_id: studentId, team_id: teamId, status: 'sent', type: 'request' }),
+    'Заявка отправлена'
+  );
+
+  if (status === 'sent') {
+    buttonText = 'Отменить заявку';
+    buttonClass = 'pending';
+    onAction = () => performStudent(
+      () => applicationStore.updateApplication({ id: application.id, status: 'cancelled' }),
+      'Заявка отменена'
+    );
+  } else if (status === 'accepted') {
+    buttonText = 'Заявка одобрена';
+    buttonClass = 'approved';
+    onAction = null;
+  } else if (status === 'rejected') {
+    buttonText = 'Заявка отклонена';
+    buttonClass = 'rejected';
+    onAction = null;
+  } else if (status === 'cancelled') {
+    buttonText = 'Подать снова';
+    buttonClass = 'cancelled';
+    onAction = () => performStudent(
+      () => applicationStore.updateApplication({ id: application.id, status: 'sent' }),
+      'Заявка отправлена'
+    );
+  }
+
+  return { showButton: true, buttonText, buttonClass, onAction, loading, error, clearError };
+}

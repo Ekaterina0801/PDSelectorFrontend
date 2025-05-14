@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Navbar from "../../components/navbar/Navbar";
 import SearchBar from "../../components/search-bar/SearchBar";
-import StudentFilter from "../../components/forms/filters/StudentFilter";
 import StudentCard from "../../components/card/student-card/StudentCard";
 import { observer } from "mobx-react";
 import studentStore from "../../stores/studentStore";
@@ -12,66 +11,62 @@ import MainContent from "../../components/main-section/MainSection";
 import styles from './StudentsPage.module.scss';
 import ErrorModal from "../../components/error-display/ErrorDisplay";
 import NoDataDisplay from "../../components/nodata-display/NoDataDisplay";
+import { StudentFilter } from "../../components/forms/filters/StudentFilter";
 const StudentsPage = observer(() => {
   const { trackId, isLoading } = authStore;
-  const { students, loading, error, allFilters, filters, hasError } = studentStore;
+  const { students, loading, error, filters } = studentStore;
 
   const [page, setPage] = useState(0);
   const [size] = useState(10);
   const [sort, setSort] = useState('name,asc');
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
-  const loadData = useCallback(() => {
+  const loadData = useCallback(async () => {
     if (isLoading) return;
-    const current = {
-      ...filters,
-      trackId: filters.trackId ?? trackId,
-      page,
-      size,
-      sort,
-    };
-    studentStore.fetchFilters(trackId);
-    studentStore.fetchStudents(current);
-  }, [filters, trackId, page, size, sort, isLoading]);
+    const params = {...studentStore.filters,
+          trackId: authStore.trackId,
+          page,
+          size,
+          sort,};
+    await studentStore.fetchStudents(params);
+    await studentStore.fetchFilters(authStore.trackId);
+  }, [trackId, filters.trackId, page, size, sort, isLoading]);
 
   useEffect(() => {
     loadData();
   }, [loadData]);
+  console.log('students', students);
 
-  const handleSearch = term => {
-    studentStore.setFilters({ ...filters, searchTerm: term, trackId });
-    setPage(0);
-  };
-
-  const handleApplyFilters = nf => {
-    studentStore.setFilters({ ...filters, ...nf, trackId });
+  const handleApplyFilters = useCallback(async (newFilters) => {
+    studentStore.setFilters({ ...studentStore.filters, ...newFilters, trackId });
     setPage(0);
     setShowMobileFilters(false);
-  };
+    const params = { ...studentStore.filters, ...newFilters, trackId, page: 0, size, sort };
+    await studentStore.fetchStudents(params);
+    await studentStore.fetchFilters(trackId);
+  }, [trackId, size, sort]);
 
-  const handleSortChange = e => {
-    setSort(e.target.value);
-    setPage(0);
-  };
-  const handleSortReset = () => {
-    setSort('name,asc');
-    setPage(0);
-  };
+  const handleSearch = useCallback((term) => {
+    handleApplyFilters({ ...filters, searchTerm: term });
+  }, [filters, handleApplyFilters]);
+
+  const handleSortChange = e => { setSort(e.target.value); setPage(0); };
+  const handleSortReset = () => { setSort('name,asc'); setPage(0); };
   const handlePageChange = np => setPage(np);
 
   const renderStudents = () => {
     if (loading) return <Loader />;
-    if (!studentStore.loading&&studentStore.error) return <ErrorModal message={studentStore.error} onClose={() => studentStore.setError(null)} />;
-    if (!students.length) {
-      return <NoDataDisplay message="Студентов нет" />;
-    }
+    if (!loading && error)
+      return <ErrorModal message={error} onClose={() => studentStore.setError(null)} />;
+    if (!students.length) return <NoDataDisplay message="Студентов нет" />;
+
     return (
       <div className={styles.studentsGrid}>
         {students.map(s => (
           <StudentCard
             key={s.id}
             name={s.user?.fio || 'Имя отсутствует'}
-            about_self={s.about_self || 'Описание отсутствует'}
+            aboutSelf={s.about_self || 'Описание отсутствует'}
             course={s.course}
             technologies={s.technologies}
             profileLink={`/students/${s.id}`}
@@ -97,11 +92,12 @@ const StudentsPage = observer(() => {
         <div className={styles.container}>
           <aside className={styles.filtersColumn}>
             <StudentFilter
-              availableFilters={allFilters}
+              availableFilters={studentStore.allFilters}
               currentFilters={filters}
               onApply={handleApplyFilters}
             />
           </aside>
+
           <section className={styles.contentColumn}>
             <div className={styles.contentHeader}>
               <h1 className={styles.pageTitle}>Участники</h1>
@@ -117,16 +113,14 @@ const StudentsPage = observer(() => {
                   <option value="course,asc">Курс (↑)</option>
                   <option value="course,desc">Курс (↓)</option>
                 </select>
-                <button
-                  className={styles.resetButton}
-                  onClick={handleSortReset}
-                >
+                <button className={styles.resetButton} onClick={handleSortReset}>
                   Сбросить
                 </button>
               </div>
             </div>
 
             {renderStudents()}
+
             <div className={styles.paginationControls}>
               <button
                 className={styles.paginationButton}
@@ -135,9 +129,7 @@ const StudentsPage = observer(() => {
               >
                 Назад
               </button>
-              <span className={styles.pageIndicator}>
-                Страница {page + 1}
-              </span>
+              <span className={styles.pageIndicator}>Страница {page + 1}</span>
               <button
                 className={styles.paginationButton}
                 onClick={() => handlePageChange(page + 1)}
@@ -149,32 +141,25 @@ const StudentsPage = observer(() => {
           </section>
         </div>
 
-        <div
-          className={[
-            styles.filtersModal,
-            showMobileFilters && styles.filtersModalOpen,
-          ]
-            .filter(Boolean)
-            .join(' ')}
-        >
-          <div className={styles.filtersModalContent}>
-            <button
-              className={styles.filtersModalClose}
-              onClick={() => setShowMobileFilters(false)}
-            >
-              <FaTimes size={16} />
-            </button>
-            <StudentFilter
-              availableFilters={allFilters}
-              currentFilters={filters}
-              onApply={handleApplyFilters}
-              showTitle={false}
-            />
+        {showMobileFilters && (
+          <div className={[styles.filtersModal, styles.filtersModalOpen].join(' ')}>
+            <div className={styles.filtersModalContent}>
+              <button
+                className={styles.filtersModalClose}
+                onClick={() => setShowMobileFilters(false)}
+              >
+                <FaTimes size={16} />
+              </button>
+              <StudentFilter
+                availableFilters={studentStore.allFilters}
+                currentFilters={filters}
+                onApply={handleApplyFilters}
+              />
+            </div>
           </div>
-        </div>
+        )}
       </MainContent>
     </>
   );
 });
-
 export default StudentsPage;

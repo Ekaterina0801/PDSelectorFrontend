@@ -1,5 +1,6 @@
 @use "sass:meta";
 @use "@/styles/index" as ui;
+// В вашем base.module.scss (или аналогичном файле)
 @mixin action-button {
   background-color: ui.$color-primary;
   color: #fff;
@@ -18,108 +19,119 @@
 }
 
 .card {
-  width: 100%;
+  // === Основная структура ===
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   background: #fff;
   border-radius: ui.$radius-lg;
   box-shadow: ui.$shadow-light;
-  padding: ui.$spacing-lg;
-  margin: calc(ui.$spacing-lg / 2) auto;
   border: 1px solid ui.$color-primary-light;
+  overflow: hidden;
   transition: all 0.3s ease;
-  align-items: center;
 
+  // === Header ===
   &-header {
+    padding: ui.$spacing-lg;
     text-align: center;
-    margin-bottom: ui.$spacing-md;
   }
-
   &-name {
     font-size: 1.5rem;
     font-weight: 700;
     color: ui.$color-primary;
-    margin-bottom: 4px;
+    margin-bottom: ui.$spacing-xs;
   }
-
   &-type {
-    font-size: 1.3rem;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    font-size: 1.25rem;
+    color: ui.$color-text;
   }
 
+  // === Body ===
   &-body {
-    margin-bottom: ui.$spacing-md;
-    font-size: 20px;
+    flex: 1;                       // занимает всё свободное пространство
+    padding: ui.$spacing-lg;
+    display: flex;
+    flex-direction: column;
   }
-
   &-resume {
+    flex: 1;                       // прижат по высоте
     color: #444;
     line-height: 1.5;
+    font-size: 1rem;
     margin-bottom: ui.$spacing-md;
-    text-align: left;
-    font-size: 20px;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-
-    .type-capture {
-      margin-right: 4px;
-      display: inline;
-      font-weight: 600;
-      color: ui.$color-primary;
-    }
   }
-
   &-tags {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: ui.$spacing-xs;
     margin-bottom: ui.$spacing-md;
   }
-
   &-tag {
-    display: inline-block;
     background-color: ui.$color-primary-light;
     color: ui.$color-primary;
     padding: ui.$spacing-xs ui.$spacing-sm;
-    margin: 0 ui.$spacing-xs ui.$spacing-xs 0;
     border-radius: ui.$radius-md;
     font-size: 0.875rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    cursor: default;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-    transition: 
-      background-color 0.2s ease, 
-      transform 0.2s ease, 
-      box-shadow 0.2s ease;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    transition: background-color 0.2s ease, transform 0.2s ease;
 
     &:hover {
-      background-color: ui.$color-primary-light;
+      background-color: ui.$color-primary;
+      color: #fff;
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
   }
-
-
   &-noTags {
     color: #888;
     font-style: italic;
   }
 
+  // === Footer / Actions ===
   &-actions {
+    padding: ui.$spacing-md;
+    border-top: 1px solid ui.$color-primary-light;
     display: flex;
     justify-content: center;
-    gap: 12px;
   }
-
   .action-link {
+    width: 100%;
     text-decoration: none;
   }
-
   .action-button {
     @include action-button();
+    width: 100%;
+  }
+
+  // === Responsive: большие экраны ===
+  @include ui.respond-to(lg) {
+    &-header   { padding: ui.$spacing-md; }
+    &-body     { padding: ui.$spacing-md; }
+    &-resume   { -webkit-line-clamp: 2; }
+    .action-button { font-size: 0.9rem; }
+  }
+
+  // === Responsive: мобильные (<768px) ===
+  @include ui.respond-to(md) {
+    &-header   { padding: ui.$spacing-sm; }
+    &-body     { padding: ui.$spacing-sm; }
+    &-resume   {
+      -webkit-line-clamp: 3;      // чуть больше строк на мобильниках
+      font-size: 0.9rem;
+    }
+    &-name     { font-size: 1.25rem; }
+    &-type     { font-size: 1rem; }
+    &-tag      { font-size: 0.75rem; padding: ui.$spacing-xs; }
+    .action-button {
+      font-size: 0.85rem;
+      padding: ui.$spacing-xs;
+    }
   }
 }

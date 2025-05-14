@@ -98,22 +98,28 @@
   }
 }
 .studentsGrid {
-    display: grid;
-    gap: ui.$spacing-md;
-  
-    // По умолчанию – auto-fit: флекс-колонки, которые заполнят доступное место
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  
-    // <=1024px (планшеты и небольшие десктопы) – фиксируем 2 колонки
-    @include ui.respond-to(lg) {
-      grid-template-columns: repeat(2, minmax(240px, 1fr));
-    }
-  
-    // <=768px (мобильники) – одна колонка
-    @include ui.respond-to(md) {
-      grid-template-columns: 1fr;
-    }
+  display: grid;
+  gap: ui.$spacing-md;
+
+  // Обычные десктопы: всегда 2 колонки
+  grid-template-columns: repeat(3, minmax(280px, 1fr));
+
+  // <=1024px (планшеты и небольшие десктопы) – тоже 2 колонки (с чуть меньшим min-width)
+  @include ui.respond-to(lg) {
+    grid-template-columns: repeat(3, minmax(240px, 1fr));
   }
+
+  // <=768px (мобильники) – одна колонка
+  @include ui.respond-to(md) {
+    grid-template-columns: 1fr;
+  }
+
+  // >1600px (ультраширокие экраны) – автоподбор количества колонок
+  @media (min-width: 1600px) {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+}
+
   
   
 

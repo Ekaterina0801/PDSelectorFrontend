@@ -1,23 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import styles from './Filter.module.scss';
 
-const CheckboxOption = ({ value, checked, onChange, label, className = '' }) => (
-  <label className={className}>
+const CheckboxOption = ({ id, value, checked, onChange, label }) => (
+  <label className={styles.checkboxWrapper} htmlFor={id}>
     <input
       type="checkbox"
+      id={id}
       checked={checked}
       onChange={() => onChange(value)}
     />
-    {label}
+    <span className={styles.checkboxLabel}>{label}</span>
   </label>
 );
-
-CheckboxOption.propTypes = {
-  value: PropTypes.any.isRequired,
-  checked: PropTypes.bool.isRequired,
-  onChange: PropTypes.func.isRequired,
-  label: PropTypes.string.isRequired,
-  className: PropTypes.string
-};
 
 export default CheckboxOption;

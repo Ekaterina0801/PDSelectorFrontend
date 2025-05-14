@@ -107,14 +107,23 @@
 .teamsGrid {
   display: grid;
   gap: ui.$spacing-md;
-  grid-template-columns: 2fr;
-  justify-content: center;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   justify-items: center;
 
-  @include ui.respond-to (sm) {
-    grid-template-columns: 1fr;
+  // <= 768px (mobile)
+  @include ui.respond-to(md) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;      // центрируем карточки по горизонтали
+
+    > * {
+      width: 100%;
+      max-width: 360px;       // ограничиваем их максимальную ширину
+    }
   }
 }
+
+
 
 .paginationControls {
     @include ui.pagination;

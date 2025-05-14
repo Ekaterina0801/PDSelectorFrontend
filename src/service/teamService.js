@@ -1,7 +1,6 @@
 
 import requests from "../agent";
 
-const encode = encodeURIComponent;
 
 export const TeamService = {
   fetchTeams: ({ input, trackId, isFull, projectType, technologies }) => {

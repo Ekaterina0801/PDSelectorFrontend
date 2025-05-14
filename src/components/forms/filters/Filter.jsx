@@ -8,125 +8,114 @@ import {
   filterItemPropTypes
 } from './propTypes';
 import styles from './Filter.module.scss';
-export default function Filter({ availableFilters, currentFilters, onApply }) {
-
-  const [filters, setFilters] = useState({
-    isFull: null,
-    projectType: null,
+import { toJS } from 'mobx';
+import teamStore from '../../../stores/teamStore';
+import authStore from '../../../stores/authStore';
+const Filter = ({ availableFilters, currentFilters, onApply }) => {
+  const [localFilters, setLocalFilters] = useState({
+    isFull: [],
+    projectType: [],
     technologies: []
   });
 
-  const { projectTypes = [], technologies: allTechnologies = [] } = 
-    useMemo(() => availableFilters, [availableFilters]);
+  const { projectTypes = [], technologies: allTechnologies = [] } = useMemo(
+    () => availableFilters,
+    [availableFilters]
+  );
 
   useEffect(() => {
-    setFilters({
-      isFull: currentFilters.isFull ?? null,
-      projectType:
-        currentFilters.projectType != null
-          ? String(currentFilters.projectType)
-          : null,
-      technologies: Array.isArray(currentFilters.technologies)
-        ? currentFilters.technologies
-        : String(currentFilters.technologies || '')
-            .split(',')
-            .filter(Boolean)
+    setLocalFilters({
+      isFull: currentFilters.isFull !== null ? [String(currentFilters.isFull)] : [],
+      projectType: currentFilters.projectType ? [currentFilters.projectType] : [],
+      technologies: Array.isArray(currentFilters.technologies) ? currentFilters.technologies : [],
     });
   }, [currentFilters]);
 
-  const handleFilterChange = useCallback((field, value) => {
-    setFilters(prev => ({ ...prev, [field]: value }));
-  }, []);
-
-  const toggleTechnology = useCallback(techId => {
-    setFilters(prev => ({
+  const handleFilterChange = (field, value) => {
+    setLocalFilters(prev => ({
       ...prev,
-      technologies: prev.technologies.includes(techId)
-        ? prev.technologies.filter(id => id !== techId)
-        : [...prev.technologies, techId]
+      [field]: prev[field].includes(value)
+        ? prev[field].filter(v => v !== value)
+        : [...prev[field], value]
     }));
-  }, []);
+  };
 
-  const handleApply = useCallback(() => {
-    onApply({
-      ...filters,
-      technologies:
-        filters.technologies.length > 0 ? filters.technologies : null
-    });
-  }, [filters, onApply]);
+  const handleApply = () => {
+    const applied = {
+      isFull: localFilters.isFull.length === 1 ? localFilters.isFull[0] === 'true' : null,
+      projectType: localFilters.projectType.length > 0 ? localFilters.projectType[0] : null,
+      technologies: localFilters.technologies,
+      trackId: authStore.trackId,
+    };
+    onApply(applied);
+  };
 
-  const handleClear = useCallback(() => {
-    const cleared = { isFull: null, projectType: null, technologies: [] };
-    setFilters(cleared);
-    onApply(cleared);
-  }, [onApply]);
+  const handleClear = () => {
+    setLocalFilters({ isFull: [], projectType: [], technologies: [] });
+    const reset = { isFull: null, projectType: null, technologies: [], trackId: authStore.trackId };
+    onApply(reset);
+  };
 
   return (
     <div className={styles.filterSection}>
       <h3 className={styles.filterSection__title}>Фильтры</h3>
 
       <div className={styles.filterSection__group}>
-        <h3 className={styles.filterSection__groupTitle}>Заполненность</h3>
-        <RadioOption
-          name="isFull"
-          label="Неважно"
-          value={null}
-          checked={filters.isFull === null}
-          onChange={v => handleFilterChange('isFull', v)}
-        />
-        <RadioOption
-          name="isFull"
+        <h4 className={styles.filterSection__groupTitle}>Заполненность</h4>
+        <CheckboxOption
+          id="isFull-true"
           label="Полностью укомплектован"
-          value={true}
-          checked={filters.isFull === true}
+          value="true"
+          checked={localFilters.isFull.includes('true')}
           onChange={v => handleFilterChange('isFull', v)}
         />
-        <RadioOption
-          name="isFull"
+        <CheckboxOption
+          id="isFull-false"
           label="Есть свободные места"
-          value={false}
-          checked={filters.isFull === false}
+          value="false"
+          checked={localFilters.isFull.includes('false')}
           onChange={v => handleFilterChange('isFull', v)}
         />
       </div>
 
-      {projectTypes.length > 0 && (
-        <div className={styles.filterSection__group}>
-          <h3 className={styles.filterSection__groupTitle}>Тип проекта</h3>
-          <RadioOption
-            name="projectType"
-            label="Неважно"
-            value={null}
-            checked={filters.projectType === null}
-            onChange={v => handleFilterChange('projectType', v)}
-          />
-          {projectTypes.map(pt => (
-            <RadioOption
-              key={pt.name}
-              name="projectType"
-              label={pt.name}
-              value={pt.name}
-              checked={filters.projectType === pt.name}
-              onChange={v => handleFilterChange('projectType', v)}
-            />
-          ))}
-        </div>
-      )}
+      <div className={styles.filterSection__group}>
+        <h4 className={styles.filterSection__groupTitle}>Тип проекта</h4>
+        {projectTypes.length > 0 ? (
+          <div className={styles.filterSection__list}>
+            {projectTypes.map(pt => (
+              <CheckboxOption
+                key={pt.id}
+                id={`projectType-${pt.id}`}
+                label={pt.name}
+                value={pt.name}
+                checked={localFilters.projectType.includes(pt.name)}
+                onChange={v => handleFilterChange('projectType', v)}
+              />
+            ))}
+          </div>
+        ) : (
+          <p>Нет доступных типов проектов</p>
+        )}
+      </div>
 
       <div className={styles.filterSection__group}>
-        <h3 className={styles.filterSection__groupTitle}>Технологии</h3>
-        <div className={styles.filterSection__list}>
-          {allTechnologies.map(tech => (
-            <CheckboxOption
-              key={tech.id}
-              label={tech.name}
-              value={tech.id}
-              checked={filters.technologies.includes(tech.id)}
-              onChange={toggleTechnology}
-              className={styles.filterSection__checkbox}
-            />
-          ))}
-        </div>
+        <h4 className={styles.filterSection__groupTitle}>Технологии</h4>
+        {allTechnologies.length > 0 ? (
+          <div className={styles.filterSection__list}>
+            {allTechnologies.map(tech => (
+              <CheckboxOption
+                key={tech.id}
+                id={`tech-${tech.id}`}
+                label={tech.name}
+                value={tech.id}
+                checked={localFilters.technologies.includes(tech.id)}
+                onChange={v => handleFilterChange('technologies', v)}
+              />
+            ))}
+          </div>
+        ) : (
+          <p>Нет доступных технологий</p>
+        )}
       </div>
 
       <div className={styles.filterSection__actions}>
@@ -147,29 +136,6 @@ export default function Filter({ availableFilters, currentFilters, onApply }) {
       </div>
     </div>
   );
-}
-
-Filter.propTypes = {
-  ...baseFilterPropTypes,
-  availableFilters: PropTypes.shape({
-    projectTypes: PropTypes.arrayOf(
-      PropTypes.shape({ name: PropTypes.string.isRequired })
-    ),
-    technologies: PropTypes.arrayOf(
-      PropTypes.shape(filterItemPropTypes)
-    )
-  }).isRequired,
-  currentFilters: PropTypes.shape({
-    isFull: PropTypes.bool,
-    projectType: PropTypes.string,
-    technologies: PropTypes.oneOfType([
-      PropTypes.arrayOf(PropTypes.string),
-      PropTypes.string
-    ])
-  }).isRequired,
-  onApply: PropTypes.func.isRequired
 };
 
-Filter.defaultProps = {
-  ...baseFilterDefaultProps
-};
+export default Filter;
