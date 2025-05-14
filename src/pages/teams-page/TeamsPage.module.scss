@@ -109,6 +109,10 @@
   gap: ui.$spacing-md;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   justify-items: center;
+  > :last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    justify-self: center;
+  }
 
   // <= 768px (mobile)
   @include ui.respond-to(md) {

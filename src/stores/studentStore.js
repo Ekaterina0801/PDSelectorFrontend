@@ -25,6 +25,7 @@ class StudentStore {
 
     try {
       const data = await StudentService.fetchStudents(params);
+      console.log('studentsData', data);
       const filters = await StudentService.fetchFilterParamsByTrackId(params.trackId);
       console.log('filters', filters);
 

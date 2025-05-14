@@ -53,5 +53,16 @@ export const TeamService = {
 
   addStudentToTeam: (teamId, studentId) => {
     return requests.put(`/teams/${teamId}/students/${studentId}`);
-  }
+  },
+  exportTeamsCsv: trackId =>
+    requests.get(
+      `/teams/export/csv?trackId=${encodeURIComponent(trackId)}`,
+      { responseType: 'blob' }
+    ),
+
+  exportTeamsExcel: trackId =>
+    requests.get(
+      `/teams/export/excel?trackId=${encodeURIComponent(trackId)}`,
+      { responseType: 'blob' }
+    ),
 };

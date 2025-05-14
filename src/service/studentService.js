@@ -55,6 +55,30 @@ class StudentService {
   static async getCurrentStudentId() {
     return requests.get('/students/me');
   }
+
+  static async exportStudentsCsv(trackId) {
+    console.log('trackIdInService', trackId);
+    const response = await requests.get(
+      `/students/export/csv?trackId=${encodeURIComponent(trackId)}`,
+      { 
+        responseType: 'blob' 
+      }
+    );
+    // тут response — это объект axios-ответа
+    console.log('response', response);
+    return response;  // data будет Blob
+  }
+
+  /** Скачивает Excel для переданного трека и возвращает Blob */
+  static async exportStudentsExcel(trackId) {
+    const response = await requests.get(
+      `/students/export/excel?trackId=${encodeURIComponent(trackId)}`,
+      { 
+        responseType: 'blob' 
+      }
+    );
+    return response;
+  }
 }
 
 export default StudentService;
