@@ -5,13 +5,19 @@ import applicationStore from '../stores/applicationStore';
 import useSuccessMessage from './useSuccessMessage';
 import authStore from '../stores/authStore';
 import { runInAction } from "mobx";
+import {toJS} from "mobx";
 export function useTeamApplication({ teamId, isCaptain }) {
   const { showSuccessMessage } = useSuccessMessage();
   const { currentUser, studentId: authStudentId } = authStore;
   const studentId = authStudentId || currentUser?.id;
 
   useEffect(() => {
+    console.log("!!!isCaptain: ", isCaptain)
+    console.log("!!!studentId: ", studentId)
+    
     if (!isCaptain && studentId) {
+      console.log("GO !!!isCaptain: ", isCaptain)
+      console.log("GO !!!studentId: ", studentId)
       applicationStore.fetchApplicationByTeamIdAndStudentId(teamId, studentId);
       return () => applicationStore.clearApplication();
     }
@@ -60,16 +66,32 @@ export function useTeamApplication({ teamId, isCaptain }) {
 
   let buttonText = 'Подать заявку';
   let buttonClass = 'default';
-  let onAction = () => performStudent(
-    () => applicationStore.createApplication({ student_id: studentId, team_id: teamId, status: 'sent', type: 'request' }),
-    'Заявка отправлена'
-  );
+
+  let onAction = () => {
+    console.log('Начало обработки заявки...');
+    
+    const result = performStudent(
+      () => applicationStore.createApplication({
+        id: application.id, //здесь application = null
+        student_id: studentId,
+        team_id: teamId,
+        status: 'sent',
+        type: 'request'
+      }),
+      'Заявка отправлена'
+    );
+    console.log('Результат application.id:', toJS(application));
+    console.log('Результат операции:', toJS(result));
+    return result;
+  };
 
   if (status === 'sent') {
+    console.log("Статус заявки!!!!:", status)
+
     buttonText = 'Отменить заявку';
     buttonClass = 'pending';
     onAction = () => performStudent(
-      () => applicationStore.updateApplication({ id: application.id, status: 'cancelled' }),
+      () => applicationStore.updateApplication({ id: application.id, status: 'cancelled', student_id: studentId, team_id: teamId, type: "request"}),
       'Заявка отменена'
     );
   } else if (status === 'accepted') {
@@ -82,9 +104,10 @@ export function useTeamApplication({ teamId, isCaptain }) {
     onAction = null;
   } else if (status === 'cancelled') {
     buttonText = 'Подать снова';
+    console.log("GO");
     buttonClass = 'cancelled';
     onAction = () => performStudent(
-      () => applicationStore.updateApplication({ id: application.id, status: 'sent' }),
+      () => applicationStore.updateApplication({ id: application.id, status: 'sent', student_id: studentId, team_id: teamId, type: "request"}),
       'Заявка отправлена'
     );
   }

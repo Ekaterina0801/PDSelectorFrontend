@@ -69,6 +69,9 @@ class ApplicationStore {
   async fetchApplicationByTeamIdAndStudentId(teamId, studentId) {
     this.loading = true;
     this.error = null;
+    console.log("!!!teamId: ", teamId)
+    console.log("!!!studentId: ", studentId)
+
     try {
       const data = await ApplicationService.fetchApplicationByTeamIdAndStudentId(teamId, studentId);
       console.log('fetchApplicationByTeamIdAndStudentId', data);
@@ -108,6 +111,7 @@ class ApplicationStore {
   async createApplication(applicationData) {
     this.loading = true;
     this.error = null;
+    console.log("!!!!! applicationData !!!!! : ", );
     try {
       const newApp = await ApplicationService.createApplication(applicationData);
       runInAction(() => {
@@ -127,6 +131,7 @@ class ApplicationStore {
   }
 
   async updateApplication(applicationData) {
+    console.log("Статус заявки:", applicationData.status)
     this.loading = true;
     this.error = null;
     try {

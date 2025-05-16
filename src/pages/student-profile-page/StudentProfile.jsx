@@ -24,7 +24,7 @@ import Loader from "../../components/spinner/Loader";
 import styles from './StudentProfilePage.module.scss';
 import NoDataDisplay from "../../components/nodata-display/NoDataDisplay";
 import ErrorModal from "../../components/error-display/ErrorDisplay";
-
+import {toJS} from "mobx"
 
 const sidebarItems = [
   { name: 'Мои команды', icon: '👥' },
@@ -88,7 +88,7 @@ const StudentProfilePage = observer(() => {
         <ProfileEditForm
           studentData={student}
           onSave={data =>
-            studentStore.updateProfile(data, studentId).then(() => setIsEditing(false))
+            studentStore.updateStudent(data, studentId).then(() => setIsEditing(false))
           }
           onCancel={() => setIsEditing(false)}
           allTechnologies={technologyStore.technologies}
@@ -132,7 +132,10 @@ const StudentProfilePage = observer(() => {
     if (loading) return <Loader />;
     return student.applications.length > 0 ? (
       <div className={styles.teamsGrid}>
-        {student.applications.map(req => (
+        
+        {student.applications.map(req => {
+          {console.log("appHook.onAction!!!!!: ", toJS(appHook))}
+          return (
           <ApplicationCard
             key={req.id}
             applicationId={req.id}
@@ -147,8 +150,9 @@ const StudentProfilePage = observer(() => {
             onApprove={appHook.onAction}
             onReject={appHook.onAction}
             onCancel={appHook.onAction}
-          />
-        ))}
+            onSending={appHook.onAction}
+          />)
+  })}
       </div>
     ) : (
       <NoDataDisplay message="У вас нет заявок" />
@@ -246,7 +250,11 @@ const StudentProfilePage = observer(() => {
           <TeamForm
             newTeam={newTeam}
             onChange={handleTeamChange}
-            onSubmit={handleTeamSubmit}
+            onSubmit={async (e) => {
+              e.preventDefault();
+              await handleTeamSubmit(e);
+              setIsCreatingTeam(false);
+              toggleModal();}}
             onCancel={() => { setIsCreatingTeam(false); toggleModal(); }}
             technologies={technologyStore.technologies}
             projectTypes={projectTypeStore.projectTypes}

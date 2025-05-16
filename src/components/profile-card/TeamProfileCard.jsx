@@ -15,7 +15,6 @@ const TeamProfileCard = ({
     <div className={styles.teamHeader}>
       <div className={styles.teamHeaderTop}>
         <h2 className={styles.teamName}>{team?.name}</h2>
-
         {!isCaptain && showButton && (
           <button
             className={`${styles.applicationCard} ${buttonClass || ''}`}

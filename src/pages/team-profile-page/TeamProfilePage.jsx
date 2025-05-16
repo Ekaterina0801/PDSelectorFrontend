@@ -133,7 +133,8 @@ const TeamProfilePage = observer(() => {
                 profileLink={`/students/${s.id}`}
               />
             ))
-          : list.map(app => (
+          : list.map(app => {
+            return (
               <ApplicationCard
                 key={app.id}
                 applicationId={app.id}
@@ -149,7 +150,7 @@ const TeamProfilePage = observer(() => {
                 onReject={onAction}
                 onCancel={onAction}
               />
-            ))}
+            )})}
       </div>
     );
   };
