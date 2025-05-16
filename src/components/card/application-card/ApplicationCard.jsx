@@ -34,10 +34,10 @@ export default function ApplicationCard({
   const { text: statusText, className: statusClass } = statusMap[appStatus] || {};
 
   const handlers = {
-    approve: () => { onApprove?.(applicationId); setAppStatus('accepted'); },
-    reject:  () => { onReject?.(applicationId);  setAppStatus('rejected');  },
-    cancel:  () => { onCancel?.(applicationId);  setAppStatus('cancelled'); },
-    resend:  () => { onSending?.(applicationId); setAppStatus('sent');      },
+    approve: () => { onApprove?.(applicationId); setAppStatus('accepted'); console.log("Сработал метод approve!!!!!!!");},
+    reject:  () => { onReject?.(applicationId);  setAppStatus('rejected');  console.log("Сработал метод reject!!!!!!!");},
+    cancel:  () => { onCancel?.(applicationId);  setAppStatus('cancelled'); console.log("Сработал метод cancel!!!!!!!");},
+    resend:  () => { onSending?.(applicationId); setAppStatus('sent'); console.log("Сработал метод resend!!!!!!!");},
     viewDetails: () => { onViewDetails?.(applicationId); },
   };
 
