@@ -50,7 +50,7 @@ export const TrackService = {
     },
   
     deleteTrack: (trackId) => {
-      return requests.del(`/tracks/${trackId}`)
+      return requests.delete(`/tracks/${trackId}`)
         .then(data => {
           console.log("API Response:", data);
           return data;

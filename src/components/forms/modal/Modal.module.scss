@@ -1,5 +1,6 @@
 @use "@/styles/index" as ui;
-/* Modal.module.css */
+
+/* Modal.module.scss */
 .modalOverlay {
   position: fixed;
   top: 0;
@@ -11,103 +12,123 @@
   justify-content: center;
   align-items: center;
   z-index: 10000;
+  padding: ui.$spacing-lg; /* чтобы при узком экране было пространство */
+  overflow-y: auto;       /* вертикальный скролл при переполнении */
 }
 
 .modalContent {
-  background: #fff;
-  border-radius: 8px;
-  padding: 2rem;
-  width: 90%;
-  max-width: 500px;
+  background: ui.$color-white;
+  border-radius: ui.$radius-lg;
+  padding: ui.$spacing-lg;
+  width: 100%;
+  max-width: 800px;       /* увеличили максимальную ширину */
+  min-width: 300px;       /* не меньше такой */
   box-shadow: 0 8px 24px rgba(0,0,0,0.1);
   position: relative;
+  max-height: 90vh;       /* чтобы не вылезало за экран */
+  overflow-y: auto;       /* скролл внутри, если очень много контента */
 }
 
 .modalClose {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
+  top: ui.$spacing-md;
+  right: ui.$spacing-md;
   background: none;
   border: none;
   font-size: 1.5rem;
-  color: #aaa;
+  color: ui.$color-grey-500;
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition: color ui.$transition-fast;
 }
 .modalClose:hover {
-  color: #555;
+  color: ui.$color-grey-800;
 }
 
 .modalHeader {
-  font-size: 1.25rem;
+  font-size: ui.$font-size-2xl;
   font-weight: 600;
-  color: var(--color-primary, #673ab7);
-  margin-bottom: 1rem;
+  color: ui.$color-primary;
+  margin-bottom: ui.$spacing-lg;
 }
 
 .modalBody {
-  margin-bottom: 1.5rem;
+  margin-bottom: ui.$spacing-lg;
 }
 
 /* Группа полей */
 .formGroup {
   display: flex;
   flex-direction: column;
-  margin-bottom: 1rem;
-}
+  margin-bottom: ui.$spacing-md;
 
-.formGroup label {
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-  color: #333;
-}
+  label {
+    margin-bottom: ui.$spacing-xs;
+    font-size: ui.$font-size-base;
+    color: ui.$color-grey-800;
+  }
 
-.formGroup input {
-  height: 2.5rem;
-  padding: 0 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 1rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-.formGroup input:focus {
-  outline: none;
-  border-color: var(--color-primary, #673ab7);
-  box-shadow: 0 0 0 3px rgba(103,58,183,0.15);
+  input,
+  textarea,
+  select {
+    padding: ui.$spacing-sm ui.$spacing-md;
+    border: 1px solid ui.$color-grey-300;
+    border-radius: ui.$radius-md;
+    font-size: ui.$font-size-base;
+    transition: border-color ui.$transition-fast, box-shadow ui.$transition-fast;
+    &:focus {
+      outline: none;
+      border-color: ui.$color-primary;
+      box-shadow: 0 0 0 3px rgba(ui.$color-primary, 0.15);
+    }
+  }
+
+  textarea {
+    min-height: 6rem;
+    resize: vertical;
+  }
 }
 
 /* Футер модалки */
 .modalFooter {
   display: flex;
   justify-content: flex-end;
-  gap: 0.5rem;
+  gap: ui.$spacing-md;
+  margin-top: ui.$spacing-lg;
 }
 
 /* Общие кнопки */
 .button {
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  font-size: 1rem;
+  padding: ui.$spacing-sm ui.$spacing-lg;
+  border-radius: ui.$radius-md;
+  font-size: ui.$font-size-base;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
+  transition: background ui.$transition-fast, transform ui.$transition-fast;
   border: none;
 }
 
 .buttonPrimary {
   composes: button;
-  background-color: var(--color-primary, #673ab7);
-  color: #fff;
-}
-.buttonPrimary:hover {
-  background-color: #5e35b1;
-  transform: translateY(-1px);
+  background-color: ui.$color-primary;
+  color: ui.$color-white;
+  &:hover {
+    background-color: darken(ui.$color-primary, 10%);
+    transform: translateY(-1px);
+  }
 }
 
 .buttonSecondary {
   composes: button;
-  background-color: #f0f0f0;
-  color: #333;
+  background-color: ui.$color-grey-300;
+  color: ui.$color-grey-800;
+  &:hover {
+    background-color: ui.$color-grey-300;
+  }
 }
-.buttonSecondary:hover {
-  background-color: #e0e0e0;
+
+/* Адаптация под мобильные экраны */
+@media (max-width: 600px) {
+  .modalContent {
+    padding: ui.$spacing-lg;
+    max-width: 100%;
+  }
 }

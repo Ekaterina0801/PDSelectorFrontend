@@ -1,95 +1,101 @@
 @use "@/styles/index" as ui;
 
 .tableWrapper {
-    width: 100%;
-    overflow-x: auto;
-    margin: 1rem 0;
+  width: 100%;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.9rem;
+  color: ui.$color-text;
+  background-color: #fff;
+  border: 1px solid ui.$color-grey-300;
+  border-radius: ui.$radius-md;
+  overflow: hidden;
+  table-layout: auto;
+}
+
+/* Заголовки */
+.headerCell {
+  background-color: ui.$color-primary;
+  color: ui.$color-white;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  cursor: pointer;
+  border-bottom: 2px solid ui.$color-text;
+  padding: 0.75rem 1rem;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.headerContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sortIcon {
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+}
+
+/* Тело таблицы */
+.bodyRow:nth-child(odd) {
+  background-color: ui.$color-grey-100;
+}
+
+.bodyRow:hover {
+  background-color: ui.$color-grey-300;
+}
+
+.bodyCell {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid ui.$color-white;
+  /* Текст теперь переносится по необходимости */
+}
+
+/* Обрезка с троеточием только для описания */
+.ellipsisCell {
+  max-width: 200px; /* подберите ширину под ваш дизайн */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Последняя строка: скругляем нижние углы */
+.bodyRow:last-child .bodyCell:first-child {
+  border-bottom-left-radius: ui.$radius-md;
+}
+.bodyRow:last-child .bodyCell:last-child {
+  border-bottom-right-radius: ui.$radius-md;
+}
+
+/* Колонка действий — узкая и без обрезки */
+.actionsCell {
+  white-space: nowrap;
+  text-align: center;
+  width: 4rem;
+  padding: 0.75rem 0.5rem;
+}
+
+.empty {
+  text-align: center;
+  color: #777;
+  font-style: italic;
+}
+
+/* Мобильная версия */
+@media (max-width: 768px) {
+  :root {
+    --cell-padding-vertical: 0.5rem;
+    --cell-padding-horizontal: 0.75rem;
   }
-  
   .table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    font-size: 0.9rem;
-    color: ui.$color-text;
-    background-color: #fff;
-    border: 1px solid ui.$color-grey-300;
-    border-radius: ui.$radius-md;
-    overflow: hidden;
-    table-layout: auto;
+    font-size: 0.8rem;
   }
-  
-  /* Заголовки */
-  .headerCell {
-    background-color: ui.$color-primary;
-    color: ui.$color-white;
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    cursor: pointer;
-    border-bottom: 2px solid ui.$color-text;
-    padding: 0.75rem 1rem;
-    text-transform: uppercase;
-    font-weight: 600;
-  }
-  
-  .headerContent {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  
-  .sortIcon {
-    margin-left: 0.5rem;
-    font-size: 0.75rem;
-  }
-  
-  /* Тело таблицы */
-  .bodyRow:nth-child(odd) {
-    background-color: ui.$color-grey-100;
-  }
-  
-  .bodyRow:hover {
-    background-color: ui.$color-grey-300;
-  }
-  
-  .bodyCell {
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid ui.$color-white;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-  }
-  
-  /* Последняя строка: скругляем нижние углы */
-  .bodyRow:last-child .bodyCell:first-child {
-    border-bottom-left-radius: ui.$color-white;
-  }
-  .bodyRow:last-child .bodyCell:last-child {
-    border-bottom-right-radius: ui.$color-white;
-  }
-  
-  /* Колонка действий — узкая и без обрезки */
-  .actionsCell {
-    white-space: nowrap;
-    text-align: center;
-    width: 4rem;
-    padding: 0.75rem 0.5rem;
-  }
-  
-  .empty {
-    text-align: center;
-    color: #777;
-    font-style: italic;
-  }
-  
-  /* Мобильная версия: горизонтальный скролл остаётся */
-  @media (max-width: 768px) {
-    :root {
-      --cell-padding-vertical: 0.5rem;
-      --cell-padding-horizontal: 0.75rem;
-    }
-    .table {
-      font-size: 0.8rem;
-    }
-  }
+}

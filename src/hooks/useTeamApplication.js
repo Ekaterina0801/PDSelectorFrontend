@@ -69,7 +69,7 @@ export function useTeamApplication({ teamId, isCaptain }) {
     buttonText = 'Отменить заявку';
     buttonClass = 'pending';
     onAction = () => performStudent(
-      () => applicationStore.updateApplication({ id: application.id, status: 'cancelled' }),
+      () => applicationStore.updateApplication({ id: application.id, status: 'cancelled', student_id: studentId, team_id: teamId }),
       'Заявка отменена'
     );
   } else if (status === 'accepted') {
@@ -84,7 +84,7 @@ export function useTeamApplication({ teamId, isCaptain }) {
     buttonText = 'Подать снова';
     buttonClass = 'cancelled';
     onAction = () => performStudent(
-      () => applicationStore.updateApplication({ id: application.id, status: 'sent' }),
+      () => applicationStore.updateApplication({ id: application.id, status: 'sent', student_id: studentId, team_id: teamId }),
       'Заявка отправлена'
     );
   }

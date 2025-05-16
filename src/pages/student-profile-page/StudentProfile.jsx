@@ -88,7 +88,7 @@ const StudentProfilePage = observer(() => {
         <ProfileEditForm
           studentData={student}
           onSave={data =>
-            studentStore.updateProfile(data, studentId).then(() => setIsEditing(false))
+            studentStore.updateStudent(data, studentId).then(() => setIsEditing(false))
           }
           onCancel={() => setIsEditing(false)}
           allTechnologies={technologyStore.technologies}

@@ -1,114 +1,97 @@
 @use "@/styles/index" as ui;
 
-.profileContainer {
-  position: fixed;
-  inset: 0;
-  background: ui.$shadow-modal;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10000;
-  padding: ui.$spacing-lg;
-}
-
-.profileEditForm {
-  background: ui.$color-white;
-  border: 1px solid ui.$color-primary-light;
-  box-shadow: ui.$shadow-strong;
-  border-radius: ui.$radius-md;
-  padding: ui.$spacing-lg;
-  max-width: 600px;
-  width: 100%;
-  position: relative;
-  animation: fadeInScale ui.$transition-medium;
-
-  @keyframes fadeInScale {
-    from { opacity: 0; transform: scale(0.95); }
-    to   { opacity: 1; transform: scale(1);    }
-  }
-
-  h2 {
-    margin-bottom: ui.$spacing-lg;
-    font-size: ui.$font-size-2xl;
-    color: ui.$color-primary;
-    font-weight: 700;
-  }
-}
-
-.formGroup {
-  margin-bottom: ui.$spacing-md;
+.form {
   display: flex;
   flex-direction: column;
+  gap: ui.$spacing-sm;       // уменьшили отступ
+  max-height: 75vh;          // чуть меньше высота
+  overflow-y: auto;
+  padding: ui.$spacing-xs;   // компактнее
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  font-size: ui.$font-size-base * 0.95;
+  color: ui.$color-grey-800;
+
+  & + & {
+    margin-top: ui.$spacing-sm;
+  }
 
   label {
-    margin-bottom: ui.$spacing-xs;
     font-weight: 600;
-    color: ui.$color-grey-800;
+    margin-bottom: ui.$spacing-xs;
   }
 
   input,
   select,
   textarea {
-    @include ui.form-control(ui.$radius-sm);
-    font-size: ui.$font-size-base;
-    transition: ui.$transition-fast;
+    margin-top: ui.$spacing-xs;
+    height: 2.25rem;          // чуть уже
+    padding: 0 ui.$spacing-sm;
+    font-size: ui.$font-size-base * 0.95;
+    border: 1px solid ui.$color-grey-300; // более светлая
+    border-radius: ui.$radius-sm;         // чуть меньше радиус
+    background: ui.$color-white;
+    transition: 
+      border-color ui.$transition-medium,
+      box-shadow ui.$transition-medium;
 
     &:focus {
+      outline: none;
       border-color: ui.$color-primary;
-      box-shadow: 0 0 0 3px rgba(ui.$color-primary, 0.15);
+      box-shadow: 0 0 0 2px rgba(ui.$color-primary, 0.1);
     }
   }
 
   textarea {
-    min-height: 100px;
-    resize: vertical;
+    min-height: 5rem;
+  }
+
+  input[type="checkbox"] {
+    width: auto;
+    margin-top: ui.$spacing-xs;
+    transform: scale(1.1);
   }
 }
 
-.formButtons {
+.actions {
   display: flex;
   justify-content: flex-end;
-  gap: ui.$spacing-sm;
-  margin-top: ui.$spacing-lg;
+  gap: ui.$spacing-xs;   // компактнее
+  margin-top: ui.$spacing-sm;
+}
 
-  .cancelButton,
-  .saveButton {
-    @include ui.btn(ui.$radius-sm, ui.$color-primary);
-    font-size: 0.95rem;
-    padding: ui.$spacing-xs ui.$spacing-md;
-    transition: ui.$transition-fast;
+.btnSave {
+  background: ui.$color-primary;
+  color: ui.$color-white;
+  border: none;
+  border-radius: ui.$radius-sm;
+  padding: ui.$spacing-xs ui.$spacing-md;
+  font-size: ui.$font-size-base;
+  cursor: pointer;
+  transition: background ui.$transition-fast;
 
-    &:hover {
-      transform: translateY(-1px);
-    }
-  }
-
-  .cancelButton {
-    background: ui.$color-grey-300;
-    color: ui.$color-grey-700;
-
-    &:hover {
-      background: ui.$color-grey-400;
-    }
-  }
-
-  .saveButton {
-    background: ui.$color-primary;
-    color: ui.$color-white;
-
-    &:hover {
-      background: ui.$color-primary-light;
-    }
+  &:hover {
+    background: ui.$color-primary-light;
   }
 }
 
-/* Адаптивность */
-@include ui.respond-to("sm") {
-  .profileEditForm {
-    padding: ui.$spacing-md;
+.btnCancel {
+  background: transparent;
+  color: ui.$color-grey-700;
+  border: 1px solid ui.$color-grey-300;
+  border-radius: ui.$radius-sm;
+  padding: ui.$spacing-xs ui.$spacing-md;
+  font-size: ui.$font-size-base;
+  cursor: pointer;
+  transition: 
+    background ui.$transition-fast,
+    color ui.$transition-fast;
 
-    h2 {
-      font-size: ui.$font-size-3xl;
-    }
+  &:hover {
+    background: ui.$color-grey-100;
+    color: ui.$color-grey-800;
   }
 }

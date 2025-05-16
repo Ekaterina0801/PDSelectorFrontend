@@ -1,17 +1,24 @@
 import { useState } from "react";
 import Modal from "../forms/modal/Modal";
 import styles from "./TeamEditForm.module.scss";
-
 const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => {
   const [formData, setFormData] = useState({
     ...studentData,
+    user: { ...studentData.user },
     technologies: studentData.technologies || [],
   });
   const [showModal, setShowModal] = useState(false);
 
   const handleChange = e => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    if (name === 'fio') {
+      setFormData(prev => ({
+        ...prev,
+        user: { ...prev.user, fio: value }
+      }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleRemoveTechnology = idToRemove => {
@@ -24,15 +31,8 @@ const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => 
   const toggleModal = () => setShowModal(prev => !prev);
 
   const handleSave = () => {
-    const flatData = {
-      about_self: formData.about_self,
-      contacts: formData.contacts,
-      course: formData.course,
-      group_number: formData.group_number,
-      technologies: formData.technologies,
-      user: formData.user,
-    };
-    onSave(flatData);
+    // Отправляем на бэкенд весь объект студента
+    onSave(formData);
   };
 
   const handleTechnologyChange = tech => {
@@ -54,7 +54,7 @@ const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => 
           ФИО:
           <input
             type="text"
-            name="fullName"
+            name="fio"
             value={formData.user?.fio || ''}
             onChange={handleChange}
           />
@@ -83,7 +83,6 @@ const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => 
         <label>
           О себе:
           <textarea
-            type="text"
             name="about_self"
             value={formData.about_self || ''}
             onChange={handleChange}
@@ -122,14 +121,16 @@ const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => 
         </label>
 
         <div className={styles.formButtons}>
-          <button onClick={toggleModal}>Добавить технологию</button>
+          <button type="button" onClick={toggleModal}>Добавить технологию</button>
           <button
+            type="button"
             className={styles.saveButton}
             onClick={handleSave}
           >
             Сохранить
           </button>
           <button
+            type="button"
             className={styles.cancelButton}
             onClick={onCancel}
           >
