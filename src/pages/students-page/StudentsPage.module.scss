@@ -97,6 +97,7 @@
     margin: ui.$spacing-sm auto 0;
   }
 }
+
 .studentsGrid {
   display: grid;
   gap: ui.$spacing-md;
@@ -113,16 +114,7 @@
   @include ui.respond-to(md) {
     grid-template-columns: 1fr;
   }
-
-  // >1600px (ультраширокие экраны) – автоподбор количества колонок
-  @media (min-width: 1600px) {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  }
 }
-
-  
-  
-
 
 .paginationControls {
   @include ui.pagination
@@ -182,3 +174,40 @@
 }
 
 
+@media (min-width: 2560px) {
+  .container {
+    margin: 0 auto;
+    padding-left: ui.$spacing-lg;
+    padding-right: ui.$spacing-lg;
+  }
+
+  .studentsGrid {
+    max-width: 100%;
+    grid-template-columns: repeat(auto-fit, minmax(980px, 1fr));
+    margin: 0;
+  }
+
+  .filtersColumn {
+    display: block !important;
+    @include ui.col(2);
+    padding-right: ui.$spacing-lg;
+  }
+
+  .contentColumn {
+    //@include ui.col(3);
+    margin: 0 auto;
+  }
+
+  .mobileFiltersButton {
+    display: none !important;
+  }
+
+  .pageTitle {
+    font-size: ui.$font-size-4xl;
+  }
+ 
+  .sortControls,
+  .paginationControls {
+    font-size: ui.$font-size-2xl;
+  }
+}

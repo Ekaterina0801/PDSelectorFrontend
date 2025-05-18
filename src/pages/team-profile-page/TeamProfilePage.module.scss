@@ -2,7 +2,7 @@
 @use "@/styles/index" as ui;
 
 .container {
-  @include ui.container();
+  @include ui.container(100%);
   display: flex;
   gap: ui.$spacing-lg;
 
@@ -25,6 +25,8 @@
   display: flex;
   flex-direction: column;
   gap: ui.$spacing-lg;
+  align-items: center;
+  width: 100%;
 }
 
 .pageTitle {
@@ -39,6 +41,7 @@
   display: grid;
   gap: ui.$spacing-md;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  max-width: 100%;
 
   @include ui.respond-to(lg) {
     grid-template-columns: repeat(2, minmax(240px, 1fr));
@@ -47,6 +50,8 @@
   @include ui.respond-to(md) {
     grid-template-columns: 1fr;
   }
+
+  margin: 0;
 }
 
 .successMessage {
@@ -134,4 +139,41 @@
 .navLabel {
   font-size: 0.75rem;
   line-height: 1;
+}
+/* TeamProfilePage.module.scss */
+
+@media (min-width: 2560px) {
+  .container {
+    margin-top: 30px;
+    gap: ui.$spacing-lg;
+  }
+
+  .sidebarWrapper {
+    @include ui.col(3);
+    min-width: 400px;
+  }
+
+  .pageTitle {
+    font-size: ui.$font-size-3xl;
+    margin-bottom: ui.$spacing-lg;
+  }
+
+  .studentsGrid {
+    max-width: 100%;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: ui.$spacing-lg;
+    margin: 0;
+  }
+
+  .contentColumn {
+    gap: ui.$spacing-lg;
+  }
+
+  .navIcon {
+    font-size: ui.$font-size-2xl;
+  }
+
+  .navLabel {
+    font-size: ui.$font-size-base;
+  }
 }

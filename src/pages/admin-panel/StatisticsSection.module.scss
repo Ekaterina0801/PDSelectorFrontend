@@ -1,0 +1,236 @@
+// StatisticsSection.module.scss
+@use "@/styles/index" as ui;
+
+
+.statistics {
+  padding: ui.$spacing-lg;
+  background: ui.$color-background;
+  text-align: center;
+
+  .title {
+    font-size: ui.$font-size-4xl;
+    font-weight: 700;
+    margin-bottom: ui.$spacing-lg;
+  }
+
+  .filter {
+    margin-bottom: ui.$spacing-lg;
+    label {
+      font-size: ui.$font-size-base;
+      color: ui.$color-grey-800;
+      margin-right: ui.$spacing-sm;
+    }
+    select {
+      font-size: ui.$font-size-base;
+      padding: ui.$spacing-xs ui.$spacing-md;
+      border: 1px solid ui.$color-grey-300;
+      border-radius: ui.$radius-md;
+      background: ui.$color-white;
+    }
+  }
+}
+
+.widgets {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: ui.$spacing-lg;
+  margin: ui.$spacing-lg;
+  flex-wrap: wrap;
+
+  .widget {
+    background: ui.$color-white;
+    border-radius: ui.$radius-lg;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    width: 320px;
+    min-height: 480px;         
+    padding: ui.$spacing-lg;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+
+    h2 {
+      font-size: ui.$font-size-2xl;
+      color: ui.$color-primary;
+      margin-bottom: ui.$spacing-lg;
+    }
+
+    .donut {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin-bottom: ui.$spacing-md;
+    }
+
+    .donut-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle closest-side, white 0, white 70%, transparent 0),
+        conic-gradient(var(--color) var(--pct), var(--bg) 0);
+    }
+
+    .donut-center {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: ui.$font-size-2xl;
+      font-weight: 600;
+      color: ui.$color-grey-800;
+    }
+
+    .texts {
+      text-align: left;
+      margin-bottom: ui.$spacing-lg;
+      p {
+        margin: ui.$spacing-xs 0;
+        font-size: ui.$font-size-base;
+        color: ui.$color-grey-800;
+        strong {
+          color: ui.$color-primary;
+        }
+      }
+    }
+
+    .moreInfo {
+      padding: ui.$spacing-sm ui.$spacing-md;
+      background: ui.$color-primary;
+      color: ui.$color-white;
+      border: none;
+      border-radius: ui.$radius-sm;
+      font-size: ui.$font-size-base;
+      cursor: pointer;
+      transition: background ui.$transition-fast;
+      &:hover {
+        background: ui.$color-primary-light;
+      }
+    }
+  }
+}
+
+.histogram {
+  margin: 0 auto;
+  background: ui.$color-white;
+  border-radius: ui.$radius-lg;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  padding: ui.$spacing-lg;
+  max-width: 800px;
+  width: 100%;
+  h2 {
+    font-size: ui.$font-size-2xl;
+    color: ui.$color-primary;
+    margin-bottom: ui.$spacing-lg;
+  }
+
+  .recharts-legend {
+    margin-bottom: ui.$spacing-md;
+    text-align: left;
+    font-size: ui.$font-size-base;
+
+    li {
+      margin: ui.$spacing-xs 0;
+    }
+  }
+
+  .total {
+    text-align: right;
+    font-size: ui.$font-size-base;
+    margin-top: ui.$spacing-md;
+    strong {
+      color: ui.$color-primary;
+    }
+  }
+}
+
+// В самом конце файла
+@media (min-width: 2560px) {
+  .statistics {
+    padding: ui.$spacing-md ui.$spacing-lg;
+    
+    .title {
+      font-size: ui.$font-size-5xl;
+      margin-bottom: ui.$spacing-md;
+    }
+
+    .filter {
+      margin-bottom: ui.$spacing-md;
+      
+      label {
+        font-size: ui.$font-size-2xl;
+        margin-right: ui.$spacing-md;
+      }
+      
+      select {
+        font-size: ui.$font-size-2xl;
+        padding: ui.$spacing-sm ui.$spacing-lg;
+        border-radius: ui.$radius-lg;
+      }
+    }
+  }
+
+  .widgets {
+    gap: ui.$spacing-md;
+    margin: ui.$spacing-md 0;
+    
+    .widget {
+      width: 400px;
+      min-height: 560px;
+      padding: ui.$spacing-md;
+      border-radius: ui.$radius-md;
+      
+      h2 {
+        font-size: ui.$font-size-3xl;
+        margin-bottom: ui.$radius-md;
+      }
+
+      .donut {
+        width: 160px;
+        height: 160px;
+        margin-bottom: ui.$spacing-lg;
+      }
+
+      .donut-center {
+        font-size: ui.$font-size-3xl;
+      }
+
+      .texts {
+        p {
+          font-size: ui.$font-size-2xl;
+          margin: ui.$spacing-sm 0;
+        }
+      }
+
+      .moreInfo {
+        font-size: ui.$font-size-2xl;
+        padding: ui.$spacing-md ui.$spacing-lg;
+        border-radius: ui.$radius-md;
+      }
+    }
+  }
+
+  .histogram {
+    max-width: 1200px;
+    padding: ui.$spacing-md;
+    border-radius: ui.$radius-md;
+    
+    h2 {
+      font-size: ui.$font-size-3xl;
+      margin-bottom: ui.$spacing-md;
+    }
+
+    .recharts-legend {
+      font-size: ui.$font-size-2xl;
+      margin-bottom: ui.$spacing-lg;
+    }
+
+    .total {
+      font-size: ui.$font-size-2xl;
+      margin-top: ui.$spacing-lg;
+    }
+    .x-axis-tick {
+      font-size: ui.$font-size-2xl;
+    }
+  }
+}

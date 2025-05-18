@@ -63,3 +63,34 @@
     font-size: 0.95rem;
   }
 }
+
+// Адаптация для ультрашироких экранов
+@media (min-width: 2560px) {
+  .noData {
+    min-height: 400px; // Увеличиваем минимальную высоту блока
+    padding: ui.$spacing-lg; // Используем увеличенный отступ
+  }
+
+  .card {
+    max-width: 420px; // Увеличиваем максимальную ширину карточки
+    padding: ui.$spacing-lg ui.$spacing-lg; // Большие отступы внутри карточки
+    border-radius: ui.$radius-lg; // Увеличиваем скругление углов
+  }
+
+  .image {
+    width: 220px; // Увеличиваем размер изображения
+    margin: 0 auto ui.$spacing-lg; // Увеличиваем нижний отступ
+  }
+
+  .title {
+    font-size: 1.5rem; // Увеличиваем размер заголовка
+    margin: 0 0 ui.$spacing-lg; // Больший отступ снизу
+  }
+
+  .actionButton {
+    padding: ui.$spacing-md ui.$spacing-lg; // Увеличиваем внутренние отступы
+    font-size: ui.$font-size-2xl; // Немного увеличиваем размер шрифта
+    border-radius: ui.$radius-lg; // Увеличиваем скругление кнопки
+    margin-top: ui.$spacing-lg; // Увеличиваем верхний отступ
+  }
+}

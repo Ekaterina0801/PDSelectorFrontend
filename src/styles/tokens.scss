@@ -28,6 +28,7 @@ $spacing-sm: 8px;
 $spacing-md: 16px;
 $spacing-lg: 24px;
 
+$radius-xxl: 64px;
 $radius-lg: 24px;
 $radius-md: 16px;
 $radius-sm: 8px;
@@ -41,9 +42,31 @@ $shadow-strong: 0 6px 16px rgba(0,0,0,0.15);
 $shadow-modal: rgba(0,0,0,0.5);
 
 $font-size-base: 1.1rem;
+$font-size-5xl: 3.5rem;
 $font-size-4xl: 2.5rem;
 $font-size-3xl: 2rem;
 $font-size-2xl: 1.5rem;
 
 $line-height-base: 1.5;
+// цвета, которых не хватало
+$color-secondary:   #6c757d !default;
+$color-orange:      #ff8c00 !default;
+$color-yellow:      #ffd700 !default;
+$color-green:       #32cd32 !default;
+$color-blue:        #007bff !default;
+$color-pink:        #e83e8c !default;
+$color-teal:        #20c997 !default;
+$color-purple:      #6f42c1 !default;
 
+$palette: (
+  primary:   $color-primary,
+  secondary: $color-secondary,
+  orange:    $color-orange,
+  yellow:    $color-yellow,
+  green:     $color-green,
+  blue:      $color-blue,
+  pink:      $color-pink,
+  teal:      $color-teal,
+  purple:    $color-purple
+);
+@export "ui-palette" $palette;

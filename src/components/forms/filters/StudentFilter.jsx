@@ -64,7 +64,7 @@ export function StudentFilter({ availableFilters, currentFilters, onApply }) {
 
       {/* Курс */}
       <div className={styles.filterSection__group}>
-        <h3 className={styles.filterSection__groupTitle}>Курс</h3>
+        <h4 className={styles.filterSection__groupTitle}>Курс</h4>
         {courses.length > 0 ? (
           <div>
             {courses.map(course => (
@@ -84,7 +84,7 @@ export function StudentFilter({ availableFilters, currentFilters, onApply }) {
 
       {/* Группа */}
       <div className={styles.filterSection__group}>
-        <h3 className={styles.filterSection__groupTitle}>Группа</h3>
+        <h4 className={styles.filterSection__groupTitle}>Группа</h4>
         {groups.length > 0 ? (
           <div>
             {groups.map(group => (
@@ -104,7 +104,7 @@ export function StudentFilter({ availableFilters, currentFilters, onApply }) {
 
       {/* Технологии */}
       <div className={styles.filterSection__group}>
-        <h3 className={styles.filterSection__groupTitle}>Технологии</h3>
+        <h4 className={styles.filterSection__groupTitle}>Технологии</h4>
         {allTechnologies.length > 0 ? (
           <div className={styles.filterSection__list}>
             {allTechnologies.map(tech => (
@@ -124,7 +124,7 @@ export function StudentFilter({ availableFilters, currentFilters, onApply }) {
 
       {/* Наличие команды */}
       <div className={styles.filterSection__group}>
-        <h3 className={styles.filterSection__groupTitle}>Наличие команды</h3>
+        <h4 className={styles.filterSection__groupTitle}>Наличие команды</h4>
         <CheckboxOption
           label="Есть команда"
           value={true}
@@ -141,7 +141,7 @@ export function StudentFilter({ availableFilters, currentFilters, onApply }) {
 
       {/* Капитан */}
       <div className={styles.filterSection__group}>
-        <h3 className={styles.filterSection__groupTitle}>Капитан</h3>
+        <h4 className={styles.filterSection__groupTitle}>Капитан</h4>
         <CheckboxOption
           label="Капитан"
           value={true}

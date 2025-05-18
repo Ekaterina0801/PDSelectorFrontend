@@ -104,4 +104,53 @@
       background-color: #bbb;
     }
   }
+
+  @media (min-width: 2560px) {
+    .teamForm {
+      max-width: 800px; // Увеличиваем максимальную ширину формы
+      gap: 24px; // Увеличиваем расстояние между элементами формы
+      
+      .formGroup {
+        gap: 12px; // Больше пространства между лейблом и инпутом
+      }
+    }
   
+    .label {
+      font-size: ui.$font-size-2xl; // Увеличиваем размер шрифта лейблов
+    }
+  
+    .input,
+    .select,
+    .textarea {
+      font-size: ui.$font-size-2xl; // Увеличиваем базовый размер шрифта
+      padding: 10px 12px; // Увеличиваем внутренние отступы
+    }
+  
+    .technologiesList {
+      max-height: 300px; // Увеличиваем высоту списка технологий
+      gap: 12px; // Больше пространства между элементами
+    }
+  
+    .technologyCheckbox {
+      font-size: ui.$font-size-2xl; // Увеличиваем размер шрифта
+      
+      .checkbox {
+        transform: scale(1.7); // Увеличиваем размер чекбоксов
+      }
+    }
+  
+    .noTech {
+      font-size: ui.$font-size-2xl; // Увеличиваем размер шрифта для пустого списка
+    }
+  
+    .formActions {
+      gap: 16px; // Больше пространства между кнопками
+    }
+  
+    .submitButton,
+    .cancelButton {
+      padding: 12px 20px; // Увеличиваем размер кнопок
+      font-size: ui.$font-size-2xl; // Увеличиваем размер шрифта
+      border-radius: 6px; // Немного увеличиваем скругление
+    }
+  }

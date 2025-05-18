@@ -20,47 +20,65 @@ import ApplicationsSection from "./ApplicationsSection";
 import TracksSection from "./TracksSection";
 import StatisticsSection from "./StatisticsSection";
 const sidebarItems = [
-    { name: 'Пользователи', icon: '👥' },
-    { name: 'Команды', icon: '👤' },
-    { name: 'Заявки', icon: '✉️' },
-    { name: 'Треки', icon: '📄' },
-    { name: 'Статистика', icon: '📊' },
-  ];
-  
-  const AdminDashboard = observer(() => {
-    const [section, setSection] = useState(sidebarItems[0].name);
-  
-    const renderSection = () => {
-      switch (section) {
-        case 'Пользователи': return <UsersSection />;
-        case 'Команды':      return <TeamsSection />;
-        case 'Заявки':       return <ApplicationsSection />;
-        case 'Треки':        return <TracksSection />;
-        case 'Статистика':   return <StatisticsSection />;
-        default: return null;
-      }
-    };
-  
-    return (
-      <>
-        <Navbar />
-        <MainContent>
-          <div className={styles.container}>
-            <aside className={styles.sidebar}>
-              <Sidebar
-                items={sidebarItems}
-                selected={section}
-                onItemClick={setSection}
-              />
-            </aside>
-            <section className={styles.content}>
-              <h2 className={styles.title}>{section}</h2>
-              {renderSection()}
-            </section>
-          </div>
-        </MainContent>
-      </>
-    );
-  });
-  
-  export default AdminDashboard;
+  { name: 'Пользователи', icon: '👥' },
+  { name: 'Команды', icon: '👤' },
+  { name: 'Заявки', icon: '✉️' },
+  { name: 'Треки', icon: '📄' },
+  { name: 'Статистика', icon: '📊' },
+];
+
+const AdminDashboard = observer(() => {
+  const [section, setSection] = useState(sidebarItems[0].name);
+
+  const renderSection = () => {
+    switch (section) {
+      case 'Пользователи': return <UsersSection />;
+      case 'Команды':      return <TeamsSection />;
+      case 'Заявки':       return <ApplicationsSection />;
+      case 'Треки':        return <TracksSection />;
+      case 'Статистика':   return <StatisticsSection />;
+      default: return null;
+    }
+  };
+
+  return (
+    <>
+      <Navbar />
+      <MainContent>
+      
+      <main className={styles.container}>
+        {/* Sidebar for desktop */}
+        <aside className={styles.sidebarWrapper}>
+          <Sidebar
+            items={sidebarItems}
+            selected={section}
+            onItemClick={setSection}
+          />
+        </aside>
+
+        {/* Main content */}
+        <section className={styles.content}>
+          <h2 className={styles.title}>{section}</h2>
+          {renderSection()}
+        </section>
+
+        {/* Bottom nav for mobile/tablet */}
+        <nav className={styles.bottomNav}>
+          {sidebarItems.map(item => (
+            <button
+              key={item.name}
+              className={`${styles.navItem} ${section === item.name ? styles.active : ''}`}
+              onClick={() => setSection(item.name)}
+            >
+              <span className={styles.navIcon}>{item.icon}</span>
+              <span className={styles.navLabel}>{item.name}</span>
+            </button>
+          ))}
+        </nav>
+      </main>
+      </MainContent>
+    </>
+  );
+});
+
+export default AdminDashboard;

@@ -12,6 +12,8 @@
 
 .sidebarWrapper {
   width: 240px;
+  margin-right: 70px;
+
 
   @include ui.respond-to("lg") {
     display: none;
@@ -138,4 +140,48 @@
 
 .navLabel {
   font-size: 0.75rem;
+}
+
+
+@media screen and (min-width: 2560px) {
+  .container {
+    margin: 0 auto;
+    padding: ui.$spacing-lg;
+    gap: ui.$spacing-lg;
+  }
+
+  .title {
+    font-size: ui.$font-size-4xl;
+    margin-bottom: ui.$spacing-lg;
+  }
+
+  .controlBlock {
+    label {
+      font-size: ui.$font-size-2xl;
+    }
+
+    input,
+    select {
+      height: ui.$font-size-5xl;
+      font-size: ui.$font-size-2xl;
+    }
+  }
+
+  .exportButton {
+    padding: ui.$spacing-md ui.$spacing-lg;
+    font-size: ui.$font-size-2xl;
+  }
+
+  .navIcon {
+    font-size: ui.$font-size-3xl;
+  }
+
+  .navLabel {
+    font-size: ui.$font-size-base;
+  }
+
+  .pagination {
+    font-size: ui.$font-size-2xl;
+  }
+  
 }

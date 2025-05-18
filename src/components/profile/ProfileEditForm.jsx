@@ -1,17 +1,41 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Modal from "../forms/modal/Modal";
 import styles from "./TeamEditForm.module.scss";
+import studentStore from "../../stores/studentStore";
+import trackStore from "../../stores/trackStore";
 
 const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => {
+  const [track, setTrack] = useState("");
+  useEffect(() => {
+    setTrack(studentData.current_track?.id.toString() || "");
+  }, [studentData]);
+
+  useEffect(() => {
+    if (track) studentStore.fetchStudents({ trackId: track });
+  }, [track]);
+
   const [formData, setFormData] = useState({
     ...studentData,
+    user: { ...studentData.user },
     technologies: studentData.technologies || [],
+    track: track
   });
   const [showModal, setShowModal] = useState(false);
 
   const handleChange = e => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    if (name === 'fio') {
+      setFormData(prev => ({
+        ...prev,
+        user: { ...prev.user, fio: value }
+      }));
+    } else if (name === "track") {
+      setFormData(prev => ({ ...prev, track: value }));
+      setTrack(value);
+    }
+      else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleRemoveTechnology = idToRemove => {
@@ -24,15 +48,8 @@ const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => 
   const toggleModal = () => setShowModal(prev => !prev);
 
   const handleSave = () => {
-    const flatData = {
-      about_self: formData.about_self,
-      contacts: formData.contacts,
-      course: formData.course,
-      group_number: formData.group_number,
-      technologies: formData.technologies,
-      user: formData.user,
-    };
-    onSave(flatData);
+    // Отправляем на бэкенд весь объект студента
+    onSave(formData);
   };
 
   const handleTechnologyChange = tech => {
@@ -54,7 +71,7 @@ const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => 
           ФИО:
           <input
             type="text"
-            name="fullName"
+            name="fio"
             value={formData.user?.fio || ''}
             onChange={handleChange}
           />
@@ -83,7 +100,6 @@ const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => 
         <label>
           О себе:
           <textarea
-            type="text"
             name="about_self"
             value={formData.about_self || ''}
             onChange={handleChange}
@@ -121,15 +137,29 @@ const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => 
           </div>
         </label>
 
+        <label className={styles.field}>
+            Трек
+            <select value={track} name = "track" onChange={handleChange}>
+              <option value="">Выберите трек</option>
+              {trackStore.tracks.map((t) => (
+                <option key={t.id} value={t.id.toString()}>
+                  {t.name}
+                </option>
+              ))}
+            </select>
+          </label>
+
         <div className={styles.formButtons}>
-          <button onClick={toggleModal}>Добавить технологию</button>
+          <button type="button" onClick={toggleModal}>Добавить технологию</button>
           <button
+            type="button"
             className={styles.saveButton}
             onClick={handleSave}
           >
             Сохранить
           </button>
           <button
+            type="button"
             className={styles.cancelButton}
             onClick={onCancel}
           >
@@ -150,6 +180,7 @@ const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => 
                     className={styles.technologyCheckbox}
                   >
                     <input
+                      className={styles.checkbox}
                       type="checkbox"
                       id={`tech-${tech.id}`}
                       checked={formData.technologies.some(t => t.id === tech.id)}

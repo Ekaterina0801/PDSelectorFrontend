@@ -1,21 +1,25 @@
 @use "@/styles/index" as ui;
 @use "sass:meta";
 
+
 .backdrop {
-  @include ui.fullscreen-overlay(1000);
-  background: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
 }
 
 .modal {
-  background: ui.$color-white;
-  border-radius: ui.$radius-md;
-  padding: ui.$spacing-lg;
-  box-shadow: ui.$shadow-strong;
-  max-width: 500px;
-  width: 90%;
-  text-align: center;
   position: relative;
-  @include ui.slide-in-up(0.4s);
+  background: ui.$color-white;
+  border-radius: ui.$radius-lg;
+  padding: ui.$spacing-lg;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
 }
 
 .closeButton {
@@ -25,39 +29,112 @@
   background: none;
   border: none;
   font-size: 1.5rem;
-  line-height: 1;
   cursor: pointer;
   color: ui.$color-grey-600;
+  transition: color ui.$transition-fast;
 
   &:hover {
-    color: ui.$color-danger;
+    color: ui.$color-grey-800;
   }
 }
 
 .image {
-    width: 150px;            
-    max-width: 100%;         
-    height: auto;
-  margin-bottom: ui.$spacing-md;
-  margin: auto;
+  display: block;
+  margin: 0 auto ui.$spacing-md;
+  width: 120px;
+  height: auto;
 }
 
 .title {
-  margin: 0;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: ui.$color-danger;
+  text-align: center;
+  font-size: ui.$font-size-2xl;
+  color: ui.$color-primary;
+  margin-bottom: ui.$spacing-md;
 }
 
 .message {
-  margin: ui.$spacing-md 0;
-  font-size: 1rem;
-  color: ui.$color-text;
+  text-align: center;
+  color: ui.$color-grey-800;
+  margin-bottom: ui.$spacing-lg;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: ui.$spacing-sm;
+}
+
+.cancelButton,
+.actionButton,
+.confirmButton {
+  @include ui.btn(ui.$radius-sm);
+  font-size: ui.$font-size-base;
+  padding: ui.$spacing-xs ui.$spacing-md;
+  transition: ui.$transition-fast;
+}
+
+.cancelButton {
+  background: ui.$color-grey-300;
+  color: ui.$color-grey-800;
+
+  &:hover {
+    background: ui.$color-grey-400;
+  }
 }
 
 .actionButton {
-  @include ui.btn(ui.$radius-sm, ui.$color-primary);
-  padding: ui.$spacing-sm ui.$spacing-lg;
-  font-weight: 600;
-  margin-top: ui.$spacing-sm;
+  background: ui.$color-primary;
+  color: ui.$color-white;
+
+  &:hover {
+    background: ui.$color-primary-light;
+  }
+}
+
+.confirmButton {
+  background: ui.$color-danger;
+  color: ui.$color-white;
+
+  &:hover {
+    background: ui.$color-danger;
+  }
+}
+@media (min-width: 2560px) {
+  .modal {
+    max-width: 700px;
+    padding: ui.$spacing-lg;
+    border-radius: ui.$radius-lg;
+  }
+
+  .closeButton {
+    top: ui.$spacing-md;
+    right: ui.$spacing-md;
+    font-size: ui.$font-size-2xl;
+  }
+
+  .image {
+    width: 160px;
+    margin-bottom: ui.$spacing-lg;
+  }
+
+  .title {
+    font-size: ui.$font-size-3xl;
+    margin-bottom: ui.$spacing-lg;
+  }
+
+  .message {
+    font-size: ui.$font-size-2xl;
+    margin-bottom: ui.$spacing-lg;
+  }
+
+  .buttons {
+    gap: ui.$spacing-md;
+  }
+
+  .cancelButton,
+  .actionButton,
+  .confirmButton {
+    font-size: ui.$font-size-2xl;
+    padding: ui.$spacing-sm ui.$spacing-lg;
+  }
 }

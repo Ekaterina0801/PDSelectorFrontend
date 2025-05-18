@@ -15,9 +15,24 @@ class TeamStore {
   allFilters = {};
   loading = false;
   error = null;
+  team = null;
 
   constructor() {
-    makeAutoObservable(this);
+    makeAutoObservable(
+      this,
+      {
+        fetchTeams:        true,
+        fetchFilters:      true,
+        updateTeam:        true,
+        deleteTeam:        true,
+        setFilters:        true,
+        setCurrentTeam:    true,
+        clearCurrentTeam:  true,
+      },
+      {
+        autoBind: true
+      }
+    )
   }
 
   async fetchTeams(params = {}) {
@@ -59,7 +74,7 @@ class TeamStore {
   async fetchFilters(trackId) {
     this.loading = true;
     this.error = null;
-
+    console.log("TRACKID", trackId);
     try {
       if (trackId == null) {
 
@@ -73,7 +88,7 @@ class TeamStore {
         return;
       }
       const filters = await TeamService.fetchFilterParamsByTrackId(trackId);
-      console.log('filters', filters);
+      console.log('filtersSSSSS', filters);
       runInAction(() => {
         this.allFilters = filters;
       });
@@ -214,6 +229,14 @@ class TeamStore {
   
   setError(error) {
     this.error = error;
+  }
+  setCurrentTeam(team) {
+    this.team = team
+    console.log('team', this.team);
+  }
+
+  clearCurrentTeam() {
+    this.team = null
   }
 }
 

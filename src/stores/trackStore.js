@@ -118,7 +118,7 @@ class TrackStore {
     }
   };
 
-  clearTrack() {
+  clearTrack = () => {
     this.track = null;
   }
 }

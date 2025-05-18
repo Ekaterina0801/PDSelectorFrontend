@@ -1,0 +1,304 @@
+@use "@/styles/index" as ui;
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+}
+
+.modalContent {
+  background: ui.$color-white;
+  border-radius: ui.$radius-lg;
+  padding: ui.$spacing-lg;
+  max-width: 600px;      // увеличенная ширина
+  width: 95%;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: ui.$spacing-lg;
+  max-height: 80vh;
+  //overflow-y: auto;
+  padding-right: ui.$spacing-sm;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  font-size: ui.$font-size-base;
+  color: ui.$color-grey-800;
+
+  & + & {
+    margin-top: ui.$spacing-md;
+  }
+
+  input,
+  textarea,
+  select {
+    margin-top: ui.$spacing-xs;
+    height: 2.75rem;
+    padding: 0 ui.$spacing-md;
+    font-size: ui.$font-size-base;
+    border: 1px solid ui.$color-grey-300;
+    border-radius: ui.$radius-md;
+    background: ui.$color-white;
+    transition: border-color ui.$transition-fast, box-shadow ui.$transition-fast;
+
+    &:focus {
+      outline: none;
+      border-color: ui.$color-primary;
+      box-shadow: 0 0 0 3px rgba(ui.$color-primary, 0.15);
+    }
+  }
+
+  textarea {
+    height: auto;
+    min-height: 7.5rem;
+    resize: vertical;
+  }
+}
+
+.membersSection {
+  background: ui.$color-grey-100;
+  padding: ui.$spacing-md;
+  border-radius: ui.$radius-md;
+  border: 1px solid ui.$color-grey-300;
+}
+
+.sectionTitle {
+  font-weight: 600;
+  margin-bottom: ui.$spacing-sm;
+  color: ui.$color-grey-800;
+}
+
+.membersList {
+  display: flex;
+  flex-direction: column;
+  gap: ui.$spacing-sm;
+  max-height: 200px;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: ui.$color-grey-300;
+    border-radius: ui.$radius-sm;
+  }
+}
+
+.memberRow {
+  display: flex;
+  align-items: center;
+  gap: ui.$spacing-sm;
+}
+
+.memberIndex {
+  flex: none;
+  width: 1.8rem;
+  height: 1.8rem;
+  line-height: 1.8rem;
+  text-align: center;
+  background: ui.$color-primary-light;
+  border: 1px solid ui.$color-primary;
+  border-radius: 50%;
+  color: ui.$color-primary;
+  font-size: ui.$font-size-base;
+}
+
+.selectMember {
+  flex: 1;
+  height: 2.75rem;
+  padding: 0 ui.$spacing-sm;
+  font-size: ui.$font-size-base;
+  border: 1px solid ui.$color-grey-300;
+  border-radius: ui.$radius-md;
+  background: ui.$color-white;
+  transition: border-color ui.$transition-fast, box-shadow ui.$transition-fast;
+
+  &:focus {
+    outline: none;
+    border-color: ui.$color-primary;
+    box-shadow: 0 0 0 3px rgba(ui.$color-primary, 0.15);
+  }
+}
+
+.trashBtn {
+  background: transparent;
+  border: none;
+  padding: ui.$spacing-xs;
+  cursor: pointer;
+  transition: color ui.$transition-fast;
+
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: ui.$color-grey-600;
+  }
+
+  &:hover svg {
+    fill: ui.$color-danger;
+  }
+}
+
+.addMemberBtn {
+  margin-top: ui.$spacing-md;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: ui.$color-primary;
+  border: none;
+  border-radius: ui.$radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background ui.$transition-fast;
+
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: ui.$color-white;
+  }
+
+  &:hover {
+    background: ui.$color-primary;
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: ui.$spacing-md;
+  margin-top: ui.$spacing-lg;
+}
+
+.btnSave {
+  background: ui.$color-primary;
+  color: ui.$color-white;
+  border: none;
+  border-radius: ui.$radius-md;
+  padding: ui.$spacing-sm ui.$spacing-lg;
+  font-size: ui.$font-size-base;
+  cursor: pointer;
+  transition: background ui.$transition-fast;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &:not(:disabled):hover {
+    background: ui.$color-primary;
+  }
+}
+
+.btnCancel {
+  background: ui.$color-grey-300;
+  color: ui.$color-grey-800;
+  border: none;
+  border-radius: ui.$radius-md;
+  padding: ui.$spacing-sm ui.$spacing-lg;
+  font-size: ui.$font-size-base;
+  cursor: pointer;
+  transition: background ui.$transition-fast;
+
+  &:hover {
+    background: ui.$color-grey-300;
+  }
+}
+
+@media (min-width: 2560px) {
+  .form {
+    max-height: 85vh;
+    gap: ui.$spacing-lg;
+    padding-right: ui.$spacing-md;
+  }
+
+  .field {
+    font-size: ui.$font-size-2xl;
+
+    & + & {
+      margin-top: ui.$spacing-md;
+    }
+
+    input,
+    textarea,
+    select {
+      height: ui.$font-size-5xl;
+      font-size: ui.$font-size-2xl;
+      margin-top: ui.$spacing-sm;
+      padding: 0 ui.$spacing-md;
+    }
+  }
+
+  .membersSection {
+    padding: ui.$spacing-lg;
+  }
+
+  .sectionTitle {
+    font-size: ui.$font-size-2xl;
+    margin-bottom: ui.$spacing-md;
+  }
+
+  .membersList {
+    gap: ui.$spacing-md;
+
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+  }
+
+  .memberRow {
+    gap: ui.$spacing-md;
+  }
+
+  .memberIndex {
+    width: ui.$font-size-4xl;
+    height: ui.$font-size-4xl;
+    line-height: ui.$font-size-2xl;
+    font-size: ui.$font-size-2xl;
+  }
+
+  .selectMember {
+    height: ui.$font-size-5xl;
+    font-size: ui.$font-size-2xl;
+    padding: 0 ui.$spacing-md;
+  }
+
+  .trashBtn {
+    svg {
+      width: ui.$font-size-2xl;
+      height: ui.$font-size-2xl;
+    }
+  }
+
+  .addMemberBtn {
+    width: ui.$font-size-5xl;
+    height: ui.$font-size-5xl;
+    
+    svg {
+      width: ui.$font-size-3xl;
+      height: ui.$font-size-3xl;
+    }
+  }
+
+  .actions {
+    gap: ui.$spacing-lg;
+    margin-top: ui.$spacing-lg;
+  }
+
+  .btnSave,
+  .btnCancel {
+    padding: ui.$spacing-md ui.$spacing-lg;
+    font-size: ui.$font-size-2xl;
+    border-radius: ui.$radius-lg;
+  }
+}

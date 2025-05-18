@@ -80,4 +80,29 @@
       }
     }
   }
-  
+  // Добавляем в самый конец файла стилей
+@media (min-width: 2560px) {
+  .searchBar {
+    .searchContainer {
+      width: 80%; // Увеличиваем ширину контейнера
+      margin-top: 30px;
+
+      input {
+        font-size: ui.$font-size-2xl !important; // Увеличиваем размер шрифта
+        padding: 12px 45px 12px 20px !important; // Увеличиваем отступы
+        @include ui.form-control(ui.$radius-lg); // Используем больший радиус (если нужно добавить в переменные)
+      }
+      
+      .searchButton {
+        right: 12px !important; // Увеличиваем отступ справа
+        width: 40px !important; // Увеличиваем размер кнопки
+        height: 40px !important;
+        font-size: ui.$font-size-2xl !important; // Увеличиваем иконку
+        
+        &:hover {
+          transform: translateY(-50%) scale(1.05); // Добавляем увеличение при наведении
+        }
+      }
+    }
+  }
+}

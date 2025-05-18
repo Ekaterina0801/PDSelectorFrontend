@@ -167,6 +167,7 @@ const TeamEditForm = ({
                   className={styles.technologyCheckbox}
                 >
                   <input
+                    className = {styles.checkbox}
                     type="checkbox"
                     id={`tech-${tech.id}`}
                     checked={formData.technologies.some(t => t.id === tech.id)}

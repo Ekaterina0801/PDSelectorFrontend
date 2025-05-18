@@ -124,3 +124,62 @@
     }
   }
   
+@media (min-width: 2560px) {
+  .background {
+    background-size: cover;
+  }
+
+  .loginContainer {
+    width: 60vw;
+    max-width: 1200px;
+    max-height: 1250px;
+    border-radius: ui.$radius-lg;
+  }
+
+  .loginImage {
+    padding: 60px;
+    
+    img {
+      max-width: 350px;
+    }
+  }
+
+  .loginContent {
+    padding: 70px;
+  }
+
+  .welcomeText {
+    font-size: ui.$font-size-4xl;
+    margin-bottom: 45px;
+  }
+
+  .registrationForm {
+    gap: 16px;
+
+    label {
+      font-size: ui.$font-size-2xl;
+    }
+
+    input,
+    select,
+    textarea {
+      padding: 16px;
+      font-size: ui.$font-size-2xl;
+      border-radius: ui.$radius-sm;
+    }
+  }
+
+  .errorText {
+    font-size: ui.$font-size-2xl;
+  }
+
+  .formButtons {
+    gap: 14px;
+
+    button {
+      padding: 16px;
+      font-size: ui.$font-size-2xl;
+      border-radius: ui.$radius-xxl;
+    }
+  }
+}
