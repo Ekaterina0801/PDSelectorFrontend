@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { createTeam } from '../api/apiTeamsController';
-
+import studentStore from '../stores/studentStore';
 export const useNewTeam = (currentTrackId, studentId, technologies, projectTypes) => {
   const [newTeam, setNewTeam] = useState({
     name: "",
@@ -55,13 +55,14 @@ export const useNewTeam = (currentTrackId, studentId, technologies, projectTypes
       const formattedTeam = {
         name: newTeam.name,
         project_description: newTeam.projectDescription,
-        projectType: newTeam.projectType,
+        project_type: newTeam.projectType,
         captain_id: studentId,
         technologies: newTeam.technologies,
         current_track: currentTrackId,
       };
 
       await createTeam(formattedTeam);
+      await studentStore.fetchStudentById(studentId);
       alert("Команда успешно добавлена!");
 
       resetNewTeam();

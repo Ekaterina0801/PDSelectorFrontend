@@ -79,6 +79,65 @@
         }
       }
     }
+   
+
+  .requestActions {
+    display: flex;
+    align-items: center;
+    gap: ui.$spacing-md;
+    margin-left: auto; 
+  }
+
+
+  .statusTag {
+    @include ui.tag(ui.$radius-sm, ui.$color-grey-500, ui.$color-white);
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: ui.$font-size-base;
+    padding: ui.$spacing-xs ui.$spacing-sm;
+
+    &.sent {
+      background-color: ui.$color-yellow-100;
+      color: ui.$color-yellow-700;
+    }
+    &.accepted {
+      background-color: ui.$color-green-100;
+      color: ui.$color-green-700;
+    }
+    &.rejected {
+      background-color: ui.$color-red-100;
+      color: ui.$color-red-700;
+    }
+    &.cancelled {
+      background-color: ui.$color-grey-200;
+      color: ui.$color-grey-700;
+    }
+  }
+
+
+  .actionButton {
+    @include ui.btn(ui.$radius-sm, ui.$color-primary);
+    padding: ui.$spacing-xs ui.$spacing-md;
+    font-size: ui.$font-size-base*0.9;
+    font-weight: 600;
+    transition: background-color ui.$transition-fast, transform 0.1s;
+
+    &:hover {
+      background-color: ui.$color-primary-dark;
+      transform: translateY(-1px);
+    }
+    &:disabled {
+      background-color: ui.$color-grey-300;
+      cursor: not-allowed;
+      transform: none;
+    }
+  }
+
+
+  .noTags {
+    color: ui.$color-grey-500;
+    font-style: italic;
+  }
   }
 
   .teamContentGrid {
@@ -121,7 +180,7 @@
 
     .cardTag,
     .techTag {
-      @include ui.tag; // миксин в ui/_tags.scss (предполагаемый)
+      @include ui.tag; 
     }
   }
 
@@ -172,7 +231,7 @@
     }
   }
 
-  // Адаптив
+
   @include ui.respond-to(md) {
     & {
       padding: 32px;

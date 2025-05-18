@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Modal from "../forms/modal/Modal";
-import styles from './TeamEditForm.module.scss';
-
+import styles from "./TeamEditForm.module.scss";
+import teamStore from "../../stores/teamStore";
 const TeamEditForm = ({
   teamData,
   onSave,
@@ -15,53 +15,51 @@ const TeamEditForm = ({
     projectType: teamData.projectType || null,
   });
   const [showModal, setShowModal] = useState(false);
-
+  console.log("teamData", teamData);
   useEffect(() => {
     setFormData({
       ...teamData,
       technologies: teamData.technologies || [],
       projectType: teamData.projectType || null,
+      studentIds: teamData.students?.map((s) => s.id) || [],
+      current_track_id: teamData.current_track,
+      captain_id: teamData.captain.id,
     });
   }, [teamData]);
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleProjectTypeChange = e => {
+  const handleProjectTypeChange = (e) => {
     const id = e.target.value;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      projectType: projectTypes.find(t => Number(t.id) === Number(id)),
+      projectType: projectTypes.find((t) => Number(t.id) === Number(id)),
     }));
   };
 
-  const handleRemoveTechnology = idToRemove => {
-    setFormData(prev => ({
+  const handleRemoveTechnology = (idToRemove) => {
+    setFormData((prev) => ({
       ...prev,
-      technologies: prev.technologies.filter(t => t.id !== idToRemove),
+      technologies: prev.technologies.filter((t) => t.id !== idToRemove),
     }));
   };
 
-  const toggleModal = () => setShowModal(prev => !prev);
+  const toggleModal = () => setShowModal((prev) => !prev);
 
   const handleSave = () => {
-    const flatData = {
-      name: formData.name,
-      project_description: formData.project_description,
-      projectType: formData.projectType,
-      technologies: formData.technologies,
-    };
-    onSave(flatData);
+    console.log('Saving payload', formData);
+    onSave(formData);
   };
 
-  const handleTechnologyChange = tech => {
-    const exists = formData.technologies.some(t => t.id === tech.id);
-    setFormData(prev => ({
+  const handleTechnologyChange = (tech) => {
+    const exists = formData.technologies.some((t) => t.id === tech.id);
+    setFormData((prev) => ({
       ...prev,
       technologies: exists
-        ? prev.technologies.filter(t => t.id !== tech.id)
+        ? prev.technologies.filter((t) => t.id !== tech.id)
         : [...prev.technologies, tech],
     }));
   };
@@ -76,7 +74,7 @@ const TeamEditForm = ({
           <input
             type="text"
             name="name"
-            value={formData.name || ''}
+            value={formData.name || ""}
             onChange={handleChange}
           />
         </label>
@@ -84,46 +82,38 @@ const TeamEditForm = ({
         <label>
           Описание проекта:
           <textarea
-            type="text"
             name="project_description"
-            value={formData.project_description || ''}
+            value={formData.project_description || ""}
             onChange={handleChange}
           />
         </label>
 
         <label>
           Тип проекта:
-          <div className={styles.technologiesList}>
-            <ul id="projectTypeUl" className="filter-switch">
-              {projectTypes.map(type => (
-                <li class="filter-switch-item" key={type.id}>
-                  <input
-                    type="radio"
-                    id={`projectType-${type.id}`}
-                    name="projectType"
-                    value={type.id}
-                    checked={formData.projectType?.id === type.id}
-                    onChange={handleProjectTypeChange}
-                    className="sr-only"
-                  />
-                  <label htmlFor={`projectType-${type.id}`}>
-                    {type.name}
-                  </label>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <ul className={styles.projectTypeList}>
+            {projectTypes.map((type) => (
+              <li key={type.id} className={styles.projectTypeItem}>
+                <input
+                  type="radio"
+                  id={`projectType-${type.id}`}
+                  name="projectType"
+                  value={type.id}
+                  checked={formData.projectType?.id === type.id}
+                  onChange={handleProjectTypeChange}
+                  className="sr-only"
+                />
+                <label htmlFor={`projectType-${type.id}`}>{type.name}</label>
+              </li>
+            ))}
+          </ul>
         </label>
 
         <label>
           <span className={styles.textCapture}>Технологии:</span>
           <div className={styles.cardTags}>
             {formData.technologies.length > 0 ? (
-              formData.technologies.map(tech => (
-                <span
-                  key={tech.id}
-                  className={styles.cardTag}
-                >
+              formData.technologies.map((tech) => (
+                <span key={tech.id} className={styles.cardTag}>
                   {tech.name}
                   <span
                     className={styles.removeIcon}
@@ -139,15 +129,35 @@ const TeamEditForm = ({
           </div>
         </label>
 
+        <label>
+          Капитан команды:
+          <select
+            name="captainId"
+            value={formData.captain_id || ""}
+            onChange={handleChange}
+          >
+            <option value="">-- Выберите капитана --</option>
+            {teamData.students?.map((student) => (
+              <option key={student.id} value={student.id}>
+                {student.user.fio}
+              </option>
+            ))}
+          </select>
+        </label>
+
         <div className={styles.formButtons}>
-          <button onClick={toggleModal}>Добавить технологию</button>
+          <button type="button" onClick={toggleModal}>
+            Добавить технологию
+          </button>
           <button
+            type="button"
             className={styles.saveButton}
             onClick={handleSave}
           >
             Сохранить
           </button>
           <button
+            type="button"
             className={styles.cancelButton}
             onClick={onCancel}
           >
@@ -157,24 +167,21 @@ const TeamEditForm = ({
       </div>
 
       {showModal && (
-        <Modal show={showModal} onClose={toggleModal}>
+        <Modal show onClose={toggleModal}>
           <div className={styles.modalContent}>
             <h2>Добавить технологию</h2>
             <div className={styles.technologiesList}>
-              {allTechnologies.map(tech => (
-                <div
-                  key={tech.id}
-                  className={styles.technologyCheckbox}
-                >
+              {allTechnologies.map((tech) => (
+                <div key={tech.id} className={styles.technologyCheckbox}>
                   <input
                     type="checkbox"
                     id={`tech-${tech.id}`}
-                    checked={formData.technologies.some(t => t.id === tech.id)}
+                    checked={formData.technologies.some(
+                      (t) => t.id === tech.id
+                    )}
                     onChange={() => handleTechnologyChange(tech)}
                   />
-                  <label htmlFor={`tech-${tech.id}`}>
-                    {tech.name}
-                  </label>
+                  <label htmlFor={`tech-${tech.id}`}>{tech.name}</label>
                 </div>
               ))}
             </div>

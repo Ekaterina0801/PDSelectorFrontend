@@ -166,3 +166,93 @@
     padding: ui.$spacing-xs ui.$spacing-sm;
   }
 }
+
+.actionButton {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  background-color: #330036;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+  font-weight: 600;
+}
+
+.actionButton:hover {
+  transform: translateY(-2px);
+}
+
+// В конец вашего файла стилей ProfileCard.module.scss (или как он у вас называется)
+.inviteSection {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;    // чтобы кнопки растягивались на всю ширину
+  gap: ui.$spacing-sm;     // отступы между статусом и кнопками
+  width: 100%;
+}
+
+.statusTag {
+  // делаем полосу с текстом статуса во всю ширину
+  display: block;
+  width: 100%;
+  padding: ui.$spacing-xs ui.$spacing-sm;
+  text-align: center;
+  font-weight: 600;
+  border-radius: ui.$radius-sm;
+  margin-bottom: ui.$spacing-sm;
+}
+
+// Цвета для разных статусов (если у вас ещё нет)
+.statusTag.sent {
+  background-color: ui.$color-warning;
+  color: ui.$color-white;
+}
+.statusTag.accepted {
+  background-color: ui.$color-green;
+  color: ui.$color-white;
+}
+.statusTag.rejected {
+  background-color: ui.$color-danger;
+  color: ui.$color-white;
+}
+.statusTag.cancelled {
+  background-color: ui.$color-grey-300;
+  color: ui.$color-grey-700;
+}
+
+// Кнопки действий внутри inviteSection
+.inviteSection .actionButton {
+  width: 100%;
+  // повторяем ваш базовый стиль или просто:
+  // @include ui.btn; 
+  // а затем кастомизируем отступы
+  padding: ui.$spacing-sm;
+  margin: 0;          // убираем сторонние отступы
+}
+
+// Если нужно отдельный стиль для состояния loading/error
+.inviteSection .error {
+  color: ui.$color-danger;
+  text-align: center;
+  margin-bottom: ui.$spacing-sm;
+}
+
+// Переопределяем отступы футера, чтобы .inviteSection вписывалась
+.footer {
+  display: flex;
+  justify-content: center;
+  padding: ui.$spacing-md;
+  /* убираем прежние justify-content: center, теперь зовем inviteSection */
+}
+
+.teamLink {
+  color: var(--purple);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.teamLink:hover {
+  text-decoration: underline;
+}

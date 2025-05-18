@@ -15,52 +15,43 @@ import { useTeamApplication } from "../../hooks/useTeamApplication";
 import styles from "./TeamProfilePage.module.scss";
 import projectTypeStore from "../../stores/projectTypeStore";
 import technologyStore from "../../stores/technologyStore";
-import applicationStore from "../../stores/applicationStore";
 import ErrorModal from "../../components/error-display/ErrorDisplay";
 import Loader from "../../components/spinner/Loader";
 import NoDataDisplay from "../../components/nodata-display/NoDataDisplay";
 import cn from "classnames";
-import { runInAction } from "mobx";
+import applicationStore from "../../stores/applicationStore";
 const sidebarItems = [
   { name: "Текущие участники", icon: "👥" },
   { name: "Заявки в команду", icon: "📄" },
 ];
 const TeamProfilePage = observer(() => {
-  const { teamId } = useParams();
-  const { currentUser, studentId: authStudentId, isAdmin } = authStore;
+  const { teamId } = useParams()
+  const { currentUser, isAdmin } = authStore
+  const [currentSection, setCurrentSection] = useState(sidebarItems[0].name)
+  const [showEditForm, setShowEditForm]     = useState(false)
+  const [localAppError, setLocalAppError]   = useState(null)
+  const { showSuccessMessage } = useSuccessMessage()
 
-  // Локальный стейт и сообщения всегда доступны
-  const [currentSection, setCurrentSection] = useState(sidebarItems[0].name);
-  const [showEditForm, setShowEditForm] = useState(false);
-  const { showSuccessMessage } = useSuccessMessage();
-
-  // Загрузка данных команды
   useEffect(() => {
-    teamStore.clearTeam();
-    teamStore.fetchTeamById(teamId);
-    projectTypeStore.fetchProjectTypes();
-    technologyStore.fetchTechnologies();
-  }, [teamId]);
+    teamStore.clearTeam()
+    teamStore.fetchTeamById(teamId)
+    technologyStore.fetchTechnologies()
+    projectTypeStore.fetchProjectTypes()
+  }, [teamId])
 
-  const team = teamStore.team;
-  const loadingTeam = teamStore.loading;
-  const teamError = teamStore.error;
+  const team       = teamStore.team
+  const loading    = teamStore.loading
+  const teamError  = teamStore.error
+  const isCaptain  = team?.captain?.id === currentUser?.id
 
-  const isCaptain = team?.captain?.id === currentUser?.id;
+  useEffect(() => {
+    if (applicationStore.error) {
+      setLocalAppError(applicationStore.error)
+      clearAppErrorHook()
+    }
+  }, [])
 
-  // Хук для заявок (зависит от isCaptain и teamId)
-  const {
-    showButton,
-    buttonText,
-    buttonClass,
-    onAction,
-    loading: appLoading,
-    error: appError,
-    clearError: clearAppError
-  } = useTeamApplication({ teamId, isCaptain });
-
-  // Пока команда или заявки загружаются
-  if (loadingTeam || appLoading || !team) {
+  if (loading || !team) {
     return (
       <>
         <Navbar />
@@ -68,98 +59,71 @@ const TeamProfilePage = observer(() => {
           <Loader />
         </MainContent>
       </>
-    );
+    )
   }
-
-  // Ошибка при работе с заявкой
-  if (appError) {
-    return (
-      <>
-        <Navbar />
-        <MainContent>
-          <ErrorModal
-            message={appError}
-            onClose={clearAppError}
-          />
-        </MainContent>
-      </>
-    );
-  }
-
-  // Ошибка загрузки команды
   if (teamError) {
     return (
       <>
         <Navbar />
         <MainContent>
-          <ErrorModal
-            message={teamError}
-            onClose={() => teamStore.setError(null)}
-          />
+          <ErrorModal message={teamError} onClose={() => teamStore.setError(null)} />
         </MainContent>
       </>
-    );
+    )
   }
 
+
   const renderContent = () => {
-    const list =
-      currentSection === sidebarItems[0].name
-        ? team.students
-        : team.applications;
+    if (currentSection === sidebarItems[0].name) {
 
-    if (!list || list.length === 0) {
+      if (!team.students?.length) {
+        return <NoDataDisplay message="Нет участников" />
+      }
       return (
-        <NoDataDisplay
-          message={
-            currentSection === sidebarItems[0].name
-              ? 'Нет участников'
-              : 'Нет заявок'
-          }
-        />
-      );
+        <div className={styles.studentsGrid}>
+          {team.students.map(s => (
+            <StudentCard
+              key={s.id}
+              name={s.user.fio}
+              course={s.course}
+              aboutSelf={s.about_self}
+              technologies={s.technologies}
+              profileLink={`/students/${s.id}`}
+            />
+          ))}
+        </div>
+      )
+    } else {
+      if (!team.applications?.length) {
+        return <NoDataDisplay message="Нет заявок" />
+      }
+      return (
+        <div className={styles.studentsGrid}>
+          {team.applications.map(app => (
+            <ApplicationCard
+              key={app.id}
+              application={app}
+            />
+          ))}
+        </div>
+      )
     }
-
-    return (
-      <div className={styles.studentsGrid}>
-        {currentSection === sidebarItems[0].name
-          ? list.map(s => (
-              <StudentCard
-                key={s.id}
-                name={s.user.fio}
-                track={team.currentTrack?.name}
-                course={s.course}
-                about_self={s.about_self}
-                technologies={s.technologies}
-                profileLink={`/students/${s.id}`}
-              />
-            ))
-          : list.map(app => {
-            return (
-              <ApplicationCard
-                key={app.id}
-                applicationId={app.id}
-                studentName={app.student?.fio || app.user?.fio}
-                teamName={team.name}
-                teamId={teamId}
-                studentId={app.student?.id ?? app.user?.id}
-                teamDescription={team.project_description}
-                technologies={app.technologies}
-                status={app.status}
-                showCaptainOptions={isCaptain}
-                onApprove={onAction}
-                onReject={onAction}
-                onCancel={onAction}
-              />
-            )})}
-      </div>
-    );
-  };
+  }
 
   return (
     <>
       <Navbar />
       <MainContent>
+        {/* Ошибка операций по заявкам */}
+        {localAppError && (
+          <ErrorModal
+            message={localAppError}
+            onClose={() => setLocalAppError(null)}
+          />
+        )}
+
         <div className={styles.container}>
+          {/* Сайдбар */}
           {(isCaptain || isAdmin) && (
             <aside className={styles.sidebarWrapper}>
               <Sidebar
@@ -171,52 +135,37 @@ const TeamProfilePage = observer(() => {
           )}
 
           <section className={styles.contentColumn}>
-            {showEditForm && (
+            {/* Форма редактирования команды */}
+            {showEditForm ? (
               <TeamEditForm
-                teamData={{
-                  name: team.name,
-                  project_description: team.project_description,
-                  projectType: team.project_type?.name,
-                  technologies: team.technologies,
-                }}
-                onSave={data => {
-                  teamStore.updateTeam(data, teamId);
-                  setShowEditForm(false);
-                  showSuccessMessage('Изменения сохранены');
+                teamData={team}
+                onSave={fullData => {
+                  teamStore.updateTeam(fullData, teamId)
+                  setShowEditForm(false)
+                  showSuccessMessage('Изменения сохранены')
                 }}
                 onCancel={() => setShowEditForm(false)}
                 allTechnologies={technologyStore.technologies}
                 projectTypes={projectTypeStore.projectTypes}
               />
-            )}
-
-            <TeamProfileCard
+            ) : (
+              <TeamProfileCard
               team={team}
-              captain={{
-                avatarUrl: team.captain.avatarUrl,
-                fio: team.captain.fio,
-              }}
               isCaptain={isCaptain}
               showEditForm={showEditForm}
-              onEditClick={() => setShowEditForm(prev => !prev)}
-              showButton={showButton}
-              buttonText={buttonText}
-              buttonClass={buttonClass}
-              onAction={onAction}
-            />
+              onEditClick={() => setShowEditForm(true)}
+              studentId={authStore.studentId}
+              isAdmin={isAdmin}
+              />
+            )}
 
+            {/* Заголовок секции */}
             <h2 className={styles.pageTitle}>{currentSection}</h2>
             {renderContent()}
-
-            {/* Уведомление об успешном действии */}
-            {showSuccessMessage && (
-              <div className={styles.successMessage}>
-                {showSuccessMessage}
-              </div>
-            )}
           </section>
         </div>
 
+        {/* Нижняя навигация для мобил */}
         {(isCaptain || isAdmin) && (
           <nav className={styles.bottomNav}>
             {sidebarItems.map(item => (
@@ -236,7 +185,7 @@ const TeamProfilePage = observer(() => {
         )}
       </MainContent>
     </>
-  );
-});
+  )
+})
 
-export default TeamProfilePage;
+export default TeamProfilePage

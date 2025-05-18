@@ -1,6 +1,6 @@
 @use "sass:meta";
 @use "@/styles/index" as ui;
-// В вашем base.module.scss (или аналогичном файле)
+
 @mixin action-button {
   background-color: ui.$color-primary;
   color: #fff;
@@ -19,7 +19,7 @@
 }
 
 .card {
-  // === Основная структура ===
+
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -30,13 +30,13 @@
   overflow: hidden;
   transition: all 0.3s ease;
 
-  // === Header ===
+
   &-header {
     padding: ui.$spacing-lg;
     text-align: center;
   }
   &-name {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     font-weight: 700;
     color: ui.$color-primary;
     margin-bottom: ui.$spacing-xs;
@@ -46,15 +46,15 @@
     color: ui.$color-text;
   }
 
-  // === Body ===
+
   &-body {
-    flex: 1;                       // занимает всё свободное пространство
+    flex: 1;                    
     padding: ui.$spacing-lg;
     display: flex;
     flex-direction: column;
   }
   &-resume {
-    flex: 1;                       // прижат по высоте
+    flex: 1;               
     color: #444;
     line-height: 1.5;
     font-size: 1rem;
@@ -94,7 +94,7 @@
     font-style: italic;
   }
 
-  // === Footer / Actions ===
+
   &-actions {
     padding: ui.$spacing-md;
     border-top: 1px solid ui.$color-primary-light;
@@ -110,7 +110,7 @@
     width: 100%;
   }
 
-  // === Responsive: большие экраны ===
+
   @include ui.respond-to(lg) {
     &-header   { padding: ui.$spacing-md; }
     &-body     { padding: ui.$spacing-md; }
@@ -118,12 +118,12 @@
     .action-button { font-size: 0.9rem; }
   }
 
-  // === Responsive: мобильные (<768px) ===
+
   @include ui.respond-to(md) {
     &-header   { padding: ui.$spacing-sm; }
     &-body     { padding: ui.$spacing-sm; }
     &-resume   {
-      -webkit-line-clamp: 3;      // чуть больше строк на мобильниках
+      -webkit-line-clamp: 3;     
       font-size: 0.9rem;
     }
     &-name     { font-size: 1.25rem; }

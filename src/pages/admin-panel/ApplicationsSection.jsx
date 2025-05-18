@@ -6,12 +6,14 @@ import Loader from "../../components/spinner/Loader";
 import applicationStore from "../../stores/applicationStore";
 
 const ApplicationsSection = observer(() => {
-    const { applications, loading, error, fetchApplications } = applicationStore;
+    const { applications, loading, error} = applicationStore;
+
     const [search, setSearch] = useState('');
     const [status, setStatus] = useState('');
     const [sort, setSort] = useState('id,asc');
   
-    useEffect(() => { fetchApplications(); }, []);
+    useEffect(() => { applicationStore.fetchApplications(); }, []);
+    console.log('aAAAAAAp',applications);
   
     const displayed = useMemo(() => {
       let arr = applications;
@@ -72,12 +74,7 @@ const ApplicationsSection = observer(() => {
         <DataTable
           columns={columns}
           rows={displayed}
-          renderRowActions={a=>(
-            <>
-              <button onClick={()=>applicationStore.approve(a.id)}>✔️</button>
-              <button onClick={()=>applicationStore.reject(a.id)}>✖️</button>
-            </>
-          )}
+          
         />
       </>
     );

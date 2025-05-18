@@ -11,26 +11,25 @@ import { useNavigate } from "react-router-dom";
 import Modal from "../../components/forms/modal/Modal";
 import TeamEditModalAdmin from "./TeamEditFormAdmin";
 import authStore from "../../stores/authStore";
-import studentStore from "../../stores/studentStore";
+import { Link } from "react-router-dom";
 const TeamsSection = observer(() => {
   const {
     teams,
-    total,
     loading,
     error,
     allFilters,
     filters,
-    fetchTeams,
     setFilters,
     deleteTeam,
     updateTeam,
     setCurrentTeam,
     clearCurrentTeam,
     team: currentTeam,
+    total,
   } = teamStore;
 
-  const { tracks, fetchTracks } = trackStore;
-  const { users, fetchUsers } = authStore;
+  const { tracks } = trackStore;
+  const { users } = authStore;
 
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("id,asc");
@@ -39,39 +38,29 @@ const TeamsSection = observer(() => {
   const [showMembersModal, setShowMembersModal] = useState(false);
   const [members, setMembers] = useState([]);
 
-  // Load reference data
+  // Для подтверждения удаления
+  const [teamToDelete, setTeamToDelete] = useState(null);
+
+  // Load reference data once
   useEffect(() => {
-    const init = async () => {
-      try {
-        await trackStore.fetchTracks();
-        await authStore.fetchUsers();
-      } catch (e) {
-        console.error("Ошибка при загрузке треков или пользователей:", e);
-      }
-    };
-    init();
+    trackStore.fetchTracks();
+    authStore.fetchUsers();
   }, []);
 
-  // Load teams & filters
+  // Load teams & filters when paging/filtering changes
   useEffect(() => {
-    console.log("CURR TEAM", currentTeam);
-    console.log("TRACJ", currentTeam?.current_track);
     const load = async () => {
-      try {
-        console.log("FILTERS", filters);
-        if (currentTeam.current_track != null) {
-          await teamStore.fetchFilters(currentTeam.current_track);
-        }
-        await teamStore.fetchTeams({ ...filters, searchTerm: search, sort });
-      } catch (e) {
-        console.error("Ошибка при загрузке команд или фильтров:", e);
-      }
+      //if (currentTeam?.current_track != null) {
+        //await teamStore.fetchFilters(currentTeam.current_track);
+
+      
+      await teamStore.fetchTeams({ ...filters, searchTerm: search, sort });
+      
     };
     load();
-  }, [filters.trackId, filters.page, filters.size, search, sort]);
+  }, [filters.trackId, filters.page, filters.size, search, sort, currentTeam]);
 
-  console.log("filters", allFilters);
-
+  console.log("filtersSSSSSSJJJJJJ", teamStore.allFilters);
   const displayed = useMemo(() => {
     let arr = teams.slice();
     const q = search.trim().toLowerCase();
@@ -93,40 +82,46 @@ const TeamsSection = observer(() => {
     [filters, setFilters]
   );
 
-  const handleExportCsv = async () => {
+  const handleExport = async (fmt) => {
     if (!filters.trackId) {
       setShowTrackModal(true);
       return;
     }
     try {
-      const blob = await TeamService.exportTeamsCsv(filters.trackId);
-      saveAs(blob, `teams_track_${filters.trackId}.csv`);
+      const svc =
+        fmt === "csv"
+          ? TeamService.exportTeamsCsv
+          : TeamService.exportTeamsExcel;
+      const blob = await svc(filters.trackId);
+      saveAs(blob, `teams_track_${filters.trackId}.${fmt}`);
     } catch {
-      alert("Не удалось скачать CSV");
+      alert(`Не удалось скачать ${fmt.toUpperCase()}`);
     }
   };
 
-  const handleExportExcel = async () => {
-    if (!filters.trackId) {
-      setShowTrackModal(true);
-      return;
-    }
-    try {
-      const blob = await TeamService.exportTeamsExcel(filters.trackId);
-      saveAs(blob, `teams_track_${filters.trackId}.xlsx`);
-    } catch {
-      alert("Не удалось скачать Excel");
+  // Открыть окно подтверждения удаления
+  const confirmDelete = (team) => {
+    setTeamToDelete(team);
+  };
+  // Закрыть окно
+  const cancelDelete = () => {
+    setTeamToDelete(null);
+  };
+  // Подтвердить удаление
+  const doDelete = async () => {
+    if (teamToDelete) {
+      await deleteTeam(teamToDelete.id);
+      setTeamToDelete(null);
     }
   };
 
   if (loading) return <Loader />;
+  console.log('teamStore.allFilters', teamStore.allFilters);
   if (error) return <div className={styles.error}>{error}</div>;
-  console.log("currTeam", currentTeam);
+
   return (
     <>
-      {/* — Filters & Export — */}
       <div className={styles.sortPaginationControls}>
-        {/* Track */}
         <div className={styles.controlBlock}>
           <label>Трек:</label>
           <select
@@ -147,7 +142,6 @@ const TeamsSection = observer(() => {
           </select>
         </div>
 
-        {/* Name Search */}
         <div className={styles.controlBlock}>
           <label>По названию:</label>
           <input
@@ -158,7 +152,6 @@ const TeamsSection = observer(() => {
           />
         </div>
 
-        {/* Fullness */}
         <div className={styles.controlBlock}>
           <label>Полнота:</label>
           <select
@@ -176,7 +169,6 @@ const TeamsSection = observer(() => {
           </select>
         </div>
 
-        {/* Project Type */}
         <div className={styles.controlBlock}>
           <label>Тип проекта:</label>
           <select
@@ -194,7 +186,6 @@ const TeamsSection = observer(() => {
           </select>
         </div>
 
-        {/* Sort */}
         <div className={styles.controlBlock}>
           <label>Сортировка:</label>
           <select value={sort} onChange={(e) => setSort(e.target.value)}>
@@ -205,14 +196,12 @@ const TeamsSection = observer(() => {
           </select>
         </div>
 
-        {/* Export */}
         <div className={styles.controlBlock}>
-          <button onClick={handleExportCsv}>📥 CSV</button>
-          <button onClick={handleExportExcel}>📥 Excel</button>
+          <button onClick={() => handleExport("csv")}>📥 CSV</button>
+          <button onClick={() => handleExport("xlsx")}>📥 Excel</button>
         </div>
       </div>
 
-      {/* — Teams Table — */}
       <DataTable
         columns={[
           { key: "id", title: "ID" },
@@ -240,23 +229,16 @@ const TeamsSection = observer(() => {
             >
               ℹ️
             </button>
-            <button
-              onClick={() => {
-                setCurrentTeam(t);
-                console.log("team", t);
-              }}
-              title="Редактировать"
-            >
+            <button onClick={() => setCurrentTeam(t)} title="Редактировать">
               ✏️
             </button>
-            <button onClick={() => deleteTeam(t.id)} title="Удалить">
+            <button onClick={() => confirmDelete(t)} title="Удалить">
               🗑️
             </button>
           </>
         )}
       />
 
-      {/* — Pagination — */}
       <div className={styles.pagination}>
         <button
           onClick={() => updateFilter("page", Math.max(0, filters.page - 1))}
@@ -265,54 +247,65 @@ const TeamsSection = observer(() => {
           ← Назад
         </button>
         <span>
-          Стр. {filters.page + 1} из {Math.ceil(total / filters.size)}
+          Стр. {filters.page + 1} из{" "}
+          {Math.max(1, Math.ceil(total / filters.size))}
         </span>
         <button
-          onClick={() =>
-            updateFilter(
-              "page",
-              Math.min(Math.ceil(total / filters.size) - 1, filters.page + 1)
-            )
-          }
-          disabled={filters.page + 1 >= Math.ceil(total / filters.size)}
+          onClick={() => updateFilter("page", filters.page + 1)}
+          disabled={(filters.page + 1) * filters.size >= total}
         >
           Далее →
         </button>
       </div>
 
-      {/* — Export Error — */}
       {showTrackModal && (
         <ErrorModal
           message="Чтобы скачать отчёт, выберите трек"
-          imageUrl="/images/cat.png"
           onClose={() => setShowTrackModal(false)}
         />
       )}
 
-      {/* — Members Modal — */}
       <Modal
         show={showMembersModal}
         onClose={() => setShowMembersModal(false)}
         title="Состав команды"
       >
-        <div className={styles.modalBody}>
-          <ul>
-            {members.map((m) => (
-              <li key={m.user.id}>
-                <strong>{m.user.fio}</strong>
-                <div className={styles.memberInfo}>
-                  <span>Курс: {m.course || "—"}</span>
-                  <span>Группа: {m.group_number || "—"}</span>
-                </div>
-              </li>
-            ))}
-          </ul>
+        <div className={styles.membersList}>
+          {members.map((m) => (
+            <div key={m.user.id} className={styles.memberCard}>
+              <img
+                src={m.user.avatarUrl || "/images/placeholder2.png"}
+                alt={m.user.fio}
+                className={styles.memberAvatar}
+              />
+              <div className={styles.memberDetails}>
+                <Link
+                  to={`/students/${m.user.id}`}
+                  className={styles.memberName}
+                >
+                  {m.user.fio}
+                </Link>
+                <p className={styles.memberMeta}>
+                  Курс {m.course || "—"} &bull; Группа {m.group_number || "—"}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
       </Modal>
 
-      {currentTeam !== null && (
+      {teamToDelete && (
+        <ErrorModal
+          title={"Удаление команды"}
+          message={`Удалить команду "${teamToDelete.name}"?`}
+          onClose={cancelDelete}
+          onConfirm={doDelete}
+        />
+      )}
+
+      {currentTeam && (
         <TeamEditModalAdmin
-          show={true}
+          show
           onClose={clearCurrentTeam}
           onSave={(data) => {
             updateTeam(data);

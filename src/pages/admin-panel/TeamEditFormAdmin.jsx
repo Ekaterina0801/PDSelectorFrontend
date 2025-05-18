@@ -37,12 +37,10 @@ const TeamEditModalAdmin = observer(
 
     const memberStudents = useMemo(() => team.students || [], [team.students]);
     console.log("members", memberStudents);
-    // 2. Early-return *after* hooks
     if (show == false) {
       return null;
     }
 
-    // 3. Handlers
     const addMember = () => setMembers((ms) => [...ms, ""]);
     const changeMember = (i, id) => {
       setMembers((ms) => ms.map((v, idx) => (idx === i ? id : v)));
@@ -65,7 +63,6 @@ const TeamEditModalAdmin = observer(
       });
     };
 
-    // 4. Render
     return (
       <Modal
         show
@@ -73,13 +70,11 @@ const TeamEditModalAdmin = observer(
         title={team.id ? "Редактирование команды" : "Новая команда"}
       >
         <div className={styles.form}>
-          {/* Название */}
           <label className={styles.field}>
             Название
             <input value={name} onChange={(e) => setName(e.target.value)} />
           </label>
 
-          {/* Тип проекта */}
           <label className={styles.field}>
             Тип проекта
             <select
@@ -94,8 +89,6 @@ const TeamEditModalAdmin = observer(
               ))}
             </select>
           </label>
-
-          {/* Участники */}
           <div className={styles.membersSection}>
             <div className={styles.sectionTitle}>Участники</div>
             <div className={styles.membersList}>
@@ -128,8 +121,6 @@ const TeamEditModalAdmin = observer(
               </button>
             </div>
           </div>
-
-          {/* Капитан */}
           <label className={styles.field}>
             Капитан команды
             <select
@@ -145,7 +136,6 @@ const TeamEditModalAdmin = observer(
             </select>
           </label>
 
-          {/* Трек */}
           <label className={styles.field}>
             Трек
             <select value={track} onChange={(e) => setTrack(e.target.value)}>
@@ -158,7 +148,6 @@ const TeamEditModalAdmin = observer(
             </select>
           </label>
 
-          {/* Действия */}
           <div className={styles.actions}>
             <button
               className={styles.btnSave}

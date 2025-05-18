@@ -3,10 +3,12 @@ import { AuthService } from "../service/authService";
 import StudentService from "../service/studentService";
 import commonStore from "./commonStore";
 import trackStore from "./trackStore";
+
 class AuthStore {
   user = null;
   isAdmin = false;
   studentId = null;
+  authStudent = null;
   users = [];
   total = 0;
   loading = false;
@@ -93,7 +95,7 @@ class AuthStore {
         trackId,
         isEnabled
       });
-      console.log('isEnabled', isEnabled);
+      console.log('total', data.totalElements)
       runInAction(() => {
         this.users = data.content;
         this.total = data.totalElements;
@@ -118,10 +120,15 @@ class AuthStore {
     try {
       const user = await AuthService.getCurrentUser();
       const student = await StudentService.getCurrentStudentId();
+      let studentData = null;
+      if (student)
+        studentData = await StudentService.fetchStudentById(student);
+      console.log("STUDENT_DATA", studentData);
       this.loadTrackId();
       runInAction(() => {
         this.user = user;
         this.studentId = student;
+        this.authStudent = studentData;
         this.isAdmin = user.role === "ADMIN";
         console.log("user", user);
         console.log('isAdmin', this.isAdmin);

@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import authStore from './stores/authStore';
 import commonStore from './stores/commonStore';
 import { useLocation } from 'react-router-dom';
+import Loader from './components/spinner/Loader';
 function App() {
   const location = useLocation(); 
   
@@ -21,6 +22,14 @@ function App() {
     }
 
   }, [location]); 
+  if (authStore.loading) {
+    return (
+      <div className="App">
+        <Header />
+        <Loader fullPage />
+      </div>
+    );
+  }
 
   return (
     <div className="App">

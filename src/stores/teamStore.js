@@ -10,7 +10,11 @@ class TeamStore {
     projectType: null,
     technologies: [],
     searchTerm: '',
-    trackId: null
+    trackId: null,
+    page: 0,
+    size: 10,
+    sort: "name,asc",
+    total: 0,           
   };
   allFilters = {};
   loading = false;
@@ -59,6 +63,7 @@ class TeamStore {
 
       runInAction(() => {
         this.teams = data.content;
+        this.filters.total = data.totalElements;
         this.allFilters = data.availableFilters || {};
       });
     } catch (err) {
@@ -128,6 +133,7 @@ class TeamStore {
     this.error = null;
 
     try {
+      console.log('teamDataAAAAAA', teamData);
       const newTeam = await TeamService.createTeam(teamData);
       runInAction(() => {
         this.teams.push(newTeam);

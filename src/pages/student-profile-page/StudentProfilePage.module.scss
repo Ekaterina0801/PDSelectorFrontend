@@ -140,3 +140,181 @@
       grid-template-columns: 1fr;
     }
   }
+
+
+/* ------------------------------------------------------------------
+   Сетка карточек (Teams, Students и др.)
+-------------------------------------------------------------------*/
+.teamsGrid,
+.studentsGrid {
+  display: grid;
+  gap: ui.$spacing-md;
+
+  // Автоподбор числа колонок: min ширина 280px, макс — равномерно распределить
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+
+  // Выравнить все карточки по верху
+  align-items: start;
+}
+
+/* ------------------------------------------------------------------
+   Универсальный стиль карточки
+-------------------------------------------------------------------*/
+.card {
+  display: flex;
+  flex-direction: column;
+
+  // чтобы карточка заняла всю высоту «ячейки» грид-контейнера
+  height: 100%;
+
+  background: ui.$color-white;
+  border-radius: ui.$radius-md;
+  box-shadow: ui.$shadow-light;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  transition: ui.$transition-medium;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: ui.$shadow-strong;
+  }
+}
+
+/* Тело карточки */
+.card-body {
+  flex: 1;               // растягиваем, чтобы футер оказался внизу
+  padding: ui.$spacing-md;
+}
+
+/* Футер карточки (кнопки и т.п.) */
+.card-footer {
+  margin-top: auto;      // прижимает футер к низу карточки
+  padding: ui.$spacing-md;
+  background: ui.$color-white;
+  display: flex;
+  flex-direction: column;
+  gap: ui.$spacing-sm;
+
+  // если нужно центрировать кнопки по горизонтали:
+  align-items: stretch;
+}
+
+/* ------------------------------------------------------------------
+   Пример стилей кнопок внутри футера (подгоняйте под свои миксины)
+-------------------------------------------------------------------*/
+.card-footer .actionButton {
+  @include ui.btn(ui.$radius-sm);
+  width: 100%;
+  padding: ui.$spacing-sm;
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------------
+   Если у вас статусный тег внутри футера
+-------------------------------------------------------------------*/
+.card-footer .statusTag {
+  display: block;
+  width: 100%;
+  padding: ui.$spacing-xs ui.$spacing-sm;
+  text-align: center;
+  font-weight: 600;
+  border-radius: ui.$radius-sm;
+  margin-bottom: ui.$spacing-sm;
+}
+
+/* Статусные цвета */
+.card-footer .statusTag.sent {
+  background-color: ui.$color-warning;
+  color: ui.$color-white;
+}
+.card-footer .statusTag.accepted {
+  background-color: ui.$color-green;
+  color: ui.$color-white;
+}
+.card-footer .statusTag.rejected {
+  background-color: ui.$color-danger;
+  color: ui.$color-white;
+}
+.card-footer .statusTag.cancelled {
+  background-color: ui.$color-grey-300;
+  color: ui.$color-grey-700;
+}
+
+
+.layout {
+  display: flex;
+  gap: ui.$spacing-lg;
+
+  @include ui.respond-to(lg) {
+    flex-direction: column;
+  }
+}
+
+.sidebar {
+  width: 240px;
+  @include ui.respond-to(lg) {
+    display: none;
+  }
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: ui.$spacing-lg;
+}
+
+.pageTitle {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  color: ui.$color-primary;
+  text-align: center;
+}
+
+.successMessage {
+  color: ui.$color-success;
+  font-weight: 600;
+  text-align: center;
+}
+
+.createButton {
+  @include ui.btn();
+  margin-bottom: ui.$spacing-md;
+}
+
+.cardsGrid {
+  display: grid;
+  gap: ui.$spacing-md;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  align-items: start; // выравниваем карточки по верхнему краю
+}
+
+.trackBlock {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: ui.$spacing-md;
+  border-radius: ui.$radius-sm;
+  color: ui.$color-white;
+  margin-bottom: ui.$spacing-md;
+  font-weight: 600;
+}
+.trackBlock.active {
+  background: ui.$color-primary;
+}
+.trackBlock.inactive {
+  background: ui.$color-grey-600;
+}
+.trackName {
+  margin: 0;
+  font-size: ui.$font-size-base;
+}
+.trackStatus {
+  font-size: ui.$font-size-base;
+}
+
+.pageTitle,
+.successMessage {
+  text-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}

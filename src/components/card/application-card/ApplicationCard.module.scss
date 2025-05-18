@@ -1,37 +1,89 @@
 @use "@/styles/index" as ui;
 @use "../BaseCard.module.scss" as base;
-.appBackground {
-  background: #f7f7f7;
-}
 
-.statusTag {
-  display: block;
+
+.cardContainer {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  row-gap: ui.$spacing-md;
   width: 100%;
-  box-sizing: border-box;
-  text-align: center;
-  padding-left: 0;
-  padding-right: 0;
-  margin: ui.$spacing-sm 0;
-  color: ui.$color-primary;
-  background-color: ui.$color-warning;
-  margin-top: ui.$spacing-sm;
-  padding-left: 0;
-  padding-right: 0;
-  border-radius: ui.$radius-lg;
+  height: 100%;
+  background: ui.$color-white;
+  border-radius: ui.$radius-md;
+  box-shadow: ui.$shadow-light;
+  overflow: hidden;
+  transition: ui.$transition-medium;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: ui.$shadow-strong;
+  }
 }
 
-.approve {
-  background: ui.$color-success;
-  color: ui.$color-primary;
+.cardHeader {
+  padding: ui.$spacing-md;
+  min-height: 4.8rem; 
 }
 
-.reject,
-.cancel {
-  background: ui.$color-danger;
-  color: ui.$color-primary;
+.cardBody {
+  padding: ui.$spacing-md;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: ui.$spacing-sm;
+
+  .cardResume {
+    flex: 1;               // описание займёт всё свободное пространство
+    color: ui.$color-grey-700;
+    line-height: 1.6;
+    font-size: ui.$font-size-base;
+    margin: 0;
+  }
+
+  .cardTags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: ui.$spacing-xs;
+
+    .cardTag {
+      @include ui.tag;
+    }
+  }
+
+  .statusTag {
+    // полоса со статусом во всю ширину
+    display: block;
+    width: 100%;
+    padding: ui.$spacing-xs ui.$spacing-sm;
+    text-align: center;
+    font-weight: 600;
+    border-radius: ui.$radius-sm;
+    margin-top: auto;      // прижимаем к низу .cardBody
+  }
+
+  // статусы
+  .statusTag.sent      { background: ui.$color-warning; color: ui.$color-white; }
+  .statusTag.accepted  { background: ui.$color-success; color: ui.$color-white; }
+  .statusTag.rejected  { background: ui.$color-danger;  color: ui.$color-white; }
+  .statusTag.cancelled { background: ui.$color-grey-300; color: ui.$color-grey-700; }
 }
 
-.apply,
-.view {
-  background: ui.$color-primary;
+.cardActions {
+  padding: ui.$spacing-md;
+  background: ui.$color-white;
+  display: flex;
+  flex-direction: column;
+  gap: ui.$spacing-sm;
+}
+
+.actionButton {
+  @include ui.btn(ui.$radius-sm);
+  width: 100%;
+  padding: ui.$spacing-sm;
+  font-weight: 600;
+  transition: ui.$transition-fast;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
 }
