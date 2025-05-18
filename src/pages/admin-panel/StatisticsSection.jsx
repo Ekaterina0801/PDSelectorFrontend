@@ -84,7 +84,6 @@ console.log('students', students);
     <div className={styles.statistics}>
 
 
-
         <label htmlFor="track-select">Трек:</label>
         <select
           id="track-select"
@@ -95,7 +94,6 @@ console.log('students', students);
             <option key={tr.id} value={tr.id}>{tr.name}</option>
           ))}
         </select>
-
 
       <div className={styles.widgets}>
         {/* Донат студентов */}

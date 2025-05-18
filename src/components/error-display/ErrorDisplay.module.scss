@@ -99,6 +99,15 @@
     background: ui.$color-danger;
   }
 }
+
+.confirmButton {
+  background: ui.$color-danger;
+  color: ui.$color-white;
+
+  &:hover {
+    background: ui.$color-danger;
+  }
+}
 @media (min-width: 2560px) {
   .modal {
     max-width: 700px;
