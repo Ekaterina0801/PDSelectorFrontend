@@ -35,7 +35,7 @@
   right: ui.$spacing-md;
   background: none;
   border: none;
-  font-size: 1.5rem;
+  font-size: ui.$font-size-2xl;
   color: ui.$color-grey-500;
   cursor: pointer;
   transition: color ui.$transition-fast;
@@ -130,5 +130,25 @@
   .modalContent {
     padding: ui.$spacing-lg;
     max-width: 100%;
+  }
+}
+/* Дополнительные адаптации для экранов сверхвысокого разрешения */
+@media (min-width: 2560px) {
+  .modalContent {
+    max-width: 1200px;
+  }
+  
+  .modalHeader {
+    font-size: ui.$font-size-3xl;
+  }
+  
+  .formGroup {
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .modalClose{
+    font-size: ui.$font-size-4xl;
   }
 }

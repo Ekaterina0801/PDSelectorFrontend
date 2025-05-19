@@ -99,3 +99,31 @@
     font-size: 0.8rem;
   }
 }
+@media (min-width: 2560px) {
+  .table {
+    font-size: ui.$font-size-2xl;
+    border-width: 2px;
+  }
+
+  .headerCell {
+    padding: 1rem 1.25rem;
+    font-size: ui.$font-size-2xl;
+  }
+
+  .bodyCell {
+    padding: 1rem 1.25rem;
+  }
+
+  .ellipsisCell {
+    max-width: 300px;
+  }
+
+  .sortIcon {
+    font-size: 0.9rem;
+  }
+
+  .actionsCell {
+    width: 6rem;
+    padding: 1rem 0.75rem;
+  }
+}

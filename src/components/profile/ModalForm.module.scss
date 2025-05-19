@@ -5,7 +5,7 @@
   flex-direction: column;
   gap: ui.$spacing-sm;       // уменьшили отступ
   max-height: 75vh;          // чуть меньше высота
-  overflow-y: auto;
+  //overflow-y: auto;
   padding: ui.$spacing-xs;   // компактнее
 }
 
@@ -93,5 +93,55 @@
   &:hover {
     background: ui.$color-grey-100;
     color: ui.$color-grey-800;
+  }
+}
+
+@media (min-width: 2560px) {
+  .form {
+    max-height: 85vh;
+    padding: ui.$spacing-sm;
+    gap: ui.$spacing-md;
+  }
+
+  .field {
+    font-size: ui.$font-size-2xl;
+    
+    & + & {
+      margin-top: ui.$spacing-md;
+    }
+
+    label {
+      margin-bottom: ui.$spacing-sm;
+    }
+
+    input,
+    select,
+    textarea {
+      height: ui.$font-size-5xl;
+      font-size: ui.$font-size-2xl;
+      border-radius: ui.$radius-md;
+      padding: 0 ui.$spacing-md;
+    }
+
+    textarea {
+      min-height: ui.$font-size-5xl ;
+      padding: ui.$spacing-sm;
+    }
+
+    input[type="checkbox"] {
+      transform: scale(1.25);
+    }
+  }
+
+  .actions {
+    gap: ui.$spacing-sm;
+    margin-top: ui.$spacing-md;
+  }
+
+  .btnSave,
+  .btnCancel {
+    padding: ui.$spacing-sm ui.$spacing-lg;
+    font-size: ui.$font-size-2xl;
+    border-radius: ui.$radius-md;
   }
 }

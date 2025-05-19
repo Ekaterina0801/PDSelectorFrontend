@@ -12,7 +12,6 @@ const Registration = () => {
     try {
       await authStore.checkAuth();
       const studentData = { ...formData, user_id: authStore.user.id };
-      console.log("studentDataAAAAAAAAA", studentData);
       await studentStore.createStudent(authStore.trackId,studentData);
 
       alert("Регистрация завершена!");

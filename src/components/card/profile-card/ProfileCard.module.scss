@@ -256,3 +256,79 @@
 .teamLink:hover {
   text-decoration: underline;
 }
+// В самом конце файла
+@media (min-width: 2560px) {
+  .card {
+    border-width: 2px;
+    width: 1000px;
+    margin: 0 auto;
+  }
+
+  .header {
+    padding: ui.$spacing-lg ui.$spacing-lg 0;
+  }
+
+  .avatarWrapper {
+    margin-bottom: ui.$spacing-lg;
+    padding: 6px;
+  }
+
+  .avatar {
+    width: 140px;
+    height: 140px;
+    border-width: 5px;
+  }
+
+  .info {
+    margin-bottom: ui.$spacing-lg;
+  }
+
+  .name {
+    font-size: ui.$font-size-3xl;
+  }
+
+  .course {
+    font-size: ui.$font-size-2xl;
+    margin-top: ui.$spacing-sm;
+  }
+
+  .details {
+    padding: ui.$spacing-lg;
+    row-gap: ui.$spacing-lg;
+  }
+
+  .label {
+    font-size: ui.$font-size-2xl;
+    min-width: 120px;
+    margin-right: ui.$spacing-md;
+  }
+
+  .value {
+    font-size: ui.$font-size-2xl;
+  }
+
+  .tags {
+    gap: ui.$spacing-md;
+  }
+
+  .tag {
+    padding: ui.$spacing-sm ui.$spacing-md;
+    font-size: ui.$font-size-2xl;
+    border-radius: ui.$radius-md;
+  }
+
+  .footer {
+    padding: ui.$spacing-lg;
+  }
+
+  .editButton,
+  .applicationButton {
+    padding: ui.$spacing-sm ui.$spacing-lg;
+    font-size: ui.$font-size-2xl;
+    border-radius: ui.$radius-sm;
+  }
+
+  .checkbox {
+    transform: scale(1.7);
+  }
+}

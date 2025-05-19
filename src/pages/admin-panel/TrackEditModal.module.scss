@@ -26,7 +26,7 @@
   flex-direction: column;
   gap: ui.$spacing-lg;
   max-height: 80vh;
-  overflow-y: auto;
+  //overflow-y: auto;
   padding-right: ui.$spacing-sm;
 }
 
@@ -61,7 +61,7 @@
 
   textarea {
     height: auto;
-    min-height: 6rem;
+    min-height: 7.5rem;
     resize: vertical;
   }
 }
@@ -212,5 +212,93 @@
 
   &:hover {
     background: ui.$color-grey-300;
+  }
+}
+
+@media (min-width: 2560px) {
+  .form {
+    max-height: 85vh;
+    gap: ui.$spacing-lg;
+    padding-right: ui.$spacing-md;
+  }
+
+  .field {
+    font-size: ui.$font-size-2xl;
+
+    & + & {
+      margin-top: ui.$spacing-md;
+    }
+
+    input,
+    textarea,
+    select {
+      height: ui.$font-size-5xl;
+      font-size: ui.$font-size-2xl;
+      margin-top: ui.$spacing-sm;
+      padding: 0 ui.$spacing-md;
+    }
+  }
+
+  .membersSection {
+    padding: ui.$spacing-lg;
+  }
+
+  .sectionTitle {
+    font-size: ui.$font-size-2xl;
+    margin-bottom: ui.$spacing-md;
+  }
+
+  .membersList {
+    gap: ui.$spacing-md;
+
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+  }
+
+  .memberRow {
+    gap: ui.$spacing-md;
+  }
+
+  .memberIndex {
+    width: ui.$font-size-4xl;
+    height: ui.$font-size-4xl;
+    line-height: ui.$font-size-2xl;
+    font-size: ui.$font-size-2xl;
+  }
+
+  .selectMember {
+    height: ui.$font-size-5xl;
+    font-size: ui.$font-size-2xl;
+    padding: 0 ui.$spacing-md;
+  }
+
+  .trashBtn {
+    svg {
+      width: ui.$font-size-2xl;
+      height: ui.$font-size-2xl;
+    }
+  }
+
+  .addMemberBtn {
+    width: ui.$font-size-5xl;
+    height: ui.$font-size-5xl;
+    
+    svg {
+      width: ui.$font-size-3xl;
+      height: ui.$font-size-3xl;
+    }
+  }
+
+  .actions {
+    gap: ui.$spacing-lg;
+    margin-top: ui.$spacing-lg;
+  }
+
+  .btnSave,
+  .btnCancel {
+    padding: ui.$spacing-md ui.$spacing-lg;
+    font-size: ui.$font-size-2xl;
+    border-radius: ui.$radius-lg;
   }
 }

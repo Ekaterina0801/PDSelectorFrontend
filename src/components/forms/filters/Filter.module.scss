@@ -99,3 +99,65 @@
     }
   }
 }
+
+// Добавляем в самом конце файла стилей
+@media (min-width: 2560px) {
+  .filterSection {
+    width: 320px; // Увеличиваем ширину секции
+    padding: 30px; // Увеличиваем внутренние отступы
+    margin: 30px; // Увеличиваем внешние отступы
+    border-radius: ui.$radius-lg; // Увеличиваем скругление
+    gap: 25px; // Увеличиваем расстояние между элементами
+
+    .filterSection__groupTitle{
+      font-size: ui.$font-size-2xl;
+      
+    }
+
+    &__title {
+      font-size: ui.$font-size-3xl; // Увеличиваем размер шрифта
+      padding-bottom: 15px; // Увеличиваем отступ
+      margin-bottom: 30px; // Увеличиваем отступ снизу
+      border-bottom-width: 3px; // Утолщаем линию
+    }
+
+    &__group {
+      gap: 15px; // Увеличиваем расстояние между элементами группы
+
+      &-title {
+        font-size: ui.$font-size-2xl; // Увеличиваем размер шрифта
+        border-left-width: 6px; // Утолщаем акцентную линию
+        padding-left: 15px; // Увеличиваем отступ
+        margin-bottom: 15px; // Увеличиваем отступ
+      }
+
+      label {
+        font-size: ui.$font-size-2xl; // Увеличиваем размер шрифта
+        gap: 12px; // Увеличиваем расстояние между элементами
+
+        input[type='radio'],
+        input[type='checkbox'] {
+          transform: scale(1.7); // Увеличиваем размер элементов ввода
+          margin-right: 12px; // Увеличиваем отступ
+        }
+      }
+    }
+
+    &__list {
+      gap: 12px; // Увеличиваем расстояние между элементами
+      max-height: 300px; // Увеличиваем максимальную высоту
+      padding: 15px; // Увеличиваем внутренние отступы
+      border-radius: ui.$radius-sm; // Увеличиваем скругление
+    }
+
+    &__actions {
+      gap: ui.$spacing-md; // Используем больший spacing из дизайн-системы
+    }
+
+    &__button {
+      padding: 16px; // Увеличиваем отступы кнопки
+      font-size: ui.$font-size-2xl; // Увеличиваем размер шрифта
+      border-radius: ui.$radius-md; // Увеличиваем скругление
+    }
+  }
+}

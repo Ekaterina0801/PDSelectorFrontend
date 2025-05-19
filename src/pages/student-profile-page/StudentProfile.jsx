@@ -25,19 +25,18 @@ import styles from "./StudentProfilePage.module.scss";
 import NoDataDisplay from "../../components/nodata-display/NoDataDisplay";
 import ErrorModal from "../../components/error-display/ErrorDisplay";
 import teamStore from "../../stores/teamStore";
-
+import trackStore from "../../stores/trackStore";
 const sidebarItems = [
   { name: "Мои команды", icon: "👥" },
   { name: "Профиль", icon: "👤" },
   { name: "Мои заявки", icon: "📄" },
   { name: "Созданные команды", icon: "⚙️" },
 ];
-
 const StudentProfilePage = observer(() => {
   const { studentId } = useParams();
-  const currentStudentId = authStore.studentId;
+  const currentUserId = authStore.studentId;
   const isAdmin = authStore.isAdmin;
-  const isOwnProfile = Number(studentId) === currentStudentId;
+  const isOwnProfile = Number(studentId) === currentUserId;
 
   const [currentSection, setCurrentSection] = useState("Профиль");
   const [isEditing, setIsEditing] = useState(false);
@@ -58,15 +57,26 @@ const StudentProfilePage = observer(() => {
     projectTypeStore.projectTypes
   );
 
+  // 1) Загрузка данных при маунте
   useEffect(() => {
-    const loadAll = async () => {
-      await studentStore.fetchStudentById(studentId);
-      await projectTypeStore.fetchProjectTypes();
-      await technologyStore.fetchTechnologies();
-    };
-    loadAll();
-  }, [studentId]);
+    studentStore.fetchStudentById(studentId);
+    projectTypeStore.fetchProjectTypes();
+    technologyStore.fetchTechnologies();
+    trackStore.fetchTracks();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const startEditing = useCallback(() => setIsEditing(true), []);
+  const stopEditing  = useCallback(() => setIsEditing(false), []);
+
+  const saveProfile = useCallback(
+    async (data) => {
+      await studentStore.updateStudent(data, studentId);
+      stopEditing();
+    },
+    [studentId, stopEditing]
+  );
+
+  // Рендер профиля или формы редактирования
   const renderProfile = () => {
     if (loading) return <Loader />;
     if (studentError) {
@@ -82,21 +92,19 @@ const StudentProfilePage = observer(() => {
       return (
         <ProfileEditForm
           studentData={student}
-          onSave={(data) =>
-            studentStore
-              .updateStudent(data, studentId)
-              .then(() => setIsEditing(false))
-          }
-          onCancel={() => setIsEditing(false)}
+          onSave={saveProfile}
+          onCancel={stopEditing}
           allTechnologies={technologyStore.technologies}
         />
       );
     }
+
     return (
       <ProfileCard
         studentData={student}
         isCurrentUser={isOwnProfile}
-        onEdit={() => setIsEditing(true)}
+        isAdmin={isAdmin}
+        onEdit={startEditing}
       />
     );
   };
@@ -108,14 +116,14 @@ const StudentProfilePage = observer(() => {
     }
     return (
       <div className={styles.teamsGrid}>
-        {student.teams.map((team) => (
+        {student.teams.map((t) => (
           <Card
-            key={team.id}
-            name={team.name}
-            type={team.projectType.name}
-            resume={team.project_description}
-            tags={team.technologies}
-            profileLink={`/teams/${team.id}`}
+            key={t.id}
+            name={t.name}
+            type={t.projectType.name}
+            resume={t.project_description}
+            tags={t.technologies}
+            profileLink={`/teams/${t.id}`}
           />
         ))}
       </div>
@@ -137,7 +145,6 @@ const StudentProfilePage = observer(() => {
   };
 
   const createdTeams = student?.current_team ? [student.current_team] : [];
-
   const renderCreatedTeams = () => (
     <>
       {!student.current_team && (
@@ -151,17 +158,16 @@ const StudentProfilePage = observer(() => {
           Создать команду
         </button>
       )}
-
       {createdTeams.length > 0 ? (
         <div className={styles.teamsGrid}>
-          {createdTeams.map((team) => (
+          {createdTeams.map((t) => (
             <TeamCard
-              key={team.id}
-              name={team.name}
-              type={team.project_type?.name}
-              description={team.project_description}
-              technologies={team.technologies}
-              profileLink={`/teams/${team.id}`}
+              key={t.id}
+              name={t.name}
+              type={t.project_type?.name}
+              description={t.project_description}
+              technologies={t.technologies}
+              profileLink={`/teams/${t.id}`}
             />
           ))}
         </div>

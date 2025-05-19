@@ -1,6 +1,6 @@
 @use "@/styles/index" as ui;
 .NavbarItems {
-    max-width: 1600px;
+    //max-width: 1600px;
     background-color: ui.$color-primary;
     border-radius: 20px;
     padding: 10px 20px;
@@ -185,3 +185,14 @@
     max-height: calc(100vh - 80px);
     overflow-y: auto;
   }
+
+  @media (min-width: 2560px) {
+    .MenuItems li {
+      font-size: ui.$font-size-2xl; // Увеличенный размер шрифта
+    }
+    .NavbarItems {
+    h3 {
+      font-size: ui.$font-size-3xl; // Увеличенный размер шрифта
+    }
+  }
+}

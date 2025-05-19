@@ -36,7 +36,7 @@
   align-items: flex-start;
   gap: ui.$spacing-lg;
   margin: ui.$spacing-lg;
-
+  flex-wrap: wrap;
 
   .widget {
     background: ui.$color-white;
@@ -117,7 +117,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
   padding: ui.$spacing-lg;
   max-width: 800px;
-
+  width: 100%;
   h2 {
     font-size: ui.$font-size-2xl;
     color: ui.$color-primary;
@@ -140,6 +140,97 @@
     margin-top: ui.$spacing-md;
     strong {
       color: ui.$color-primary;
+    }
+  }
+}
+
+// В самом конце файла
+@media (min-width: 2560px) {
+  .statistics {
+    padding: ui.$spacing-md ui.$spacing-lg;
+    
+    .title {
+      font-size: ui.$font-size-5xl;
+      margin-bottom: ui.$spacing-md;
+    }
+
+    .filter {
+      margin-bottom: ui.$spacing-md;
+      
+      label {
+        font-size: ui.$font-size-2xl;
+        margin-right: ui.$spacing-md;
+      }
+      
+      select {
+        font-size: ui.$font-size-2xl;
+        padding: ui.$spacing-sm ui.$spacing-lg;
+        border-radius: ui.$radius-lg;
+      }
+    }
+  }
+
+  .widgets {
+    gap: ui.$spacing-md;
+    margin: ui.$spacing-md 0;
+    
+    .widget {
+      width: 400px;
+      min-height: 560px;
+      padding: ui.$spacing-md;
+      border-radius: ui.$radius-md;
+      
+      h2 {
+        font-size: ui.$font-size-3xl;
+        margin-bottom: ui.$radius-md;
+      }
+
+      .donut {
+        width: 160px;
+        height: 160px;
+        margin-bottom: ui.$spacing-lg;
+      }
+
+      .donut-center {
+        font-size: ui.$font-size-3xl;
+      }
+
+      .texts {
+        p {
+          font-size: ui.$font-size-2xl;
+          margin: ui.$spacing-sm 0;
+        }
+      }
+
+      .moreInfo {
+        font-size: ui.$font-size-2xl;
+        padding: ui.$spacing-md ui.$spacing-lg;
+        border-radius: ui.$radius-md;
+      }
+    }
+  }
+
+  .histogram {
+    max-width: 1200px;
+    padding: ui.$spacing-md;
+    border-radius: ui.$radius-md;
+    
+    h2 {
+      font-size: ui.$font-size-3xl;
+      margin-bottom: ui.$spacing-md;
+    }
+
+    .recharts-legend {
+      font-size: ui.$font-size-2xl;
+      margin-bottom: ui.$spacing-lg;
+    }
+
+    .total {
+      font-size: ui.$font-size-2xl;
+      margin-top: ui.$spacing-lg;
+    }
+    .x-axis-tick {
+      font-size: ui.$font-size-2xl;
     }
   }
 }

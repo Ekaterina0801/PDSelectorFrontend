@@ -9,6 +9,7 @@
   position: relative;
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width:1000px;
 
   &:hover {
     transform: translateY(-4px);
@@ -273,6 +274,97 @@
 
       .techTag {
         padding: 8px 16px;
+      }
+    }
+  }
+}
+
+@media (min-width: 2560px) {
+  .teamInfoCard { 
+    width: 1500px;
+    margin: 0 auto 64px;
+    padding: ui.$spacing-lg;
+    border-radius: ui.$radius-lg;
+
+    .teamHeader {
+      margin-bottom: 32px;
+      padding-bottom: 32px;
+
+      &Top {
+        .teamName {
+          font-size: ui.$font-size-4xl;
+          
+          &::after {
+            width: 80px;
+            height: 5px;
+            bottom: -12px;
+          }
+        }
+
+        .applicationCard,
+        .button {
+          font-size: ui.$font-size-base;
+          padding: ui.$spacing-sm  ui.$spacing-md;
+        }
+      }
+
+      &Center {
+        .teamTypeBadge {
+          font-size: ui.$font-size-base;
+          padding: ui.$spacing-md  ui.$spacing-lg;
+          border-radius: ui.$radius-xxl;
+        }
+      }
+    }
+
+    .teamContentGrid {
+      gap: 64px;
+    }
+
+    .sectionTitle {
+      font-size: ui.$font-size-2xl;
+      margin-bottom: ui.$spacing-lg;
+
+      &::before {
+        width: 10px;
+        height: 10px;
+      }
+    }
+
+    .teamDescription {
+      font-size: ui.$font-size-2xl;
+      line-height: 2;
+    }
+
+    .cardTags {
+      gap: ui.$spacing-md;
+
+      .cardTag,
+      .techTag {
+        font-size: ui.$font-size-2xl;
+        padding: ui.$spacing-sm  ui.$spacing-sm;
+      }
+    }
+
+    .captainCard {
+      padding: ui.$spacing-lg;
+      border-radius: ui.$radius-lg;
+
+      .captainAvatar {
+        width: 90px;
+        height: 90px;
+        border-width: 4px;
+      }
+
+      .captainDetails {
+        .captainName {
+          font-size: ui.$font-size-2xl;
+        }
+
+        .captainRole {
+          font-size: ui.$font-size-base;
+          padding: ui.$spacing-sm  ui.$spacing-md;
+        }
       }
     }
   }

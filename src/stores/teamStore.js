@@ -64,7 +64,8 @@ class TeamStore {
       runInAction(() => {
         this.teams = data.content;
         this.filters.total = data.totalElements;
-        this.allFilters = data.availableFilters || {};
+        //this.allFilters = data.availableFilters || {};
+        //console.log('DATATATATATA', data);
       });
     } catch (err) {
       runInAction(() => {
@@ -153,7 +154,11 @@ class TeamStore {
   async updateTeam(teamData, teamId) {
     this.loading = true;
     this.error = null;
-
+    console.log('teamDataAAAAAA', teamData);
+    console.log('teamIdAAAAAA', teamId);
+    if (!teamId) {
+      teamId = teamData.id;
+    }
     try {
       const updated = await TeamService.updateTeam(teamData, teamId);
       runInAction(() => {

@@ -174,6 +174,7 @@ const TeamEditForm = ({
               {allTechnologies.map((tech) => (
                 <div key={tech.id} className={styles.technologyCheckbox}>
                   <input
+                    className = {styles.checkbox}
                     type="checkbox"
                     id={`tech-${tech.id}`}
                     checked={formData.technologies.some(

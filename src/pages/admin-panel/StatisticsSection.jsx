@@ -13,7 +13,7 @@ import * as d3 from "d3";
 import palette from "../../styles/palette"
 import {
   PieChart, Pie, Cell,
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from "recharts";
 
 const StatisticsSection = observer(() => {
@@ -82,8 +82,6 @@ console.log('students', students);
 
   return (
     <div className={styles.statistics}>
-      <div className={stylesAdmin.sortPaginationControls}>
-        <div className={stylesAdmin.controlBlock}>
 
 
         <label htmlFor="track-select">Трек:</label>
@@ -96,8 +94,6 @@ console.log('students', students);
             <option key={tr.id} value={tr.id}>{tr.name}</option>
           ))}
         </select>
-        </div>
-      </div>
 
       <div className={styles.widgets}>
         {/* Донат студентов */}
@@ -126,6 +122,7 @@ console.log('students', students);
         {/* Донат команд */}
         <div className={styles.widget}>
           <h2>Информация о командах</h2>
+          <h2></h2>
           <div className={styles.donut}>
             <div
               className={styles["donut-inner"]}
@@ -149,11 +146,10 @@ console.log('students', students);
       {/* Гистограмма */}
       <div className={styles.histogram}>
         <h2>Проекты по типам</h2>
+        <ResponsiveContainer width="100%" height={300}>
         <BarChart
-          width={700}
-          height={300}
           data={barData}
-          margin={{ top: 20, right: 150, left: 20, bottom: 60 }}
+          margin={{ top: 20, right: 30, left: 1, bottom: 25 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis 
@@ -162,6 +158,7 @@ console.log('students', students);
             textAnchor="end" 
             interval={0} 
             height={60}
+            className="x-axis-tick"
           />
           <YAxis allowDecimals={false} />
           <Tooltip />
@@ -172,6 +169,7 @@ console.log('students', students);
             ))}
           </Bar>
         </BarChart>
+        </ResponsiveContainer>
         <p className={styles.total}>
           Всего проектов: <strong>{teams.length}</strong>
         </p>

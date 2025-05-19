@@ -73,6 +73,7 @@ const UsersSection = observer(() => {
       return;
     }
     try {
+      console.log('handleExport', trackId, fmt);
       const svc =
         fmt === 'csv'
           ? StudentService.exportStudentsCsv

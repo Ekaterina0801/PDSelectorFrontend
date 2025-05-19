@@ -29,8 +29,11 @@
   border: 1px solid ui.$color-primary-light;
   overflow: hidden;
   transition: all 0.3s ease;
-
-
+  //width: 100%; // займет всю ширину родителя
+  //max-width: 1000px;
+  width:100%;
+  
+  // === Header ===
   &-header {
     padding: ui.$spacing-lg;
     text-align: center;
@@ -132,6 +135,60 @@
     .action-button {
       font-size: 0.85rem;
       padding: ui.$spacing-xs;
+    }
+  }
+}
+
+// === Адаптив для ультрашироких экранов (2560px+) ===
+@media (min-width: 2560px) {
+  .card {
+    //width: 1200px; // Увеличиваем максимальную ширину карточки
+    border-radius: ui.$radius-lg; // Используем увеличенный радиус скругления
+    box-shadow: ui.$shadow-strong; // Более выраженная тень
+
+    &-header {
+      padding: ui.$spacing-lg; // Увеличиваем отступы
+    }
+
+    &-name {
+      font-size: ui.$font-size-3xl; // Крупный заголовок
+      margin-bottom: ui.$spacing-sm;
+    }
+
+    &-type {
+      font-size: ui.$font-size-2xl; // Увеличенный подзаголовок
+      letter-spacing: 0.5px;
+    }
+
+    &-body {
+      padding: ui.$spacing-lg;
+    }
+
+    &-resume {
+      font-size: ui.$font-size-2xl; // Чуть крупнее текст
+      line-height: 1.6; // Улучшенная читаемость
+      -webkit-line-clamp: 3; // Показываем больше строк
+    }
+
+    &-tags {
+      gap: ui.$spacing-sm; // Больше пространства между тегами
+      margin-bottom: ui.$spacing-lg;
+    }
+
+    &-tag {
+      font-size: ui.$font-size-base; // Крупные теги
+      padding: ui.$spacing-sm ui.$spacing-md; // Больше padding
+      border-radius: ui.$radius-lg; // Сильнее скругление
+    }
+
+    &-actions {
+      padding: ui.$spacing-lg; // Увеличиваем отступы футера
+    }
+
+    .action-button {
+      padding: 12px 24px; // Крупная кнопка
+      font-size: ui.$font-size-2xl; // Увеличенный текст
+      border-radius: ui.$radius-md; // Согласованное скругление
     }
   }
 }

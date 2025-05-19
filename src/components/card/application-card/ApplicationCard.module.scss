@@ -87,3 +87,27 @@
     transform: translateY(-1px);
   }
 }
+
+@media (min-width: 2560px) {
+  .appBackground {
+    max-width: 2560px;
+    margin: 0 auto;
+    padding: ui.$spacing-lg 0;
+  }
+
+  .statusTag {
+    font-size: ui.$font-size-2xl;
+    padding: ui.$spacing-md 0;
+    margin: ui.$spacing-md 0;
+    border-radius: ui.$radius-lg;
+  }
+
+  .approve,
+  .reject,
+  .cancel,
+  .apply,
+  .view {
+    font-size: ui.$font-size-2xl;
+    padding: ui.$spacing-sm ui.$spacing-md;
+  }
+}

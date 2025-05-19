@@ -124,3 +124,51 @@
     }
   }
 }
+
+.confirmButton {
+  background: ui.$color-danger;
+  color: ui.$color-white;
+
+  &:hover {
+    background: ui.$color-danger;
+  }
+}
+@media (min-width: 2560px) {
+  .modal {
+    max-width: 700px;
+    padding: ui.$spacing-lg;
+    border-radius: ui.$radius-lg;
+  }
+
+  .closeButton {
+    top: ui.$spacing-md;
+    right: ui.$spacing-md;
+    font-size: ui.$font-size-2xl;
+  }
+
+  .image {
+    width: 160px;
+    margin-bottom: ui.$spacing-lg;
+  }
+
+  .title {
+    font-size: ui.$font-size-3xl;
+    margin-bottom: ui.$spacing-lg;
+  }
+
+  .message {
+    font-size: ui.$font-size-2xl;
+    margin-bottom: ui.$spacing-lg;
+  }
+
+  .buttons {
+    gap: ui.$spacing-md;
+  }
+
+  .cancelButton,
+  .actionButton,
+  .confirmButton {
+    font-size: ui.$font-size-2xl;
+    padding: ui.$spacing-sm ui.$spacing-lg;
+  }
+}

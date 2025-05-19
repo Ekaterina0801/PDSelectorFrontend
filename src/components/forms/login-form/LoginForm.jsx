@@ -4,6 +4,7 @@ import styles from './LoginForm.module.scss';
 const LoginForm = () => {
   const handleLogin = () => {
     window.location.href = 'http://localhost:8080/oauth2/authorization/azure';
+    //window.location.href = 'https://titlecounter.ru:8080/oauth2/authorization/azure';
   };
 
   const getCookieValue = name => {

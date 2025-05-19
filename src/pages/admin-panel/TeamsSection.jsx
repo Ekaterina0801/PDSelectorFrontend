@@ -12,6 +12,8 @@ import Modal from "../../components/forms/modal/Modal";
 import TeamEditModalAdmin from "./TeamEditFormAdmin";
 import authStore from "../../stores/authStore";
 import { Link } from "react-router-dom";
+import studentStore from "../../stores/studentStore";
+
 const TeamsSection = observer(() => {
   const {
     teams,
@@ -38,29 +40,23 @@ const TeamsSection = observer(() => {
   const [showMembersModal, setShowMembersModal] = useState(false);
   const [members, setMembers] = useState([]);
 
-  // Для подтверждения удаления
   const [teamToDelete, setTeamToDelete] = useState(null);
 
-  // Load reference data once
   useEffect(() => {
     trackStore.fetchTracks();
     authStore.fetchUsers();
   }, []);
 
-  // Load teams & filters when paging/filtering changes
   useEffect(() => {
     const load = async () => {
-      //if (currentTeam?.current_track != null) {
-        //await teamStore.fetchFilters(currentTeam.current_track);
+      await teamStore.fetchFilters(filters.trackId);
 
-      
       await teamStore.fetchTeams({ ...filters, searchTerm: search, sort });
-      
     };
+
     load();
   }, [filters.trackId, filters.page, filters.size, search, sort, currentTeam]);
 
-  console.log("filtersSSSSSSJJJJJJ", teamStore.allFilters);
   const displayed = useMemo(() => {
     let arr = teams.slice();
     const q = search.trim().toLowerCase();
@@ -99,15 +95,14 @@ const TeamsSection = observer(() => {
     }
   };
 
-  // Открыть окно подтверждения удаления
   const confirmDelete = (team) => {
     setTeamToDelete(team);
   };
-  // Закрыть окно
+
   const cancelDelete = () => {
     setTeamToDelete(null);
   };
-  // Подтвердить удаление
+
   const doDelete = async () => {
     if (teamToDelete) {
       await deleteTeam(teamToDelete.id);
@@ -116,7 +111,7 @@ const TeamsSection = observer(() => {
   };
 
   if (loading) return <Loader />;
-  console.log('teamStore.allFilters', teamStore.allFilters);
+  console.log("teamStore.allFilters", teamStore.allFilters);
   if (error) return <div className={styles.error}>{error}</div>;
 
   return (
@@ -179,7 +174,7 @@ const TeamsSection = observer(() => {
           >
             <option value="">Все</option>
             {allFilters.projectTypes?.map((pt) => (
-              <option key={pt.id} value={pt.id}>
+              <option key={pt.id} value={pt.name}>
                 {pt.name}
               </option>
             ))}
@@ -196,10 +191,19 @@ const TeamsSection = observer(() => {
           </select>
         </div>
 
-        <div className={styles.controlBlock}>
-          <button onClick={() => handleExport("csv")}>📥 CSV</button>
-          <button onClick={() => handleExport("xlsx")}>📥 Excel</button>
-        </div>
+        {/* Export */}
+        <button
+          onClick={() => handleExport("csv")}
+          className={styles.exportButton}
+        >
+          📥 CSV
+        </button>
+        <button
+          onClick={() => handleExport("xlsx")}
+          className={styles.exportButton}
+        >
+          📥 Excel
+        </button>
       </div>
 
       <DataTable
@@ -248,11 +252,11 @@ const TeamsSection = observer(() => {
         </button>
         <span>
           Стр. {filters.page + 1} из{" "}
-          {Math.max(1, Math.ceil(total / filters.size))}
+          {Math.max(1, Math.ceil(filters.total / filters.size))}
         </span>
         <button
           onClick={() => updateFilter("page", filters.page + 1)}
-          disabled={(filters.page + 1) * filters.size >= total}
+          disabled={(filters.page + 1) * filters.size >= filters.total}
         >
           Далее →
         </button>
@@ -307,11 +311,12 @@ const TeamsSection = observer(() => {
         <TeamEditModalAdmin
           show
           onClose={clearCurrentTeam}
-          onSave={(data) => {
-            updateTeam(data);
+          onSave={async (data) => {
+            await updateTeam(data);
             clearCurrentTeam();
           }}
           team={currentTeam}
+          technologies={allFilters.technologies || []}
           tracks={tracks}
           projectTypes={allFilters.projectTypes || []}
           students={users}

@@ -1,10 +1,9 @@
 @use "@/styles/index" as ui;
 
 .container {
-  @include ui.container();
+  @include ui.container(100%);
   display: flex;
   gap: ui.$spacing-lg;
-
   @include ui.respond-to(lg) {
     flex-direction: column;
   }
@@ -23,6 +22,7 @@
   display: flex;
   flex-direction: column;
   gap: ui.$spacing-lg;
+  align-items: center;
 }
 
 .pageTitle {
@@ -135,6 +135,8 @@
     grid-template-columns: 2fr;
     justify-content: center;
     justify-items: center;
+    width:100%;
+    //max-width:1200px;
   
     @include ui.respond-to (sm) {
       grid-template-columns: 1fr;
@@ -317,4 +319,63 @@
 .pageTitle,
 .successMessage {
   text-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+@media (min-width: 2560px) {
+  .container {
+    padding-left: ui.$spacing-lg;
+    padding-right: ui.$spacing-lg;
+    padding-top: ui.$spacing-lg;
+
+  }
+
+  .sidebarWrapper {
+    @include ui.col(4);
+  }
+
+  .contentColumn {
+    margin: 0 auto;
+  }
+
+  .pageTitle {
+    font-size: ui.$font-size-4xl;
+    margin-bottom: ui.$spacing-lg;
+  }
+
+  .cards {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: ui.$spacing-lg;
+  }
+
+  .teamsGrid {
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: ui.$spacing-lg;
+    width:1200px;
+
+  }
+
+  .successMessage,
+  .error {
+    font-size: ui.$font-size-2xl;
+    margin-bottom: ui.$spacing-lg;
+  }
+
+  .createButton {
+    padding: ui.$spacing-md ui.$spacing-lg;
+    font-size: ui.$font-size-2xl;
+  }
+
+  .navItem {
+    max-width: 120px;
+    padding: ui.$spacing-sm ui.$spacing-md;
+    
+    .navIcon {
+      font-size: ui.$font-size-3xl;
+      width: 48px;
+      height: 48px;
+    }
+    
+    .navLabel {
+      font-size: ui.$font-size-2xl;
+    }
+  }
 }

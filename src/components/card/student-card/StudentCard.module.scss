@@ -9,7 +9,6 @@
   box-shadow: ui.$shadow-light;
   border: 1px solid ui.$color-primary-light;
   overflow: hidden;
-  
 
   .header {
     height: 250px;
@@ -187,6 +186,74 @@
     .actionButton {
       font-size: 0.85rem;
       padding: ui.$spacing-xs 0;
+    }
+  }
+}
+
+// === Ультраширокие экраны (>=2560px) ===
+@media (min-width: 2560px) {
+  .studentCard {
+    border-width: 2px;
+    border-radius: ui.$radius-lg;
+
+    .header {
+      height: 360px;
+      padding: ui.$spacing-lg;
+      gap: ui.$spacing-md;
+    }
+
+    .avatar {
+      width: 144px;
+      height: 144px;
+      border-width: 4px;
+      box-shadow: ui.$shadow-strong;
+    }
+
+    .name {
+      font-size: ui.$font-size-3xl;
+      -webkit-line-clamp: 3;
+    }
+
+    .course {
+      font-size: ui.$font-size-2xl;
+      -webkit-line-clamp: 2;
+    }
+
+    .body {
+      padding: ui.$spacing-lg;
+      gap: ui.$spacing-lg;
+    }
+
+    .resume {
+      font-size: ui.$font-size-2xl;
+      -webkit-line-clamp: 4;
+      line-height: 1.5;
+    }
+
+    p {
+      font-size: ui.$font-size-2xl;
+
+    }
+
+    .tags {
+      gap: ui.$spacing-sm;
+    }
+
+    .tag {
+      font-size: ui.$font-size-2xl;
+      padding: ui.$spacing-sm ui.$spacing-md;
+      border-radius: ui.$radius-lg;
+    }
+
+    .footer {
+      padding: ui.$spacing-lg;
+      border-top-width: 2px;
+    }
+
+    .actionButton {
+      font-size: ui.$font-size-2xl;
+      padding: ui.$spacing-md 0;
+      border-radius: ui.$radius-md;
     }
   }
 }

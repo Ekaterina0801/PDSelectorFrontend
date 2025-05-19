@@ -17,6 +17,7 @@ const ApplicationsSection = observer(() => {
   
     const displayed = useMemo(() => {
       let arr = applications;
+      console.log("applications: ", applications);
       const q = search.trim().toLowerCase();
       if (q) arr = arr.filter(a=>
         a.student?.fio.toLowerCase().includes(q) ||
@@ -49,28 +50,36 @@ const ApplicationsSection = observer(() => {
   
     return (
       <>
-        <div className={styles.controls}>
-          <input
-            placeholder="Поиск…"
-            value={search}
-            onChange={e=>setSearch(e.target.value)}
-          />
-          <select value={status}
-                  onChange={e=>setStatus(e.target.value)}>
-            <option value="">Все статусы</option>
-            {['PENDING','APPROVED','REJECTED'].map(s=>
-              <option key={s} value={s}>{s}</option>
-            )}
-          </select>
-          <select value={sort}
-                  onChange={e=>setSort(e.target.value)}>
-            <option value="id,asc">ID ↑</option>
-            <option value="id,desc">ID ↓</option>
-            <option value="student,asc">Студент ↑</option>
-            <option value="student,desc">Студент ↓</option>
-          </select>
+        <div className={styles.sortPaginationControls}>
+          <div className={styles.controlBlock}>
+          <label>Поиск:</label>
+            <input
+              placeholder="Поиск…"
+              value={search}
+              onChange={e=>setSearch(e.target.value)}
+            />
+          </div>
+          <div className={styles.controlBlock}>
+          <label>Тип статуса:</label>
+            <select value={status}
+                    onChange={e=>setStatus(e.target.value)}>
+              <option value="">Все статусы</option>
+              {['PENDING','APPROVED','REJECTED'].map(s=>
+                <option key={s} value={s}>{s}</option>
+              )}
+            </select>
+          </div>
+          <div className={styles.controlBlock}>
+          <label>Сортировка:</label>
+            <select value={sort}
+                    onChange={e=>setSort(e.target.value)}>
+              <option value="id,asc">ID ↑</option>
+              <option value="id,desc">ID ↓</option>
+              <option value="student,asc">Студент ↑</option>
+              <option value="student,desc">Студент ↓</option>
+            </select>
+          </div>
         </div>
-  
         <DataTable
           columns={columns}
           rows={displayed}

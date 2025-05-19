@@ -107,23 +107,23 @@
 .teamsGrid {
   display: grid;
   gap: ui.$spacing-md;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  justify-items: center;
-  > :last-child:nth-child(odd) {
-    grid-column: 1 / -1;
-    justify-self: center;
+
+  // Обычные десктопы: всегда 2 колонки
+  grid-template-columns: repeat(3, minmax(280px, 1fr));
+
+  // <=1024px (планшеты и небольшие десктопы) – тоже 2 колонки (с чуть меньшим min-width)
+  @include ui.respond-to(lg) {
+    grid-template-columns: repeat(3, minmax(240px, 1fr));
   }
 
-  // <= 768px (mobile)
+  // <=768px (мобильники) – одна колонка
   @include ui.respond-to(md) {
-    display: flex;
-    flex-direction: column;
-    align-items: center;      // центрируем карточки по горизонтали
-
-    > * {
-      width: 100%;
-      max-width: 360px;       // ограничиваем их максимальную ширину
-    }
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 2560px) {
+    max-width: 100%;
+    grid-template-columns: repeat(auto-fit, minmax(980px, 1fr));
+    margin: 0;
   }
 }
 
@@ -205,4 +205,35 @@
   font-weight: 700;
   color: ui.$color-primary;
   text-align: center;
+}
+
+// В самом конце файла стилей
+@media (min-width: 2560px) {
+  .container {
+    margin: 0 auto;
+    padding-top: ui.$spacing-lg;
+    gap: ui.$spacing-lg;
+  }
+
+  .pageTitle {
+    font-size: ui.$font-size-3xl;
+  }
+
+  .filtersModalContent {
+    max-width: 700px;
+    padding: ui.$spacing-lg;
+  }
+
+  .sortControls,
+  .paginationControls {
+    font-size: ui.$font-size-2xl;
+  }
+
+  .resetButton {
+    padding: ui.$spacing-md ui.$spacing-lg;
+  }
+
+  .contentHeader {
+    margin-bottom: ui.$spacing-lg;
+  }
 }
