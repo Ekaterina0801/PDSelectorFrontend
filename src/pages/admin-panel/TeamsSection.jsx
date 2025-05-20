@@ -122,7 +122,13 @@ const TeamsSection = observer(() => {
   };
 
   if (loading) return <Loader />;
-  if (error) return <div className={styles.error}>{error}</div>;
+  if (error) return (
+    <ErrorModal
+      message={error}
+      onClose={() => teamStore.setError(null)}
+    />
+  );
+
   console.log("currTeam", currentTeam);
   return (
     <>

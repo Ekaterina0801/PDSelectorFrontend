@@ -4,6 +4,7 @@ import styles from "./AdminDashboard.module.scss";
 import { DataTable } from "../../components/data-table/DataTable";
 import Loader from "../../components/spinner/Loader";
 import applicationStore from "../../stores/applicationStore";
+import ErrorModal from "../../components/error-display/ErrorDisplay";
 
 const ApplicationsSection = observer(() => {
     const { applications, loading, error, fetchApplications } = applicationStore;
@@ -44,7 +45,12 @@ const ApplicationsSection = observer(() => {
     ];
   
     if (loading) return <Loader />;
-    if (!loading && error) return <div className={styles.error}>{error}</div>;
+    if (!loading && error) return (
+      <ErrorModal
+        message={error}
+        onClose={() => teamStore.setError(null)}
+      />
+    );
   
     return (
       <>
