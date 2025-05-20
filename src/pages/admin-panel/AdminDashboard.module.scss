@@ -143,6 +143,76 @@
 }
 
 
+.membersList {
+  display: grid;
+  gap: ui.$spacing-md;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: ui.$spacing-md;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: ui.$color-grey-400;
+    border-radius: 3px;
+  }
+}
+
+.memberCard {
+  display: flex;
+  align-items: center;
+  gap: ui.$spacing-md;
+  padding: ui.$spacing-sm ui.$spacing-md;
+  background: ui.$color-white;
+  border-radius: ui.$radius-md;
+  box-shadow: ui.$shadow-light;
+  transition: transform ui.$transition-fast, box-shadow ui.$transition-fast;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: ui.$shadow-strong;
+  }
+}
+
+.memberAvatar {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid ui.$color-primary;
+}
+
+.memberDetails {
+  display: flex;
+  flex-direction: column;
+}
+
+.memberName {
+  margin: 0;
+  font-weight: 700;
+  color: ui.$color-grey-800;
+}
+
+.memberMeta {
+  margin: ui.$spacing-xs 0 0;
+  font-size: ui.$font-size-base * 0.9;
+  color: ui.$color-grey-600;
+}
+
+.memberName {
+  margin: 0;
+  font-weight: 700;
+  color: ui.$color-grey-800;
+  text-decoration: none;
+  transition: color ui.$transition-fast;
+
+  &:hover {
+    color: ui.$color-primary;
+    text-decoration: underline;
+  }
+}
 @media screen and (min-width: 2560px) {
   .container {
     margin: 0 auto;

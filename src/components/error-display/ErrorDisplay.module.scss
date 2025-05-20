@@ -5,7 +5,7 @@
 .backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -16,10 +16,14 @@
   position: relative;
   background: ui.$color-white;
   border-radius: ui.$radius-lg;
-  padding: ui.$spacing-lg;
+  padding: calc(ui.$spacing-lg * 1.5);
   width: 90%;
-  max-width: 400px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  max-width: 420px;
+  box-shadow: ui.$shadow-strong;
+  transition: transform 0.2s ease;
+  &:hover {
+    transform: translateY(-4px);
+  }
 }
 
 .closeButton {
@@ -28,11 +32,10 @@
   right: ui.$spacing-sm;
   background: none;
   border: none;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   cursor: pointer;
   color: ui.$color-grey-600;
   transition: color ui.$transition-fast;
-
   &:hover {
     color: ui.$color-grey-800;
   }
@@ -40,14 +43,14 @@
 
 .image {
   display: block;
-  margin: 0 auto ui.$spacing-md;
-  width: 120px;
+  margin: 0 auto ui.$spacing-lg * 0.75;
+  width: 160px;
   height: auto;
 }
 
 .title {
   text-align: center;
-  font-size: ui.$font-size-2xl;
+  font-size: ui.$font-size-3xl;
   color: ui.$color-primary;
   margin-bottom: ui.$spacing-md;
 }
@@ -56,12 +59,13 @@
   text-align: center;
   color: ui.$color-grey-800;
   margin-bottom: ui.$spacing-lg;
+  line-height: 1.6;
 }
 
 .buttons {
   display: flex;
   justify-content: center;
-  gap: ui.$spacing-sm;
+  gap: ui.$spacing-md;
 }
 
 .cancelButton,
@@ -69,34 +73,55 @@
 .confirmButton {
   @include ui.btn(ui.$radius-sm);
   font-size: ui.$font-size-base;
-  padding: ui.$spacing-xs ui.$spacing-md;
-  transition: ui.$transition-fast;
+  padding: ui.$spacing-sm ui.$spacing-lg;
+  min-width: 100px;
+  box-shadow: ui.$shadow-light;
+  transition: background ui.$transition-fast, box-shadow ui.$transition-fast;
 }
 
 .cancelButton {
   background: ui.$color-grey-300;
   color: ui.$color-grey-800;
-
   &:hover {
     background: ui.$color-grey-400;
+    box-shadow: ui.$shadow-strong;
   }
 }
 
 .actionButton {
   background: ui.$color-primary;
   color: ui.$color-white;
-
   &:hover {
     background: ui.$color-primary-light;
+    box-shadow: ui.$shadow-strong;
   }
 }
 
 .confirmButton {
   background: ui.$color-danger;
   color: ui.$color-white;
-
   &:hover {
-    background: ui.$color-danger;
+    background: darken(ui.$color-danger, 5%);
+    box-shadow: ui.$shadow-strong;
+  }
+}
+
+@include ui.respond-to(md) {
+  .modal {
+    padding: ui.$spacing-lg;
+    max-width: 360px;
+  }
+  .image {
+    width: 140px;
+  }
+  .title {
+    font-size: ui.$font-size-2xl;
+  }
+  .buttons {
+    flex-direction: column;
+    button {
+      width: 100%;
+    }
   }
 }
 

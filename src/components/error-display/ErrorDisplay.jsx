@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './ErrorDisplay.module.scss';
 import errorImage from '@/assets/images/error-cat.png'; 
-export default function ErrorModal({ message, onClose, onConfirm }) {
+export default function ErrorModal({ title, message, onClose, onConfirm }) {
   return (
     <div className={styles.backdrop} onClick={onClose}>
       <div className={styles.modal} onClick={e => e.stopPropagation()}>
@@ -18,13 +18,12 @@ export default function ErrorModal({ message, onClose, onConfirm }) {
           alt="Ошибка"
           className={styles.image}
         />
-        <h2 className={styles.title}>Упс!</h2>
+        <h2 className={styles.title}>{title || 'Внимание!'}</h2>
         <p className={styles.message}>
           {message || 'Что-то пошло не так. Попробуйте ещё раз.'}
         </p>
 
         <div className={styles.buttons}>
-          {/* Если есть onConfirm, показываем две кнопки */}
           {onConfirm ? (
             <>
               <button
@@ -46,7 +45,6 @@ export default function ErrorModal({ message, onClose, onConfirm }) {
               </button>
             </>
           ) : (
-            /* Иначе — одна кнопка Закрыть */
             <button
               type="button"
               className={styles.actionButton}
@@ -58,5 +56,5 @@ export default function ErrorModal({ message, onClose, onConfirm }) {
         </div>
       </div>
     </div>
-  );
+);
 }

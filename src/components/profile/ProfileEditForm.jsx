@@ -1,24 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Modal from "../forms/modal/Modal";
 import styles from "./TeamEditForm.module.scss";
-import studentStore from "../../stores/studentStore";
-import trackStore from "../../stores/trackStore";
-
 const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => {
-  const [track, setTrack] = useState("");
-  useEffect(() => {
-    setTrack(studentData.current_track?.id.toString() || "");
-  }, [studentData]);
-
-  useEffect(() => {
-    if (track) studentStore.fetchStudents({ trackId: track });
-  }, [track]);
-
   const [formData, setFormData] = useState({
     ...studentData,
     user: { ...studentData.user },
     technologies: studentData.technologies || [],
-    track: track
   });
   const [showModal, setShowModal] = useState(false);
 
@@ -29,11 +16,7 @@ const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => 
         ...prev,
         user: { ...prev.user, fio: value }
       }));
-    } else if (name === "track") {
-      setFormData(prev => ({ ...prev, track: value }));
-      setTrack(value);
-    }
-      else {
+    } else {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
   };
@@ -137,18 +120,6 @@ const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => 
           </div>
         </label>
 
-        <label className={styles.field}>
-            Трек
-            <select value={track} name = "track" onChange={handleChange}>
-              <option value="">Выберите трек</option>
-              {trackStore.tracks.map((t) => (
-                <option key={t.id} value={t.id.toString()}>
-                  {t.name}
-                </option>
-              ))}
-            </select>
-          </label>
-
         <div className={styles.formButtons}>
           <button type="button" onClick={toggleModal}>Добавить технологию</button>
           <button
@@ -180,7 +151,6 @@ const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => 
                     className={styles.technologyCheckbox}
                   >
                     <input
-                      className={styles.checkbox}
                       type="checkbox"
                       id={`tech-${tech.id}`}
                       checked={formData.technologies.some(t => t.id === tech.id)}

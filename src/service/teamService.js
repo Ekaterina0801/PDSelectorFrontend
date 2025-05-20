@@ -44,11 +44,12 @@ export const TeamService = {
   },
 
   updateTeam: (teamData, teamId) => {
+    console.log('teamData', teamData);
     return requests.put(`/teams/${teamId}`, teamData);
   },
 
   deleteTeam: (teamId) => {
-    return requests.del(`/teams/${teamId}`);
+    return requests.delete(`/teams/${teamId}`);
   },
 
   addStudentToTeam: (teamId, studentId) => {

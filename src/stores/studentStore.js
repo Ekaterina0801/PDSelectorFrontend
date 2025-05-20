@@ -69,6 +69,7 @@ class StudentStore {
     this.error = null;
 
     try {
+      console.log('CREATEDATA', studentData);
       const newStudent = await StudentService.createStudent(trackId, studentData);
       runInAction(() => {
         this.students.push(newStudent);

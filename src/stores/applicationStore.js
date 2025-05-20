@@ -1,189 +1,139 @@
 import { observable, action, runInAction, makeObservable } from 'mobx';
 import { ApplicationService } from '../service/applicationService';
 
-
 class ApplicationStore {
-  applications = [];
-  application = null;
-  teamApplications = [];
-  loading = false;
-  error = null;
+  // для fetchApplications(trackId)
+  applications = []
+
+  // для отдельных запросов по паре teamId/studentId
+  applicationsByKey = new Map()
+  loadingByKey      = new Map()
+  errorByKey        = new Map()
 
   constructor() {
     makeObservable(this, {
-      applications: observable,
-      application: observable,
-      teamApplications: observable,
-      loading: observable,
-      error: observable,
+      applications:      observable,
+      applicationsByKey: observable,
+      loadingByKey:      observable,
+      errorByKey:        observable,
 
-      fetchApplications: action,
-      fetchApplicationById: action,
-      fetchTeamApplications: action,
-      createApplication: action,
-      updateApplication: action,
-      deleteApplication: action,
-      clearApplication: action,
-      setError: action,
-    });
+      fetchApplications:      action,
+      fetchApplication:       action,
+      createApplication:      action,
+      updateApplication:      action,
+      clearApplicationKey:    action,
+    })
+  }
+
+  makeKey(teamId, studentId) {
+    return `${teamId}_${studentId}`
   }
 
   async fetchApplications(trackId) {
-    this.loading = true;
-    this.error = null;
+    this.applications = []
     try {
-      const data = await ApplicationService.fetchApplications(trackId);
+      const data = await ApplicationService.fetchApplications(trackId)
+      console.log('DADARARADARAR', data)
       runInAction(() => {
-        this.applications = data;
-      });
+        this.applications = data
+      })
     } catch (err) {
-      runInAction(() => {
-        this.error = JSON.parse(err.message).message|| 'Ошибка при загрузке заявок';
-      });
-    } finally {
-      runInAction(() => {
-        this.loading = false;
-      });
+      console.error('Ошибка при fetchApplications:', err)
     }
   }
 
-  async fetchApplicationById(applicationId) {
-    this.loading = true;
-    this.error = null;
+
+  getApplication(teamId, studentId) {
+    return this.applicationsByKey.get(this.makeKey(teamId, studentId)) || null
+  }
+
+  getLoading(teamId, studentId) {
+    return this.loadingByKey.get(this.makeKey(teamId, studentId)) || false
+  }
+
+  getError(teamId, studentId) {
+    return this.errorByKey.get(this.makeKey(teamId, studentId)) || null
+  }
+
+  clearApplicationKey(teamId, studentId) {
+    const key = this.makeKey(teamId, studentId)
+    this.applicationsByKey.delete(key)
+    this.loadingByKey.delete(key)
+    this.errorByKey.delete(key)
+  }
+
+  async fetchApplication(teamId, studentId) {
+    const key = this.makeKey(teamId, studentId)
+    this.loadingByKey.set(key, true)
+    this.errorByKey.set(key, null)
     try {
-      const data = await ApplicationService.fetchApplicationById(applicationId);
+      const data = await ApplicationService.fetchApplicationByTeamIdAndStudentId(teamId, studentId)
       runInAction(() => {
-        this.application = data;
-      });
+        this.applicationsByKey.set(key, data)
+      })
     } catch (err) {
       runInAction(() => {
-        this.error = JSON.parse(err.message).message || 'Ошибка при загрузке заявки';
-      });
+        this.errorByKey.set(
+          key,
+          err.response?.data?.message || err.message || 'Ошибка при загрузке заявки'
+        )
+      })
     } finally {
       runInAction(() => {
-        this.loading = false;
-      });
+        this.loadingByKey.set(key, false)
+      })
     }
   }
 
-  async fetchApplicationByTeamIdAndStudentId(teamId, studentId) {
-    this.loading = true;
-    this.error = null;
-    console.log("!!!teamId: ", teamId)
-    console.log("!!!studentId: ", studentId)
-
+  async createApplication(payload) {
+    const key = this.makeKey(payload.team_id, payload.student_id)
+    this.loadingByKey.set(key, true)
+    this.errorByKey.set(key, null)
     try {
-      const data = await ApplicationService.fetchApplicationByTeamIdAndStudentId(teamId, studentId);
-      console.log('fetchApplicationByTeamIdAndStudentId', data);
+      const newApp = await ApplicationService.createApplication(payload)
       runInAction(() => {
-        this.application = data;
-      });
+        this.applicationsByKey.set(key, newApp)
+      })
+      return newApp
     } catch (err) {
       runInAction(() => {
-        this.error = err.message || 'Ошибка при загрузке заявки';
-      });
+        this.errorByKey.set(
+          key,
+          err.response?.data?.message || err.message || 'Ошибка при создании заявки'
+        )
+      })
+      throw err
     } finally {
       runInAction(() => {
-        this.loading = false;
-      });
+        this.loadingByKey.set(key, false)
+      })
     }
   }
 
-  async fetchTeamApplications(teamId) {
-    this.loading = true;
-    this.error = null;
+  async updateApplication(payload) {
+    const key = this.makeKey(payload.team_id, payload.student_id)
+    this.loadingByKey.set(key, true)
+    this.errorByKey.set(key, null)
     try {
-      const data = await ApplicationService.fetchTeamApplications(teamId);
+      const updated = await ApplicationService.updateApplication(payload)
       runInAction(() => {
-        this.teamApplications = data;
-      });
+        this.applicationsByKey.set(key, updated)
+      })
+      return updated
     } catch (err) {
       runInAction(() => {
-        this.error = JSON.parse(err.message).message || 'Ошибка при загрузке заявок команды';
-      });
+        this.errorByKey.set(
+          key,
+          err.response?.data?.message || err.message || 'Ошибка при обновлении заявки'
+        )
+      })
+      throw err
     } finally {
       runInAction(() => {
-        this.loading = false;
-      });
+        this.loadingByKey.set(key, false)
+      })
     }
-  }
-
-  async createApplication(applicationData) {
-    this.loading = true;
-    this.error = null;
-    console.log("!!!!! applicationData !!!!! : ", );
-    try {
-      const newApp = await ApplicationService.createApplication(applicationData);
-      runInAction(() => {
-        this.applications.push(newApp);
-        this.application = newApp;
-      });
-    } catch (err) {
-      runInAction(() => {
-        console.log('createApplication error', JSON.parse(err.message));
-        this.error =JSON.parse(err.message).message|| 'Ошибка при создании заявки';
-      });
-    } finally {
-      runInAction(() => {
-        this.loading = false;
-      });
-    }
-  }
-
-  async updateApplication(applicationData) {
-    console.log("Статус заявки:", applicationData.status)
-    this.loading = true;
-    this.error = null;
-    try {
-      console.log('updateApplication', applicationData);
-      const updatedApp = await ApplicationService.updateApplication(applicationData);
-      runInAction(() => {
-        this.application = updatedApp;
-        console.log('updatedApp', updatedApp);
-        this.applications = this.applications.map(app =>
-          app.id === updatedApp.id ? updatedApp : app
-        );
-      });
-    } catch (err) {
-      runInAction(() => {
-        console.log('updateApplication error', err);
-        this.error =JSON.parse(err.message).message|| 'Ошибка при обновлении заявки';
-      });
-    } finally {
-      runInAction(() => {
-        this.loading = false;
-      });
-    }
-  }
-
-  async deleteApplication(applicationId) {
-    this.loading = true;
-    this.error = null;
-    try {
-      await ApplicationService.deleteApplication(applicationId);
-      runInAction(() => {
-        this.applications = this.applications.filter(app => app.id !== applicationId);
-        if (this.application?.id === applicationId) this.application = null;
-      });
-    } catch (err) {
-      runInAction(() => {
-        this.error = JSON.parse(err.message).message || 'Ошибка при удалении заявки';
-      });
-    } finally {
-      runInAction(() => {
-        this.loading = false;
-      });
-    }
-  }
-
-  clearApplication() {
-    this.application = null;
-  }
-
-  setError(error) {
-    this.error = error;
   }
 }
 
-const applicationStore = new ApplicationStore();
-export default applicationStore;
+export default new ApplicationStore()

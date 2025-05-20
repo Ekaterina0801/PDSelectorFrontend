@@ -1,12 +1,21 @@
 // Цвета
-$color-primary:       #330036 !default;
-$color-primary-light: #dcd0ff !default;
-$color-white:        #ffffff !default;
-$color-success:       #32CD32 !default;
-$color-warning:       #FFD700 !default;
-$color-danger:        #FF4500 !default;
-$color-background:   #f5efed !default;
+$color-primary:        #330036 !default;
+$color-primary-light:  #dcd0ff !default;
+$color-primary-dark:   #29002d !default; // затемнённый primary
+$color-white:          #ffffff !default;
 
+$color-success:        #32CD32 !default;
+$color-success-light:  #abeebd !default;
+
+$color-warning:        #FFD700 !default;
+$color-warning-light:  #ffeb99 !default;
+
+$color-danger:         #FF4500 !default;
+$color-danger-light:   #ff8a66 !default;
+
+$color-background:     #f5efed !default;
+
+// Серые оттенки
 $color-grey-100: #f5f5f5;
 $color-grey-300: #e0e0e0;
 $color-grey-400: #bdbdbd;
@@ -14,13 +23,34 @@ $color-grey-500: #9e9e9e;
 $color-grey-600: #757575;
 $color-grey-700: #333333;
 $color-grey-800: #666666;
-$color-text:    #000000;
+$color-text:     #000000;
+// Дополнительные оттенки для статусов
+$color-yellow-100: #fff9db !default;  // очень светлый жёлтый
+$color-yellow-700: #b58900 !default;  // тёмный жёлтый
+$color-green-100:  #e6f4ea !default;  // очень светлый зелёный
+$color-green-700:  #22863a !default;  // тёмный зелёный
+$color-red-100:    #fdecea !default;  // очень светлый красный
+$color-red-700:    #972727 !default;  // тёмный красный
 
+// Ещё чуть больше оттенков серого
+$color-grey-200: #eeeeee !default;    // чуть темнее, чем grey-100
+$color-grey-700: #444444 !default;    // чуть светлее, чем grey-800
 
-$breakpoint-sm:  480px;
-$breakpoint-md:  768px;
-$breakpoint-lg: 1024px;
+// Дополнительные базовые цвета
+$color-secondary:   #6c757d !default;
+$color-orange:      #ff8c00 !default;
+$color-yellow:      #ffd700 !default;
+$color-green:       #32cd32 !default;
+$color-blue:        #007bff !default;
+$color-pink:        #e83e8c !default;
+$color-teal:        #20c997 !default;
+$color-purple:      #6f42c1 !default;
+$color-purple-light: #d6bbf6 !default; // светлый оттенок purple
 
+// Тени
+$shadow-light:  0 4px 8px rgba(0,0,0,0.1);
+$shadow-strong: 0 6px 16px rgba(0,0,0,0.15);
+$shadow-modal:  rgba(0,0,0,0.5);
 
 // Размеры, отступы
 $spacing-xs: 4px;
@@ -34,7 +64,7 @@ $radius-md: 16px;
 $radius-sm: 8px;
 
 $transition-medium: all 0.3s ease;
-$transition-fast: all 0.2s ease;
+$transition-fast:   all 0.2s ease;
 
 // Тени
 $shadow-light: 0 4px 8px rgba(0,0,0,0.1);
@@ -48,25 +78,42 @@ $font-size-3xl: 2rem;
 $font-size-2xl: 1.5rem;
 
 $line-height-base: 1.5;
-// цвета, которых не хватало
-$color-secondary:   #6c757d !default;
-$color-orange:      #ff8c00 !default;
-$color-yellow:      #ffd700 !default;
-$color-green:       #32cd32 !default;
-$color-blue:        #007bff !default;
-$color-pink:        #e83e8c !default;
-$color-teal:        #20c997 !default;
-$color-purple:      #6f42c1 !default;
 
+// Точки останова
+$breakpoint-sm:  480px;
+$breakpoint-md:  768px;
+$breakpoint-lg: 1024px;
+
+/**
+ * Палитра – пригодится для d3 или любых динамических схем
+ */
 $palette: (
-  primary:   $color-primary,
-  secondary: $color-secondary,
-  orange:    $color-orange,
-  yellow:    $color-yellow,
-  green:     $color-green,
-  blue:      $color-blue,
-  pink:      $color-pink,
-  teal:      $color-teal,
-  purple:    $color-purple
+  primary:        $color-primary,
+  primary-light:  $color-primary-light,
+  primary-dark:   $color-primary-dark,
+  secondary:      $color-secondary,
+  success:        $color-success,
+  success-light:  $color-success-light,
+  warning:        $color-warning,
+  warning-light:  $color-warning-light,
+  danger:         $color-danger,
+  danger-light:   $color-danger-light,
+  grey-100:       $color-grey-100,
+  grey-300:       $color-grey-300,
+  grey-400:       $color-grey-400,
+  grey-500:       $color-grey-500,
+  grey-600:       $color-grey-600,
+  grey-700:       $color-grey-700,
+  grey-800:       $color-grey-800,
+  text:           $color-text,
+  background:     $color-background,
+  orange:         $color-orange,
+  yellow:         $color-yellow,
+  green:          $color-green,
+  blue:           $color-blue,
+  pink:           $color-pink,
+  teal:           $color-teal,
+  purple:         $color-purple,
+  purple-light:   $color-purple-light
 );
 @export "ui-palette" $palette;
