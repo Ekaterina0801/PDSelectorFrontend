@@ -5,6 +5,7 @@ import { DataTable } from "../../components/data-table/DataTable";
 import Loader from "../../components/spinner/Loader";
 import trackStore from "../../stores/trackStore";
 import TrackEditModal from "./TrackEditModal";
+import ErrorModal from "../../components/error-display/ErrorDisplay";
 const TracksSection = observer(() => {
   const {
     tracks,
@@ -76,7 +77,12 @@ const TracksSection = observer(() => {
   ];
 
   if (loading) return <Loader />;
-  if (!loading && error) return <div className={styles.error}>{error}</div>;
+  if (!loading && error) return (
+    <ErrorModal
+      message={error}
+      onClose={() => teamStore.setError(null)}
+    />
+  );
 
   return (
     <>

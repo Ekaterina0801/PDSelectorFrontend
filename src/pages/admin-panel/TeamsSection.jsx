@@ -112,8 +112,14 @@ const TeamsSection = observer(() => {
 
   if (loading) return <Loader />;
   console.log("teamStore.allFilters", teamStore.allFilters);
-  if (error) return <div className={styles.error}>{error}</div>;
+  if (error) return (
+    <ErrorModal
+      message={error}
+      onClose={() => teamStore.setError(null)}
+    />
+  );
 
+  console.log("currTeam", currentTeam);
   return (
     <>
       <div className={styles.sortPaginationControls}>
