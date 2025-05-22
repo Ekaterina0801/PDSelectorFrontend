@@ -4,6 +4,12 @@ import { ApplicationService } from '../service/applicationService';
 class ApplicationStore {
   // для fetchApplications(trackId)
   applications = []
+  loading      = false;
+  page           = 0;
+  size           = 10;
+  sort           = 'id,asc';
+  totalPages     = 0;
+  totalElements  = 0;
 
   // для отдельных запросов по паре teamId/studentId
   applicationsByKey = new Map()
@@ -13,6 +19,7 @@ class ApplicationStore {
   constructor() {
     makeObservable(this, {
       applications:      observable,
+      loading:           observable,
       applicationsByKey: observable,
       loadingByKey:      observable,
       errorByKey:        observable,
@@ -29,18 +36,55 @@ class ApplicationStore {
     return `${teamId}_${studentId}`
   }
 
-  async fetchApplications(trackId) {
-    this.applications = []
+  setPage(newPage) {
+    this.page = newPage;
+    this.fetchApplications();
+  }
+
+  setSort(newSort) {
+    this.sort = newSort;
+    this.page = 0;
+    this.fetchApplications();
+  }
+
+  setSize(newSize) {
+    this.size = newSize;
+    this.page = 0;
+    this.fetchApplications();
+  }
+
+  async fetchApplications({ track_id = null, status = null } = {}) {
+    this.loading = true;
+    this.error = null;
     try {
-      const data = await ApplicationService.fetchApplications(trackId)
-      console.log('DADARARADARAR', data)
+      const params = {
+        page: this.page,
+        size: this.size,
+        sort: this.sort,
+      };
+      if (track_id != null) params.track_id = track_id;
+      if (status != null) params.status = status;
+
+      const response = await ApplicationService.fetchApplications(params);
       runInAction(() => {
-        this.applications = data
-      })
+        const { content, totalPages, totalElements } = response;
+        this.applications = content;
+        this.totalPages = totalPages;
+        this.totalElements = totalElements;
+      });
     } catch (err) {
-      console.error('Ошибка при fetchApplications:', err)
+      runInAction(() => {
+        this.error = err.response?.data?.message || err.message || 'Ошибка при загрузке заявок';
+      });
+    } finally {
+      runInAction(() => {
+        console.log('final')
+        this.loading = false;
+      });
     }
   }
+
+
 
 
   getApplication(teamId, studentId) {

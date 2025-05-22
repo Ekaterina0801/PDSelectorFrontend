@@ -26,11 +26,11 @@ import NoDataDisplay from "../../components/nodata-display/NoDataDisplay";
 import ErrorModal from "../../components/error-display/ErrorDisplay";
 import teamStore from "../../stores/teamStore";
 import trackStore from "../../stores/trackStore";
+import { groupBy } from "lodash";
 const sidebarItems = [
   { name: "Мои команды", icon: "👥" },
   { name: "Профиль", icon: "👤" },
   { name: "Мои заявки", icon: "📄" },
-  { name: "Созданные команды", icon: "⚙️" },
 ];
 const StudentProfilePage = observer(() => {
   const { studentId } = useParams();
@@ -52,18 +52,26 @@ const StudentProfilePage = observer(() => {
     handleSubmit: handleTeamSubmit,
   } = useNewTeam(
     student?.current_track?.id,
-    authStore.studentId,
+    student?.id,
     technologyStore.technologies,
     projectTypeStore.projectTypes
   );
 
-  // 1) Загрузка данных при маунте
+const groupTeamsByTrack = (teams) => {
+    return groupBy(teams, t => {
+      const trackId = t.current_track;
+      const track = trackStore.tracks.find(tr => tr.id === trackId);
+      return track ? track.name : 'Без трека';
+    });
+  };
+  console.log('student', student);
+
   useEffect(() => {
     studentStore.fetchStudentById(studentId);
     projectTypeStore.fetchProjectTypes();
     technologyStore.fetchTechnologies();
     trackStore.fetchTracks();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []); 
 
   const startEditing = useCallback(() => setIsEditing(true), []);
   const stopEditing  = useCallback(() => setIsEditing(false), []);
@@ -76,7 +84,6 @@ const StudentProfilePage = observer(() => {
     [studentId, stopEditing]
   );
 
-  // Рендер профиля или формы редактирования
   const renderProfile = () => {
     if (loading) return <Loader />;
     if (studentError) {
@@ -109,26 +116,118 @@ const StudentProfilePage = observer(() => {
     );
   };
 
-  const renderMyTeams = () => {
+  const renderTeamsSection = (teams, emptyMessage) => {
     if (loading) return <Loader />;
-    if (!student.teams?.length) {
-      return <NoDataDisplay message="У вас нет команд" />;
+    if (!teams.length) {
+      return <NoDataDisplay message={emptyMessage} />;
     }
+    const groups = groupTeamsByTrack(teams);
     return (
-      <div className={styles.teamsGrid}>
-        {student.teams.map((t) => (
-          <Card
-            key={t.id}
-            name={t.name}
-            type={t.projectType.name}
-            resume={t.project_description}
-            tags={t.technologies}
-            profileLink={`/teams/${t.id}`}
-          />
+      <div className={styles.trackGroupsContainer}>
+        {Object.entries(groups).map(([trackName, group]) => (
+          <div key={trackName}>
+            <h3 className={styles.trackTitle}>{trackName}</h3>
+            <div className={styles.teamsGrid}>
+              {group.map(t => (
+                <TeamCard
+                  key={t.id}
+                  name={t.name}
+                  type={t.project_type?.name}
+                  description={t.project_description}
+                  technologies={t.technologies}
+                  profileLink={`/teams/${t.id}`}
+                />
+              ))}
+            </div>
+          </div>
         ))}
       </div>
     );
   };
+
+const renderMyTeams = () => {
+  if (loading) return <Loader />;
+
+  const current = student?.current_team;
+  const oldTeams = (student?.teams || []).filter(t => current?.id !== t.id);
+
+  return (
+    
+    <div>
+      {authStore.authStudent?.id===student?.id&&!student.current_team && (
+        <button
+          className={styles.createButton}
+          onClick={() => {
+            setIsCreatingTeam(true);
+            toggleModal();
+          }}
+        >
+          Создать команду
+        </button>
+      )}
+      {/* Блок текущей команды */}
+      <h3 className={styles.trackTitle}>Текущая команда</h3>
+      {current ? (
+        <div className={styles.currentTeamCard}>
+          <p className={styles.trackTitle}>
+            Трек:{' '}
+            {(() => {
+              const track = trackStore.tracks.find(
+                tr => tr.id === current.current_track
+              );
+              return track ? track.name : '—';
+            })()}
+          </p>
+          <TeamCard
+            key={current.id}
+            name={current.name}
+            type={current.project_type?.name}
+            description={current.project_description}
+            technologies={current.technologies}
+            profileLink={`/teams/${current.id}`}
+          />
+          
+        </div>
+      ) : (
+        <NoDataDisplay message="У вас нет текущей команды" />
+      )}
+
+      {/* Блок старых команд */}
+      <h3 className={styles.trackTitle}>Старые команды</h3>
+      {oldTeams.length ? (
+        <div className={styles.teamsGrid}>
+          {oldTeams.map(t => {
+            const track = trackStore.tracks.find(tr => tr.id === t.current_track);
+            return (
+              <div key={t.id}>
+                <TeamCard
+                  name={t.name}
+                  type={t.project_type?.name}
+                  description={t.project_description}
+                  technologies={t.technologies}
+                  profileLink={`/teams/${t.id}`}
+                />
+                <p className={styles.trackTitle}>
+                  Трек: {track ? track.name : '—'}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <NoDataDisplay message="Нет старых команд" />
+      )}
+    </div>
+  );
+};
+
+
+  const managedTeams = student?.teams?.filter(t => t.captain_id === currentUserId) || [];
+
+  const renderManagedTeams = () =>
+    renderTeamsSection(managedTeams, 'Нет управляемых команд');
+
+
 
   const renderApplications = () => {
     if (loading) return <Loader />;
@@ -144,39 +243,6 @@ const StudentProfilePage = observer(() => {
     );
   };
 
-  const createdTeams = student?.current_team ? [student.current_team] : [];
-  const renderCreatedTeams = () => (
-    <>
-      {!student.current_team && (
-        <button
-          className={styles.createButton}
-          onClick={() => {
-            setIsCreatingTeam(true);
-            toggleModal();
-          }}
-        >
-          Создать команду
-        </button>
-      )}
-      {createdTeams.length > 0 ? (
-        <div className={styles.teamsGrid}>
-          {createdTeams.map((t) => (
-            <TeamCard
-              key={t.id}
-              name={t.name}
-              type={t.project_type?.name}
-              description={t.project_description}
-              technologies={t.technologies}
-              profileLink={`/teams/${t.id}`}
-            />
-          ))}
-        </div>
-      ) : (
-        <NoDataDisplay message="Нет созданных команд" />
-      )}
-    </>
-  );
-
   const renderSection = () => {
     switch (currentSection) {
       case "Профиль":
@@ -185,8 +251,8 @@ const StudentProfilePage = observer(() => {
         return renderMyTeams();
       case "Мои заявки":
         return renderApplications();
-      case "Созданные команды":
-        return renderCreatedTeams();
+      case "Управляемые команды":
+        return renderManagedTeams();
       default:
         return null;
     }

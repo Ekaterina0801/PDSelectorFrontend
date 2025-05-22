@@ -100,7 +100,7 @@ class TeamStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = err.message || "Ошибка при загрузке фильтров";
+         this.error = err.response?.data?.message || err.message || "Ошибка при загрузке фильтров";
       });
     } finally {
       runInAction(() => {
@@ -120,7 +120,7 @@ class TeamStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = err.message || "Ошибка при загрузке команды";
+         this.error = err.response?.data?.message || err.message || "Ошибка при загрузке команды";
       });
     } finally {
       runInAction(() => {
@@ -142,7 +142,7 @@ class TeamStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = err.message || "Ошибка при создании команды";
+         this.error = err.response?.data?.message || err.message || "Ошибка при создании команды";
       });
     } finally {
       runInAction(() => {
@@ -167,7 +167,7 @@ class TeamStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = err.message || "Ошибка при обновлении команды";
+         this.error = err.response?.data?.message || err.message || "Ошибка при обновлении команды";
       });
     } finally {
       runInAction(() => {
@@ -188,7 +188,7 @@ class TeamStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = err.message || "Ошибка при удалении команды";
+         this.error = err.response?.data?.message || err.message || "Ошибка при удалении команды";
       });
     } finally {
       runInAction(() => {
@@ -208,7 +208,7 @@ class TeamStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = err.message || "Ошибка при добавлении студента";
+         this.error = err.response?.data?.message || err.message || "Ошибка при добавлении студента";
       });
     } finally {
       runInAction(() => {

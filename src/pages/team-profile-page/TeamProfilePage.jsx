@@ -44,6 +44,7 @@ const TeamProfilePage = observer(() => {
   const teamError  = teamStore.error
   const isCaptain  = team?.captain?.id === currentUser?.id
 
+  console.log('team', team)
   useEffect(() => {
     if (applicationStore.error) {
       setLocalAppError(applicationStore.error)

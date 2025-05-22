@@ -2,9 +2,18 @@ import requests from "../agent";
 
 export const ApplicationService = {
   // Получение всех заявок по треку
-  fetchApplications: (trackId) => {
-    return requests.get(`/applications?track_id=${trackId}`);
+  fetchApplications: (params) => {
+    const queryParams = [];
+    if (params.page) queryParams.push(`page=${params.page}`);
+    if (params.size) queryParams.push(`size=${params.size}`);
+    if (params.sort) queryParams.push(`sort=${params.sort}`);
+    if (params.track_id) queryParams.push(`track_id=${params.track_id}`);
+    if (params.status) queryParams.push(`status=${params.status.toLowerCase()}`);
+    
+    const queryString = queryParams.length ? `?${queryParams.join('&')}` : '';
+    return requests.get(`/applications${queryString}`);
   },
+
 
   // Получение одной заявки
   fetchApplicationById: (applicationId) => {

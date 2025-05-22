@@ -102,7 +102,7 @@ class AuthStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = err.message || "Ошибка при загрузке пользователей";
+         this.error = err.response?.data?.message || err.message || "Ошибка при загрузке пользователей";
       });
     } finally {
       runInAction(() => {
@@ -137,7 +137,7 @@ class AuthStore {
     } catch (err) {
       runInAction(() => {
         this.user = null;
-        this.error = err.message || "Ошибка авторизации";
+         this.error = err.response?.data?.message || err.message || "Ошибка авторизации";
       });
       if (err?.response?.status === 401) {
         window.location.href = "/login";
@@ -167,7 +167,7 @@ class AuthStore {
       await this.fetchUsers();
     } catch (err) {
       runInAction(() => {
-        this.error = err.message || "Ошибка при сохранении пользователя";
+         this.error = err.response?.data?.message || err.message || "Ошибка при сохранении пользователя";
       });
     } finally {
       runInAction(() => {
@@ -193,7 +193,7 @@ class AuthStore {
       runInAction(() => {
         console.log('errroooor');
         console.log(err);
-        this.error = err.message || "Ошибка при удалении пользователя";
+         this.error = err.response?.data?.message || err.message || "Ошибка при удалении пользователя";
       });
     } finally {
       runInAction(() => {

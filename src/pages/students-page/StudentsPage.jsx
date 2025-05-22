@@ -30,12 +30,11 @@ const StudentsPage = observer(() => {
           sort,};
     await studentStore.fetchStudents(params);
     await studentStore.fetchFilters(authStore.trackId);
-  }, [trackId, filters.trackId, page, size, sort, isLoading]);
+  }, [trackId, page, size, sort]);
 
   useEffect(() => {
     loadData();
   }, [loadData]);
-  console.log('students', students);
 
   const handleApplyFilters = useCallback(async (newFilters) => {
     studentStore.setFilters({ ...studentStore.filters, ...newFilters, trackId });
@@ -47,7 +46,7 @@ const StudentsPage = observer(() => {
   }, [trackId, size, sort]);
 
   const handleSearch = useCallback((term) => {
-    handleApplyFilters({ ...filters, searchTerm: term });
+    handleApplyFilters({ ...filters, input: term });
   }, [filters, handleApplyFilters]);
 
   const handleSortChange = e => { setSort(e.target.value); setPage(0); };

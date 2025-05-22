@@ -25,7 +25,6 @@ const TeamProfileCard = observer(({
   // Показываем секцию заявки только если это не капитан и studentId загружен
   const showRequestSection = !isCaptain && currentUserId != null 
 
-  // Подключаемся к хуку для работы с заявкой
   const { status, actions, loading, error } = useApplicationActions({
     type:      'request',
     teamId:    team.id,
@@ -112,13 +111,13 @@ const TeamProfileCard = observer(({
           <h3 className={styles.sectionTitle}>Капитан команды</h3>
           <div className={styles.captainCard}>
             <img
-              src={team.captain.avatarUrl || '/images/placeholder2.png'}
+              src={team.captain?.avatarUrl || '/images/placeholder2.png'}
               alt="Аватар капитана"
               className={styles.captainAvatar}
             />
             <div className={styles.captainDetails}>
               <span className={styles.captainName}>
-                {team.captain.user.fio}
+                {team.captain?.user.fio}
               </span>
               <span className={styles.captainRole}>
                 Капитан

@@ -21,7 +21,6 @@ const UsersSection = observer(() => {
     error,
     deleteUser,
     fetchUsers,
-    setError,
   } = authStore;
   const { teams } = teamStore;
   const { tracks } = trackStore;
@@ -52,6 +51,7 @@ const UsersSection = observer(() => {
     [filters]
   );
 
+    console.log('users', users);
  
   const displayed = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -103,7 +103,6 @@ const UsersSection = observer(() => {
     setSelectedUser(null);
   };
 
-  // prepare payload for update
   const buildPayload = (current, changes) => {
     const p = {
       id: current.id,
@@ -144,7 +143,7 @@ const UsersSection = observer(() => {
 
   if (loading) return <Loader />;
   if (error)
-    return <ErrorModal title="УПС" message={error} onClose={() => setError(null)} />;
+    return <ErrorModal title="Упс" message={error} onClose={() => authStore.setError(null)} />;
 
   return (
     <div className={styles.container}>

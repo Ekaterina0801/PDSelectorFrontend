@@ -5,6 +5,7 @@ import { observer } from 'mobx-react';
 import {useApplicationActions} from '../../../hooks/useApplicationActions';
 import teamStore from '../../../stores/teamStore';
 import Loader from '../../spinner/Loader';
+import ErrorModal from '../../error-display/ErrorDisplay';
 export default observer(function ApplicationCard({ application }) {
   const teamId    = application.team.id;
   const studentId = application.student.id;

@@ -378,4 +378,34 @@
       font-size: ui.$font-size-2xl;
     }
   }
+  
 }
+
+
+
+.trackGroupsContainer {
+display: flex;
+flex-direction: column;
+gap: 2rem; /* расстояние между группами \*/
+margin-top: 1.5rem;
+}
+
+
+.trackGroup {
+background-color: #f9f9f9; /* светло-серый фон для визуального разделения \*/
+border-radius: 8px;
+padding: 1rem;
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+.trackTitle {
+font-size: 1.25rem;
+font-weight: 600;
+margin-bottom: 0.75rem;
+color: #333;
+text-align: center;
+}
+
+
+
