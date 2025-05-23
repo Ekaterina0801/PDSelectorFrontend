@@ -186,3 +186,85 @@
     padding: ui.$spacing-md;
   }
 }
+
+@media (min-width: 2560px) {
+  .profileContainer {
+    padding: ui.$spacing-lg;
+  }
+
+  .profileEditForm {
+    max-width: 800px;
+    padding: ui.$spacing-lg;
+    border-radius: ui.$radius-lg;
+
+    h2 {
+      font-size: ui.$font-size-3xl;
+      margin-bottom: ui.$spacing-lg;
+    }
+
+    label {
+      font-size: ui.$font-size-2xl;
+      margin-bottom: ui.$spacing-lg;
+
+      input[type="text"],
+      input[type="number"],
+      textarea {
+        font-size: ui.$font-size-2xl;
+        padding: ui.$spacing-md;
+      }
+
+      textarea{
+        min-height: 150px;
+      }
+
+      .textCapture {
+        font-size: ui.$font-size-2xl;
+      }
+
+      ul {
+        li {
+          label {
+            padding: 0.5rem 1rem;
+            font-size: ui.$font-size-2xl;
+          }
+        }
+      }
+
+      .cardTags {
+        .cardTag {
+          font-size: ui.$font-size-2xl;
+          padding: ui.$spacing-xs ui.$spacing-md;
+        }
+      }
+    }
+
+    .formButtons {
+      button {
+        font-size: ui.$font-size-2xl;
+        padding: ui.$spacing-sm ui.$spacing-lg;
+      }
+    }
+  }
+
+  .modalContent {
+    max-width: 900px;
+    padding: ui.$spacing-lg;
+    
+    h2 {
+      font-size: ui.$font-size-3xl;
+    }
+  }
+
+  .technologiesList {
+    .technologyCheckbox {
+      label {
+        font-size: ui.$font-size-2xl;
+        padding: ui.$spacing-sm;
+
+      }
+      .checkbox {
+        transform: scale(1.7);
+      }
+    }
+  }
+}

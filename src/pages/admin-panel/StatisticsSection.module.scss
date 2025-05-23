@@ -30,6 +30,45 @@
   }
 }
 
+.sortPaginationControls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: ui.$spacing-md;
+  background: ui.$color-white;
+  padding: ui.$spacing-md;
+  border-radius: ui.$radius-md;
+  box-shadow: ui.$shadow-light;
+  border: 1px solid ui.$color-primary-light;
+  margin: auto;
+  max-width: 800px;
+
+  .sort-block {
+    display: flex;
+    align-items: center;
+    gap: ui.$spacing-sm;
+
+    label {
+      font-weight: 600;
+      color: ui.$color-primary;
+    }
+
+    select {
+      @include ui.form-control(ui.$radius-sm);
+      background-color: lighten(ui.$color-primary-light, 40%);
+      color: ui.$color-primary;
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s;
+
+      &:hover {
+        border-color: ui.$color-primary;
+        box-shadow: ui.$shadow-light;
+      }
+    }
+  }
+}
+
 .widgets {
   display: flex;
   justify-content: center;
@@ -168,6 +207,10 @@
         border-radius: ui.$radius-lg;
       }
     }
+  }
+
+  .sortPaginationControls{
+    max-width: 1200px;
   }
 
   .widgets {

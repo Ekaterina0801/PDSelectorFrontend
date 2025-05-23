@@ -38,20 +38,28 @@
 }
 
 .studentsGrid {
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
   gap: ui.$spacing-md;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  max-width: 100%;
+  justify-content: center;
 
-  @include ui.respond-to(lg) {
-    grid-template-columns: repeat(2, minmax(240px, 1fr));
+  > * {
+    // Базовые стили для элементов
+    flex: 1 0 calc(33.333% - ui.$spacing-md * 2/3);
+    min-width: 280px;
+
+    // Адаптация для <=1024px
+    @include ui.respond-to(lg) {
+      flex-basis: calc(33.333% - ui.$spacing-md * 2/3);
+      min-width: 240px;
+    }
+
+    // Мобильная версия <=768px
+    @include ui.respond-to(md) {
+      flex-basis: 100%;
+      min-width: 0;
+    }
   }
-
-  @include ui.respond-to(md) {
-    grid-template-columns: 1fr;
-  }
-
-  margin: 0;
 }
 
 .successMessage {

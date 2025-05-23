@@ -3,7 +3,12 @@ import PropTypes from 'prop-types';
 import styles from './DataTable.module.scss';
 export function DataTable({ columns, rows, renderRowActions }) {
   {console.log("rows: ",rows)}
-
+  const statusText = {
+    accepted: "Принята",
+    sent: "Отправлена",
+    rejected: "Отклонена",
+    cancelled: "Отменена"
+  };
   return (
     <div className={styles.tableWrapper}>
       <table className={styles.table}>
@@ -51,7 +56,11 @@ export function DataTable({ columns, rows, renderRowActions }) {
                       data-label={col.title}
                       title={tooltip}
                     >
-                      {content}
+                      {content === "accepted" ? "Принята" 
+                      : content === "sent" ? "Отправлена" 
+                      : content === "rejected" ? "Отклонена" 
+                      : content === "cancelled" ? "Отменена" 
+                      : content}
                     </td>
                   );
                 })}

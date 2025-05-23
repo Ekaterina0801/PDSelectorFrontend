@@ -22,7 +22,7 @@
 
   display: flex;
   flex-direction: column;
-  height: 100%;
+  //height: 100%;
   background: #fff;
   border-radius: ui.$radius-lg;
   box-shadow: ui.$shadow-light;
@@ -39,7 +39,7 @@
     text-align: center;
   }
   &-name {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: ui.$color-primary;
     margin-bottom: ui.$spacing-xs;
@@ -66,6 +66,9 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    max-height: calc(2 * 1.5em);
+    min-width: 0;
+    text-overflow: ellipsis;
   }
   &-tags {
     display: flex;
@@ -128,6 +131,7 @@
     &-resume   {
       -webkit-line-clamp: 3;     
       font-size: 0.9rem;
+      max-height: calc(3 * 1.5em);
     }
     &-name     { font-size: 1.25rem; }
     &-type     { font-size: 1rem; }
@@ -168,6 +172,7 @@
       font-size: ui.$font-size-2xl; // Чуть крупнее текст
       line-height: 1.6; // Улучшенная читаемость
       -webkit-line-clamp: 3; // Показываем больше строк
+      max-height: calc(3 * 1.5em);
     }
 
     &-tags {
