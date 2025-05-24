@@ -126,6 +126,74 @@
     }
   }
   
+@media (min-width: 320px) {
+  .loginContainer {
+    min-height: 200px;
+  }
+  .loginContent {
+    padding: 10px;
+  }
+  .loginImage{
+    display: none;
+  }
+  .welcomeText {
+    font-size: ui.$font-size-base;
+  }
+  .formButtons {  
+    button {
+      padding: ui.$spacing-sm;
+    }
+  }
+}
+
+@media (min-width: 480px) {
+  .loginContent {
+    padding: 20px;
+  }
+  .loginImage{
+    display: none;
+  }
+  .welcomeText {
+    font-size: ui.$font-size-2xl;
+  }
+}
+
+@media (min-width: 768px) {
+  .loginContent {
+    padding: 35px;
+  }
+  .loginImage{
+    display: flex;
+    padding: 35px;
+  }
+  .welcomeText {
+    font-size: ui.$font-size-2xl;
+  }
+  .formButtons {  
+    button {
+      padding: ui.$spacing-md;
+    }
+  }
+}
+
+@media (min-width: 1024px) {
+  .loginContent {
+    padding: 50px;
+  }
+  .loginImage{
+    display: flex;
+    padding: 50px;
+  }
+  .welcomeText {
+    font-size: ui.$font-size-3xl;
+  }
+  .formButtons {  
+    button {
+      padding: 12px;
+    }
+  }
+}
+
 @media (min-width: 2560px) {
   .background {
     background-size: cover;

@@ -44,7 +44,7 @@
   }
   
   .welcomeText {
-    font-size: 2rem;
+    //font-size: 2rem;
     font-weight: 600;
     color: ui.$color-primary;
     margin-bottom: 30px;
@@ -52,13 +52,10 @@
   
   .loginButton {
     width: 100%;
-    padding: 16px;
-    font-size: 1.2rem;
     font-weight: 600;
     color: #fff;
     background: ui.$color-primary;
     border: none;
-    border-radius: 10px;
     cursor: pointer;
     transition: background 0.3s;
   
@@ -67,7 +64,78 @@
       color: ui.$color-primary;
     }
   }
-  
+
+  @media (min-width: 320px) {
+    .loginContainer {
+      min-height: 200px;
+    }
+    .loginContent {
+      padding: 10px;
+    }
+    .loginImage{
+      padding: 10px;
+    }
+    .welcomeText {
+      font-size: ui.$font-size-base;
+    }
+    .loginButton {
+      padding: ui.$spacing-xs;
+      font-size: ui.$font-size-base;
+      border-radius: 10px;
+    }
+  }
+
+  @media (min-width: 480px) {
+    .loginContent {
+      padding: 20px;
+    }
+    .loginImage{
+      padding: 20px;
+    }
+    .welcomeText {
+      font-size: ui.$font-size-2xl;
+    }
+    .loginButton {
+      padding: ui.$spacing-xs;
+      font-size: ui.$font-size-base;
+      border-radius: 10px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .loginContent {
+      padding: 35px;
+    }
+    .loginImage{
+      padding: 35px;
+    }
+    .welcomeText {
+      font-size: ui.$font-size-2xl;
+    }
+    .loginButton {
+      padding: ui.$spacing-xs;
+      font-size: ui.$font-size-base;
+      border-radius: 10px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .loginContent {
+      padding: 50px;
+    }
+    .loginImage{
+      padding: 50px;
+    }
+    .welcomeText {
+      font-size: ui.$font-size-3xl;
+    }
+    .loginButton {
+      padding: ui.$spacing-sm;
+      font-size: ui.$font-size-2xl;
+      border-radius: 10px;
+    }
+  }
+
   @media (min-width: 2560px) {
     .background {
       height: 100vh;

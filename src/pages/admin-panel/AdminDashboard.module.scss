@@ -189,12 +189,6 @@
   flex-direction: column;
 }
 
-.memberName {
-  margin: 0;
-  font-weight: 700;
-  color: ui.$color-grey-800;
-}
-
 .memberMeta {
   margin: ui.$spacing-xs 0 0;
   font-size: ui.$font-size-base * 0.9;
@@ -251,6 +245,14 @@
   }
 
   .pagination {
+    font-size: ui.$font-size-2xl;
+  }
+  
+  .memberName {
+    font-size: ui.$font-size-2xl;
+  }
+
+  .memberMeta {
     font-size: ui.$font-size-2xl;
   }
   
