@@ -1,5 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import TechnologyService from "../service/technologyService";
+import { extractErrorMessage } from "../utils/errorUtils";
 class TechnologyStore {
   technologies = [];
   loading = false;
@@ -19,7 +20,7 @@ class TechnologyStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = err.message || 'Ошибка при загрузке технологий';
+        this.error = extractErrorMessage(err) || 'Ошибка при загрузке технологий';
       });
     } finally {
       runInAction(() => {
@@ -38,7 +39,7 @@ class TechnologyStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = err.message || 'Ошибка при создании технологии';
+        this.error = extractErrorMessage(err) || 'Ошибка при создании технологии';
       });
     } finally {
       runInAction(() => {
@@ -57,7 +58,7 @@ class TechnologyStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = err.message || 'Ошибка при удалении технологии';
+        this.error = extractErrorMessage(err) || 'Ошибка при удалении технологии';
       });
     } finally {
       runInAction(() => {

@@ -1,7 +1,7 @@
 
 import { TrackService } from "../service/trackService";
 import { makeAutoObservable, runInAction } from "mobx"; 
-
+import { extractErrorMessage } from "../utils/errorUtils";
 class TrackStore {
   tracks = [];
   track = null;
@@ -21,11 +21,10 @@ class TrackStore {
       const data = await TrackService.fetchTracks();
       runInAction(() => {
         this.tracks = data;
-        console.log("Tracks:", data);
       });
     } catch (err) {
       runInAction(() => {
-        this.error = err.message || "Ошибка при загрузке треков";
+        this.error = extractErrorMessage(err) || "Ошибка при загрузке треков";
       });
     } finally {
       runInAction(() => {
@@ -46,7 +45,7 @@ class TrackStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = err.message || "Ошибка при загрузке трека";
+        this.error = extractErrorMessage(err) || "Ошибка при загрузке трека";
       });
     } finally {
       runInAction(() => {
@@ -67,7 +66,7 @@ class TrackStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = err.message || "Ошибка при создании трека";
+        this.error = extractErrorMessage(err) || "Ошибка при создании трека";
       });
     } finally {
       runInAction(() => {
@@ -88,7 +87,7 @@ class TrackStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = err.message || "Ошибка при обновлении трека";
+        this.error = extractErrorMessage(err) || "Ошибка при обновлении трека";
       });
     } finally {
       runInAction(() => {
@@ -109,7 +108,7 @@ class TrackStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = err.message || "Ошибка при удалении трека";
+        this.error = extractErrorMessage(err) || "Ошибка при удалении трека";
       });
     } finally {
       runInAction(() => {

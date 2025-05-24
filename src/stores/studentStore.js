@@ -1,6 +1,6 @@
 import { makeAutoObservable, observable, action, runInAction, computed } from 'mobx';
 import StudentService from '../service/studentService';
-
+import { extractErrorMessage } from '../utils/errorUtils';
 class StudentStore {
   students = [];
   student = null;
@@ -27,7 +27,7 @@ class StudentStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = err.response?.data?.message || err.message;
+        this.error = extractErrorMessage(err) || "Ошибка при загрузке доступных студентов";
       });
     } finally {
       runInAction(() => {
@@ -49,7 +49,7 @@ class StudentStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = err.message || "Ошибка при загрузке студентов";
+        this.error = extractErrorMessage(err) || "Ошибка при загрузке студентов";
       });
     } finally {
       runInAction(() => {
@@ -69,7 +69,7 @@ class StudentStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = err.message || "Ошибка при загрузке студента";
+        this.error = extractErrorMessage(err) || "Ошибка при загрузке студента";
       });
     } finally {
       runInAction(() => {
@@ -90,7 +90,7 @@ class StudentStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = err.message || "Ошибка при создании студента";
+        this.error = extractErrorMessage(err) || "Ошибка при создании студента";
       });
     } finally {
       runInAction(() => {
@@ -111,7 +111,7 @@ class StudentStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = err.message || "Ошибка при обновлении студента";
+        this.error = extractErrorMessage(err) || "Ошибка при обновлении студента";
       });
     } finally {
       runInAction(() => {
@@ -132,7 +132,7 @@ class StudentStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = err.message || "Ошибка при удалении студента";
+        this.error = extractErrorMessage(err) || "Ошибка при удалении студента";
       });
     } finally {
       runInAction(() => {
@@ -149,7 +149,7 @@ class StudentStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = err.message || "Ошибка при получении текущего студента";
+        this.error = extractErrorMessage(err) || "Ошибка при получении текущего студента";
       });
     }
   }
@@ -165,7 +165,7 @@ class StudentStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = err.message || "Ошибка при загрузке фильтров";
+        this.error = extractErrorMessage(err) || "Ошибка при загрузке фильтров";
       });
     } finally {
       runInAction(() => {

@@ -64,12 +64,10 @@ class TeamStore {
       runInAction(() => {
         this.teams = data.content;
         this.filters.total = data.totalElements;
-        //this.allFilters = data.availableFilters || {};
-        //console.log('DATATATATATA', data);
       });
     } catch (err) {
       runInAction(() => {
-        this.error = err.message || "Ошибка при загрузке команд";
+        this.error = extractErrorMessage(err) || "Ошибка при загрузке команд";
       });
     } finally {
       runInAction(() => {
@@ -80,7 +78,6 @@ class TeamStore {
   async fetchFilters(trackId) {
     this.loading = true;
     this.error = null;
-    console.log("TRACKID", trackId);
     try {
       if (trackId == null) {
 
@@ -94,13 +91,12 @@ class TeamStore {
         return;
       }
       const filters = await TeamService.fetchFilterParamsByTrackId(trackId);
-      console.log('filtersSSSSS', filters);
       runInAction(() => {
         this.allFilters = filters;
       });
     } catch (err) {
       runInAction(() => {
-         this.error = err.response?.data?.message || err.message || "Ошибка при загрузке фильтров";
+         this.error = extractErrorMessage(err) || "Ошибка при загрузке фильтров";
       });
     } finally {
       runInAction(() => {
@@ -120,7 +116,7 @@ class TeamStore {
       });
     } catch (err) {
       runInAction(() => {
-         this.error = err.response?.data?.message || err.message || "Ошибка при загрузке команды";
+         this.error = extractErrorMessage(err) || "Ошибка при загрузке команды";
       });
     } finally {
       runInAction(() => {
@@ -141,7 +137,7 @@ class TeamStore {
       });
     } catch (err) {
       runInAction(() => {
-         this.error = err.response?.data?.message || err.message || "Ошибка при создании команды";
+         this.error = extractErrorMessage(err) || "Ошибка при создании команды";
       });
     } finally {
       runInAction(() => {
@@ -154,8 +150,6 @@ class TeamStore {
   async updateTeam(teamData, teamId) {
     this.loading = true;
     this.error = null;
-    console.log('teamDataAAAAAA', teamData);
-    console.log('teamIdAAAAAA', teamId);
     if (!teamId) {
       teamId = teamData.id;
     }
@@ -167,7 +161,6 @@ class TeamStore {
       });
     } catch (err) {
       runInAction(() => {
-        console.log('err',extractErrorMessage(err));
          this.error = extractErrorMessage(err) || "Ошибка при обновлении команды";
       });
     } finally {

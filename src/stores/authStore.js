@@ -3,7 +3,7 @@ import { AuthService } from "../service/authService";
 import StudentService from "../service/studentService";
 import commonStore from "./commonStore";
 import trackStore from "./trackStore";
-
+import { extractErrorMessage } from "../utils/errorUtils";
 class AuthStore {
   user = null;
   isAdmin = false;
@@ -49,7 +49,6 @@ class AuthStore {
 
   setTrackId(trackId) {
     this.trackId = trackId;
-    localStorage.setItem("trackId", trackId);
     this.setFilters({ trackId });
   }
 
@@ -61,10 +60,8 @@ class AuthStore {
   async fetchRoles() {
     try {
       const data = await AuthService.getRoles();
-      console.log("dataRoles", data);
       runInAction(() => {
         this.roles = data;
-        console.log("rolesStore", this.roles);
       });
     } catch {}
   }
@@ -95,14 +92,13 @@ class AuthStore {
         trackId,
         isEnabled
       });
-      console.log('total', data.totalElements)
       runInAction(() => {
         this.users = data.content;
         this.total = data.totalElements;
       });
     } catch (err) {
       runInAction(() => {
-         this.error = err.response?.data?.message || err.message || "Ошибка при загрузке пользователей";
+         this.error = extractErrorMessage(err) || "Ошибка при загрузке пользователей";
       });
     } finally {
       runInAction(() => {
@@ -123,7 +119,6 @@ class AuthStore {
       let studentData = null;
       if (student)
         studentData = await StudentService.fetchStudentById(student);
-      console.log("STUDENT_DATA", studentData);
       this.loadTrackId();
       runInAction(() => {
         this.user = user;
@@ -137,7 +132,7 @@ class AuthStore {
     } catch (err) {
       runInAction(() => {
         this.user = null;
-         this.error = err.response?.data?.message || err.message || "Ошибка авторизации";
+         this.error = extractErrorMessage(err) || "Ошибка авторизации";
       });
       if (err?.response?.status === 401) {
         window.location.href = "/login";
@@ -167,7 +162,7 @@ class AuthStore {
       await this.fetchUsers();
     } catch (err) {
       runInAction(() => {
-         this.error = err.response?.data?.message || err.message || "Ошибка при сохранении пользователя";
+         this.error = extractErrorMessage(err) || "Ошибка при сохранении пользователя";
       });
     } finally {
       runInAction(() => {
@@ -193,7 +188,7 @@ class AuthStore {
       runInAction(() => {
         console.log('errroooor');
         console.log(err);
-         this.error = err.response?.data?.message || err.message || "Ошибка при удалении пользователя";
+         this.error = extractErrorMessage(err) || "Ошибка при удалении пользователя";
       });
     } finally {
       runInAction(() => {

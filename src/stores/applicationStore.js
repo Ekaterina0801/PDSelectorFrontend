@@ -1,6 +1,6 @@
 import { observable, action, runInAction, makeObservable } from 'mobx';
 import { ApplicationService } from '../service/applicationService';
-
+import { extractErrorMessage } from '../utils/errorUtils';
 class ApplicationStore {
   // для fetchApplications(trackId)
   applications = []
@@ -74,7 +74,7 @@ class ApplicationStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = err.response?.data?.message || err.message || 'Ошибка при загрузке заявок';
+        this.error = extractErrorMessage(err) || 'Ошибка при загрузке заявок';
       });
     } finally {
       runInAction(() => {
@@ -119,7 +119,7 @@ class ApplicationStore {
       runInAction(() => {
         this.errorByKey.set(
           key,
-          err.response?.data?.message || err.message || 'Ошибка при загрузке заявки'
+          extractErrorMessage(err) || 'Ошибка при загрузке заявки'
         )
       })
     } finally {
@@ -143,7 +143,7 @@ class ApplicationStore {
       runInAction(() => {
         this.errorByKey.set(
           key,
-          err.response?.data?.message || err.message || 'Ошибка при создании заявки'
+          extractErrorMessage(err) || 'Ошибка при создании заявки'
         )
       })
       throw err
@@ -168,7 +168,7 @@ class ApplicationStore {
       runInAction(() => {
         this.errorByKey.set(
           key,
-          err.response?.data?.message || err.message || 'Ошибка при обновлении заявки'
+          extractErrorMessage(err) || 'Ошибка при обновлении заявки'
         )
       })
       throw err

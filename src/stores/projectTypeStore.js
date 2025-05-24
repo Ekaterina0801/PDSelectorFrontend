@@ -1,6 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import ProjectTypeService from "../service/projectTypeService";
-
+import { extractErrorMessage } from "../utils/errorUtils";
 class ProjectTypeStore {
   projectTypes = [];
   loading = false;
@@ -20,7 +20,7 @@ class ProjectTypeStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = err.message || 'Ошибка при загрузке типов проектов';
+        this.error = extractErrorMessage(err) || 'Ошибка при загрузке типов проектов';
       });
     } finally {
       runInAction(() => {
@@ -39,7 +39,7 @@ class ProjectTypeStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = err.message || 'Ошибка при создании типа проекта';
+        this.error = extractErrorMessage(err) || 'Ошибка при создании типа проекта';
       });
     } finally {
       runInAction(() => {
@@ -58,7 +58,7 @@ class ProjectTypeStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = err.message || 'Ошибка при удалении типа проекта';
+        this.error = extractErrorMessage(err) || 'Ошибка при удалении типа проекта';
       });
     } finally {
       runInAction(() => {
