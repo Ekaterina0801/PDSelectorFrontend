@@ -79,6 +79,14 @@ class StudentService {
     );
     return response;
   }
+
+  static async fetchAvailableForTeam({ trackId, teamId }) {
+    const params = [];
+    if (trackId  != null) params.push(`track_id=${encodeURIComponent(trackId)}`);
+    if (teamId   != null) params.push(`team_id=${encodeURIComponent(teamId)}`);
+    const qs = params.length ? `?${params.join("&")}` : "";
+    return requests.get(`/students/available${qs}`);
+  }
 }
 
 export default StudentService;

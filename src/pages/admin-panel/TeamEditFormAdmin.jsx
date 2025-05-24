@@ -7,6 +7,7 @@ import { FiPlus } from "react-icons/fi";
 import { observer } from "mobx-react";
 import studentStore from "../../stores/studentStore";
 import teamStore from "../../stores/teamStore";
+import { has } from "lodash";
 const TeamEditModalAdmin = observer(({
   show,
   onClose,
@@ -15,96 +16,82 @@ const TeamEditModalAdmin = observer(({
   projectTypes,
   team
 }) => {
-  const [name, setName] = useState('');
-  const [projectType, setProjectType] = useState('');
-  const [track, setTrack] = useState('');
-  const [teamMembers, setTeamMembers] = useState([]); 
-  const [captain, setCaptain] = useState('');        
+  const [name, setName] = useState("");
+  const [projectType, setProjectType] = useState("");
+  const [track, setTrack] = useState("");
+  const [teamMembers, setTeamMembers] = useState([]);
+  const [captain, setCaptain] = useState("");
 
-  const { loading: studentsLoading, students } = studentStore;
+  const { loading: studentsLoading, availableStudents } = studentStore;
 
-
+  // При открытии/смене команды: инициализируем лок. стейт и красим availableStudents
   useEffect(() => {
     if (!team) return;
-
-    setName(team.name || '');
-    setProjectType(team.project_type?.id.toString() || '');
-
-    const trackId = team.current_track?.toString() || '';
+    setName(team.name || "");
+    setProjectType(team.project_type?.id.toString() || "");
+    const trackId = team.current_track?.toString() || "";
     setTrack(trackId);
-
-
     const initial = (team.students || []).map(s => s.id.toString());
     setTeamMembers(initial);
+    const cap = team.captain?.id.toString() || "";
+    setCaptain(initial.includes(cap) ? cap : "");
 
-
-    const capId = team.captain?.id.toString() || '';
-    setCaptain(initial.includes(capId) ? capId : '');
-
-    if (trackId) {
-      studentStore.fetchStudents({ trackId: +trackId });
+    if (trackId && team.id) {
+      studentStore.fetchAvailableStudents({
+        trackId: +trackId,
+        teamId:  team.id
+      });
     }
   }, [team]);
 
-
+  // Смена трека: сброс участников/капитана + перезагрузка списка
   const onTrackChange = e => {
     const newTrack = e.target.value;
     setTrack(newTrack);
     setTeamMembers([]);
-    setCaptain('');
-    console.log('Fetching students for track:', newTrack);
-    if (newTrack) {
-      console.log('Fetching students for track:', newTrack);
-      studentStore.fetchStudents({ trackId: +newTrack });
+    setCaptain("");
+    if (newTrack && team?.id) {
+      studentStore.fetchAvailableStudents({
+        trackId: +newTrack,
+        teamId:  team.id
+      });
     }
   };
 
-
-  const addMember = () => setTeamMembers(ms => [...ms, '']);
-  const changeMember = (i, val) =>
-    setTeamMembers(ms => ms.map((m, idx) => idx === i ? val : m));
-  const removeMember = i =>
+  // CRUD участников
+  const addMember    = () => setTeamMembers(ms => [...ms, ""]);
+  const changeMember = (idx, val) => setTeamMembers(ms => ms.map((m,i) => i===idx?val:m));
+  const removeMember = idx => {
     setTeamMembers(ms => {
-      const upd = ms.filter((_, idx) => idx !== i);
-      if (!upd.includes(captain)) setCaptain('');
+      const upd = ms.filter((_,i) => i!==idx);
+      if (!upd.includes(captain)) setCaptain("");
       return upd;
     });
+  };
 
+  // Опции для селекторов участников
+  const availableMembers = availableStudents.map(u => ({
+    id:  u.id.toString(),
+    fio: u.user.fio
+  }));
 
-  const availableMembers = [
-    ...students
-      .filter(u => !u.has_team)
-      .map(u => ({ id: u.id.toString(), fio: u.user.fio })),
-    ...teamMembers
-      //.filter(id => !students.some(u => u.id.toString() === id))
-      .map(id => {
-        const fb = team.students?.find(s => s.id.toString() === id);
-        return fb ? { id, fio: fb.user.fio } : null;
-      })
-      .filter(Boolean)
-  ];
-  console.log('students', students);
-  console.log('Available members:', availableMembers);
-
-  // Собираем полезный payload
   const handleSubmit = () => {
-    const payload = {
-      id: team.id,
+    onSave({
+      id:               team.id,
       name,
-      project_description: '',
-      project_type: { id: +projectType },
-      technologies: [],
-      captain_id: +captain,
-      studentIds: teamMembers.filter(Boolean).map(id => +id),
+      project_description: "",
+      project_type:     { id: +projectType },
+      technologies:     [],
+      captain_id:       +captain,
+      studentIds:       teamMembers.filter(Boolean).map(id=>+id),
       current_track_id: +track
-    };
-    onSave(payload);
+    });
   };
 
   if (!show) return null;
 
   return (
-    <Modal show onClose={onClose} title={team.id ? 'Редактирование команды' : 'Новая команда'}>
+    <Modal show onClose={onClose} title={team.id ? "Редактирование команды" : "Новая команда"}>
       <div className={styles.form}>
 
         {/* Название */}
@@ -166,6 +153,7 @@ const TeamEditModalAdmin = observer(({
                   </button>
                 </div>
               ))}
+
               <button className={styles.addMemberBtn} onClick={addMember}>
                 <FiPlus />
               </button>
@@ -173,7 +161,7 @@ const TeamEditModalAdmin = observer(({
           )}
         </div>
 
-        {/* Капитан — только из teamMembers */}
+        {/* Капитан */}
         <label className={styles.field}>
           Капитан команды
           <select
@@ -184,19 +172,14 @@ const TeamEditModalAdmin = observer(({
             <option value="">— выберите капитана —</option>
             {teamMembers.map(id => {
               const opt = availableMembers.find(u => u.id === id);
-              const fio = opt
-                ? opt.fio
-                : team.students?.find(s => s.id.toString() === id)?.user.fio;
-              return fio ? (
-                <option key={id} value={id}>
-                  {fio}
-                </option>
-              ) : null;
+              return opt
+                ? <option key={id} value={id}>{opt.fio}</option>
+                : null;
             })}
           </select>
         </label>
 
-        {/* Действия */}
+        {/* Кнопки */}
         <div className={styles.actions}>
           <button
             className={styles.btnSave}
@@ -204,12 +187,12 @@ const TeamEditModalAdmin = observer(({
             disabled={
               !name ||
               !projectType ||
-              !captain ||
               !track ||
+              !captain ||
               teamMembers.some(m => !m)
             }
           >
-            {team.id ? 'Сохранить изменения' : 'Создать команду'}
+            {team.id ? "Сохранить изменения" : "Создать команду"}
           </button>
           <button className={styles.btnCancel} onClick={onClose}>
             Отменить
@@ -221,3 +204,6 @@ const TeamEditModalAdmin = observer(({
 });
 
 export default TeamEditModalAdmin;
+
+
+

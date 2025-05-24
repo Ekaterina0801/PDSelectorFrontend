@@ -8,6 +8,7 @@ class StudentStore {
   error = null;
   filters = {};
   allFilters = {};
+  availableStudents = []; 
 
   constructor() {
     makeAutoObservable(this);
@@ -15,6 +16,24 @@ class StudentStore {
 
   get hasError() {
     return this.error != null;
+  }
+  async fetchAvailableStudents({ trackId, teamId }) {
+    this.loading = true;
+    this.error   = null;
+    try {
+      const list = await StudentService.fetchAvailableForTeam({ trackId, teamId });
+      runInAction(() => {
+        this.availableStudents = list;
+      });
+    } catch (err) {
+      runInAction(() => {
+        this.error = err.response?.data?.message || err.message;
+      });
+    } finally {
+      runInAction(() => {
+        this.loading = false;
+      });
+    }
   }
 
   async fetchStudents(params = {}) {
