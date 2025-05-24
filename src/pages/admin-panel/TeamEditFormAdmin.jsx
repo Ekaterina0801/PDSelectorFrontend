@@ -18,12 +18,12 @@ const TeamEditModalAdmin = observer(({
   const [name, setName] = useState('');
   const [projectType, setProjectType] = useState('');
   const [track, setTrack] = useState('');
-  const [teamMembers, setTeamMembers] = useState([]); // здесь — массив student.id
-  const [captain, setCaptain] = useState('');         // и captain — тоже student.id
+  const [teamMembers, setTeamMembers] = useState([]); 
+  const [captain, setCaptain] = useState('');        
 
   const { loading: studentsLoading, students } = studentStore;
 
-  // Инициализация при открытии/смене team
+
   useEffect(() => {
     if (!team) return;
 
@@ -33,11 +33,11 @@ const TeamEditModalAdmin = observer(({
     const trackId = team.current_track?.toString() || '';
     setTrack(trackId);
 
-    // стартовый список участников — по student.id
+
     const initial = (team.students || []).map(s => s.id.toString());
     setTeamMembers(initial);
 
-    // стартовый капитан — тоже по student.id
+
     const capId = team.captain?.id.toString() || '';
     setCaptain(initial.includes(capId) ? capId : '');
 
@@ -46,18 +46,20 @@ const TeamEditModalAdmin = observer(({
     }
   }, [team]);
 
-  // при смене трека сбрасываем
+
   const onTrackChange = e => {
     const newTrack = e.target.value;
     setTrack(newTrack);
     setTeamMembers([]);
     setCaptain('');
+    console.log('Fetching students for track:', newTrack);
     if (newTrack) {
+      console.log('Fetching students for track:', newTrack);
       studentStore.fetchStudents({ trackId: +newTrack });
     }
   };
 
-  // CRUD участников
+
   const addMember = () => setTeamMembers(ms => [...ms, '']);
   const changeMember = (i, val) =>
     setTeamMembers(ms => ms.map((m, idx) => idx === i ? val : m));
@@ -68,19 +70,21 @@ const TeamEditModalAdmin = observer(({
       return upd;
     });
 
-  // Опции для добавления: свободные студенты + уже выбранные
+
   const availableMembers = [
     ...students
-      .filter(u => !u.hasTeam)
+      .filter(u => !u.has_team)
       .map(u => ({ id: u.id.toString(), fio: u.user.fio })),
     ...teamMembers
-      .filter(id => !students.some(u => u.id.toString() === id))
+      //.filter(id => !students.some(u => u.id.toString() === id))
       .map(id => {
         const fb = team.students?.find(s => s.id.toString() === id);
         return fb ? { id, fio: fb.user.fio } : null;
       })
       .filter(Boolean)
   ];
+  console.log('students', students);
+  console.log('Available members:', availableMembers);
 
   // Собираем полезный payload
   const handleSubmit = () => {

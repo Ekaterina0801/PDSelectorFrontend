@@ -23,10 +23,18 @@ const ApplicationsSection = observer(() => {
 
 
   useEffect(() => {
-    applicationStore.fetchApplications({
+    if (trackId === null) {
+applicationStore.fetchApplications({
       track_id: trackId,
       status:   status || null,
     });
+    }
+    else{
+      applicationStore.fetchApplications({
+      status:   status || null,
+    });
+    }
+    
   }, [trackId, page, size, sort, status]);
 
   const columns = [

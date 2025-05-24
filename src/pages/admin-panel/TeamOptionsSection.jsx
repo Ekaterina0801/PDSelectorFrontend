@@ -6,52 +6,40 @@ import technologyStore from '../../stores/technologyStore';
 import ModalForm from '../../components/profile/ModalForm';
 import ErrorModal from '../../components/error-display/ErrorDisplay';
 import SuccessMessage from '../../components/successMessage/SuccessMessage';
+import useSuccessMessage from '../../hooks/useSuccessMessage';
 const TeamOptionsSection = observer(() => {
-
   const [showProjectTypeModal, setShowProjectTypeModal] = useState(false);
   const [showTechModal, setShowTechModal] = useState(false);
 
   const [projectTypeToDelete, setProjectTypeToDelete] = useState(null);
   const [techToDelete, setTechToDelete] = useState(null);
 
-  const [successMessage, setSuccessMessage] = useState('');
+  const { successMessage, showSuccessMessage } = useSuccessMessage();
 
   useEffect(() => {
     projectTypeStore.fetchProjectTypes();
     technologyStore.fetchTechnologies();
-  }, [projectTypeStore, technologyStore]);
-
-  useEffect(() => {
-    if (successMessage) {
-      const timer = setTimeout(() => setSuccessMessage(''), 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [successMessage]);
+  }, []);
 
   const handleSaveProjectType = async ({ name }) => {
     await projectTypeStore.createProjectType(name);
     setShowProjectTypeModal(false);
-    setSuccessMessage(`Тип проекта "${name}" успешно добавлен`);
+    showSuccessMessage(`Тип проекта "${name}" успешно добавлен`);
   };
 
   const handleSaveTech = async ({ name }) => {
     await technologyStore.createTechnology(name);
     setShowTechModal(false);
-    setSuccessMessage(`Технология "${name}" успешно добавлена`);
+    showSuccessMessage(`Технология "${name}" успешно добавлена`);
   };
 
-  const confirmDeleteProjectType = (pt) => {
-    setProjectTypeToDelete(pt);
-  };
-
-  const confirmDeleteTech = (tech) => {
-    setTechToDelete(tech);
-  };
+  const confirmDeleteProjectType = pt => setProjectTypeToDelete(pt);
+  const confirmDeleteTech = t  => setTechToDelete(t);
 
   const doDeleteProjectType = async () => {
     if (projectTypeToDelete) {
       await projectTypeStore.deleteProjectType(projectTypeToDelete.id);
-      setSuccessMessage(`Тип проекта "${projectTypeToDelete.name}" успешно удалён`);
+      showSuccessMessage(`Тип проекта "${projectTypeToDelete.name}" успешно удалён`);
       setProjectTypeToDelete(null);
     }
   };
@@ -59,21 +47,20 @@ const TeamOptionsSection = observer(() => {
   const doDeleteTech = async () => {
     if (techToDelete) {
       await technologyStore.deleteTechnology(techToDelete.id);
-      setSuccessMessage(`Технология "${techToDelete.name}" успешно удалена`);
+      showSuccessMessage(`Технология "${techToDelete.name}" успешно удалена`);
       setTechToDelete(null);
     }
   };
 
   return (
     <div className={styles.container}>
-      {/* === Project Types Section === */}
+    {/* Success */}
+      {!!successMessage && <SuccessMessage message={successMessage} />}
+      {/* Project Types */}
       <section className={styles.section}>
         <div className={styles.header}>
           <h2>Типы проектов</h2>
-          <button
-            className={styles.addBtn}
-            onClick={() => setShowProjectTypeModal(true)}
-          >
+          <button className={styles.addBtn} onClick={() => setShowProjectTypeModal(true)}>
             Добавить тип
           </button>
         </div>
@@ -83,27 +70,19 @@ const TeamOptionsSection = observer(() => {
               {pt.name}
               <button
                 className={styles.deleteTagBtn}
-                title="Удалить тип проекта"
                 onClick={() => confirmDeleteProjectType(pt)}
-              >
-                🗑️
-              </button>
+              >🗑️</button>
             </span>
           ))}
-          {projectTypeStore.projectTypes.length === 0 && (
-            <p className={styles.emptyText}>Нет типов проектов</p>
-          )}
+          {!projectTypeStore.projectTypes.length && <p className={styles.emptyText}>Нет типов проектов</p>}
         </div>
       </section>
 
-      {/* === Technologies Section === */}
+      {/* Technologies */}
       <section className={styles.section}>
         <div className={styles.header}>
           <h2>Технологии</h2>
-          <button
-            className={styles.addBtn}
-            onClick={() => setShowTechModal(true)}
-          >
+          <button className={styles.addBtn} onClick={() => setShowTechModal(true)}>
             Добавить технологию
           </button>
         </div>
@@ -113,44 +92,32 @@ const TeamOptionsSection = observer(() => {
               {tech.name}
               <button
                 className={styles.deleteTagBtn}
-                title="Удалить технологию"
                 onClick={() => confirmDeleteTech(tech)}
-              >
-                🗑️
-              </button>
+              >🗑️</button>
             </span>
           ))}
-          {technologyStore.technologies.length === 0 && (
-            <p className={styles.emptyText}>Нет технологий</p>
-          )}
+          {!technologyStore.technologies.length && <p className={styles.emptyText}>Нет технологий</p>}
         </div>
       </section>
 
-      {/* Modal for adding Project Type */}
+      {/* Modals */}
       <ModalForm
         show={showProjectTypeModal}
         title="Новый тип проекта"
         initialData={{}}
-        fields={[
-          { name: 'name', label: 'Название', type: 'text', required: true },
-        ]}
+        fields={[{ name: 'name', label: 'Название', type: 'text', required: true }]}
         onSave={handleSaveProjectType}
         onCancel={() => setShowProjectTypeModal(false)}
       />
-
-      {/* Modal for adding Technology */}
       <ModalForm
         show={showTechModal}
         title="Новая технология"
         initialData={{}}
-        fields={[
-          { name: 'name', label: 'Название', type: 'text', required: true },
-        ]}
+        fields={[{ name: 'name', label: 'Название', type: 'text', required: true }]}
         onSave={handleSaveTech}
         onCancel={() => setShowTechModal(false)}
       />
 
-      {/* Confirmation ErrorModal for Project Type deletion */}
       {projectTypeToDelete && (
         <ErrorModal
           title="Удаление типа проекта"
@@ -159,8 +126,6 @@ const TeamOptionsSection = observer(() => {
           onConfirm={doDeleteProjectType}
         />
       )}
-
-      {/* Confirmation ErrorModal for Technology deletion */}
       {techToDelete && (
         <ErrorModal
           title="Удаление технологии"
@@ -170,8 +135,7 @@ const TeamOptionsSection = observer(() => {
         />
       )}
 
-      {/* SuccessMessage */}
-      {!!successMessage && <SuccessMessage message={successMessage} />}
+
     </div>
   );
 });
