@@ -1,4 +1,5 @@
 @use "@/styles/index" as ui;
+
 .teamInfoCard {
   background: ui.$color-white;
   border-radius: 18px;
@@ -9,7 +10,6 @@
   position: relative;
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  width:1000px;
 
   &:hover {
     transform: translateY(-4px);
@@ -29,7 +29,6 @@
       margin-bottom: ui.$spacing-md;
 
       .teamName {
-        font-size: 2.4rem;
         color: #1a202c;
         margin: 0 0 8px;
         font-weight: 800;
@@ -240,6 +239,24 @@
         grid-template-columns: 1fr;
         gap: 32px;
       }
+
+      .teamName {
+        font-size: ui.$font-size-base;
+      }
+
+      .cardTags {
+        gap: ui.$spacing-md;
+  
+        .cardTag,
+        .techTag {
+          font-size: 1rem;
+          padding: ui.$spacing-sm  ui.$spacing-sm;
+        }
+      }
+    }
+
+    .sectionTitle{
+      font-size: ui.$font-size-base;
     }
   }
 
@@ -249,7 +266,7 @@
       border-radius: ui.$radius-md;
 
       .teamName {
-        font-size: 2rem;
+        font-size: ui.$font-size-base;
       }
 
       .teamHeaderTop {
@@ -264,7 +281,7 @@
       margin-bottom: 32px;
 
       .teamName {
-        font-size: 1.8rem;
+        font-size: ui.$font-size-base;
       }
 
       .button {
@@ -311,7 +328,7 @@
       &Center {
         .teamTypeBadge {
           font-size: ui.$font-size-base;
-          padding: ui.$spacing-md  ui.$spacing-lg;
+          padding: ui.$spacing-sm  ui.$spacing-lg;
           border-radius: ui.$radius-xxl;
         }
       }

@@ -83,18 +83,21 @@ console.log('students', students);
   return (
     <div className={styles.statistics}>
 
-
-        <label htmlFor="track-select">Трек:</label>
-        <select
-          id="track-select"
-          value={selectedTrack}
-          onChange={e => setSelectedTrack(e.target.value)}
-        >
-          {tracks.map(tr => (
-            <option key={tr.id} value={tr.id}>{tr.name}</option>
-          ))}
-        </select>
-
+      <div className={styles.sortPaginationControls}>
+        <div className={stylesAdmin.controlBlock}>
+          <label htmlFor="track-select">Трек:</label>
+          <select
+            id="track-select"
+            value={selectedTrack}
+            onChange={e => setSelectedTrack(e.target.value)}
+          >
+            {tracks.map(tr => (
+              <option key={tr.id} value={tr.id}>{tr.name}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+      
       <div className={styles.widgets}>
         {/* Донат студентов */}
         <div className={styles.widget}>

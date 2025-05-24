@@ -105,25 +105,34 @@
 }
 
 .teamsGrid {
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
   gap: ui.$spacing-md;
+  justify-content: center; // Центрируем все элементы
 
-  // Обычные десктопы: всегда 2 колонки
-  grid-template-columns: repeat(3, minmax(280px, 1fr));
+  // Базовые стили для дочерних элементов
+  > * {
+    // Для обычных десктопов: 3 колонки
+    flex: 1 0 calc(33.333% - ui.$spacing-md * 2/3);
+    min-width: 280px;
+    //max-height: 500px;
+    // <=1024px
+    @include ui.respond-to(lg) {
+      flex-basis: calc(33.333% - ui.$spacing-md * 2/3);
+      min-width: 240px;
+    }
 
-  // <=1024px (планшеты и небольшие десктопы) – тоже 2 колонки (с чуть меньшим min-width)
-  @include ui.respond-to(lg) {
-    grid-template-columns: repeat(3, minmax(240px, 1fr));
-  }
+    // <=768px
+    @include ui.respond-to(md) {
+      flex-basis: 100%;
+      min-width: 0;
+    }
 
-  // <=768px (мобильники) – одна колонка
-  @include ui.respond-to(md) {
-    grid-template-columns: 1fr;
-  }
-  @media (min-width: 2560px) {
-    max-width: 100%;
-    grid-template-columns: repeat(auto-fit, minmax(980px, 1fr));
-    margin: 0;
+    // >=2560px
+    @media (min-width: 2560px) {
+      min-width: 980px;
+      flex-grow: 1;
+    }
   }
 }
 
