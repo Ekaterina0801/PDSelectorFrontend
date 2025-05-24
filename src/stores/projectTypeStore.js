@@ -13,7 +13,6 @@ class ProjectTypeStore {
   async fetchProjectTypes() {
     this.loading = true;
     this.error = null;
-
     try {
       const data = await ProjectTypeService.fetchProjectTypes();
       runInAction(() => {
@@ -21,7 +20,45 @@ class ProjectTypeStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = err.message || "Ошибка при загрузке типов проектов";
+        this.error = err.message || 'Ошибка при загрузке типов проектов';
+      });
+    } finally {
+      runInAction(() => {
+        this.loading = false;
+      });
+    }
+  }
+
+  async createProjectType(name) {
+    this.loading = true;
+    this.error = null;
+    try {
+      const newType = await ProjectTypeService.createProjectType(name);
+      runInAction(() => {
+        this.projectTypes.push(newType);
+      });
+    } catch (err) {
+      runInAction(() => {
+        this.error = err.message || 'Ошибка при создании типа проекта';
+      });
+    } finally {
+      runInAction(() => {
+        this.loading = false;
+      });
+    }
+  }
+
+  async deleteProjectType(id) {
+    this.loading = true;
+    this.error = null;
+    try {
+      await ProjectTypeService.deleteProjectType(id);
+      runInAction(() => {
+        this.projectTypes = this.projectTypes.filter(pt => pt.id !== id);
+      });
+    } catch (err) {
+      runInAction(() => {
+        this.error = err.message || 'Ошибка при удалении типа проекта';
       });
     } finally {
       runInAction(() => {

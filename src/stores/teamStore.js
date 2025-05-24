@@ -2,6 +2,37 @@ import { makeAutoObservable, runInAction,action } from "mobx";
 import { TeamService } from "../service/teamService";
 import trackStore from "./trackStore";
 
+function extractErrorMessage(err) {
+  if (err.response?.data?.message) {
+    return err.response.data.message;
+  }
+
+  if (err instanceof Error && typeof err.message === 'string') {
+    err = err.message;
+  }
+
+  if (typeof err === 'string') {
+    let str = err.trim();
+
+    if (str.startsWith('"') && str.endsWith('"')) {
+      try {
+        str = JSON.parse(str);      
+      } catch {
+
+      }
+    }
+
+    try {
+      const obj = JSON.parse(str);
+      return obj.message || str;
+    } catch {
+      return str;
+    }
+  }
+
+  return String(err);
+}
+
 
 class TeamStore {
   teams = [];
@@ -134,7 +165,6 @@ class TeamStore {
     this.error = null;
 
     try {
-      console.log('teamDataAAAAAA', teamData);
       const newTeam = await TeamService.createTeam(teamData);
       runInAction(() => {
         this.teams.push(newTeam);
@@ -151,6 +181,7 @@ class TeamStore {
     }
   }
 
+  
   async updateTeam(teamData, teamId) {
     this.loading = true;
     this.error = null;
@@ -167,7 +198,8 @@ class TeamStore {
       });
     } catch (err) {
       runInAction(() => {
-         this.error = err.response?.data?.message || err.message || "Ошибка при обновлении команды";
+        console.log('err',extractErrorMessage(err));
+         this.error = extractErrorMessage(err) || "Ошибка при обновлении команды";
       });
     } finally {
       runInAction(() => {

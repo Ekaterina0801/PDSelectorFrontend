@@ -25,7 +25,7 @@ const UsersSection = observer(() => {
   const { teams } = teamStore;
   const { tracks } = trackStore;
 
-  const [search, setSearch] = useState(filters.fio || '');
+  const [search, setSearch] = useState(filters.fio || "");
   const [modalEditOpen, setModalEditOpen] = useState(false);
   const [modalDeleteOpen, setModalDeleteOpen] = useState(false);
   const [showTrackModal, setShowTrackModal] = useState(false);
@@ -38,44 +38,41 @@ const UsersSection = observer(() => {
     authStore.fetchRoles();
   }, [fetchUsers]);
 
-
   useEffect(() => {
-    setSearch(filters.fio || '');
+    setSearch(filters.fio || "");
   }, [filters.fio]);
-
+  console.log("selectedUser", selectedUser);
 
   const updateFiltersHandler = useCallback(
-    diff => {
+    (diff) => {
       authStore.setFilters({ ...filters, ...diff, size: filters.size });
     },
     [filters]
   );
 
-    console.log('users', users);
- 
+  console.log("users", users);
+
   const displayed = useMemo(() => {
     const q = search.trim().toLowerCase();
     if (!q) return users;
     return users.filter(
-      u =>
-        u.fio.toLowerCase().includes(q) ||
-        u.email.toLowerCase().includes(q)
+      (u) =>
+        u.fio.toLowerCase().includes(q) || u.email.toLowerCase().includes(q)
     );
   }, [users, search]);
 
-
   const trackId = filters.trackId;
-  const baseFilename = trackId ? `students_track_${trackId}` : 'students_all';
+  const baseFilename = trackId ? `students_track_${trackId}` : "students_all";
 
-  const handleExport = async fmt => {
+  const handleExport = async (fmt) => {
     if (!trackId) {
       setShowTrackModal(true);
       return;
     }
     try {
-      console.log('handleExport', trackId, fmt);
+      console.log("handleExport", trackId, fmt);
       const svc =
-        fmt === 'csv'
+        fmt === "csv"
           ? StudentService.exportStudentsCsv
           : StudentService.exportStudentsExcel;
       const blob = await svc(trackId);
@@ -85,8 +82,7 @@ const UsersSection = observer(() => {
     }
   };
 
-
-  const openEdit = u => {
+  const openEdit = (u) => {
     setSelectedUser(u);
     setModalEditOpen(true);
   };
@@ -94,7 +90,7 @@ const UsersSection = observer(() => {
     setModalEditOpen(false);
     setSelectedUser(null);
   };
-  const openDelete = u => {
+  const openDelete = (u) => {
     setSelectedUser(u);
     setModalDeleteOpen(true);
   };
@@ -114,7 +110,16 @@ const UsersSection = observer(() => {
       isRemindEnabled: current.isRemindEnabled,
     };
     Object.entries(changes).forEach(([k, v]) => {
-      if (k === 'teamId') {
+    if (k === "teamId") {
+      p.student.current_team_id = v;
+    } else if (k === "current_track_id") {
+      p.student.current_track_id = v;
+    } else {
+      p[k] = v;
+    }
+  });
+    Object.entries(changes).forEach(([k, v]) => {
+      if (k === "teamId") {
         p.student.current_team_id = v;
       } else {
         p[k] = v;
@@ -129,7 +134,7 @@ const UsersSection = observer(() => {
     return p;
   };
 
-  const handleSave = async formData => {
+  const handleSave = async (formData) => {
     if (!selectedUser) return;
     const payload = buildPayload(selectedUser, formData);
     await authStore.updateUser(payload);
@@ -143,7 +148,13 @@ const UsersSection = observer(() => {
 
   if (loading) return <Loader />;
   if (error)
-    return <ErrorModal title="Упс" message={error} onClose={() => authStore.setError(null)} />;
+    return (
+      <ErrorModal
+        title="Упс"
+        message={error}
+        onClose={() => authStore.setError(null)}
+      />
+    );
 
   return (
     <div className={styles.container}>
@@ -155,19 +166,17 @@ const UsersSection = observer(() => {
               type="text"
               placeholder="ФИО или почта…"
               value={search}
-              onChange={e => setSearch(e.target.value)}
+              onChange={(e) => setSearch(e.target.value)}
             />
           </div>
           <div className={styles.controlBlock}>
             <label>Роль:</label>
             <select
-              value={filters.role || ''}
-              onChange={e =>
-                updateFiltersHandler({ role: e.target.value })
-              }
+              value={filters.role || ""}
+              onChange={(e) => updateFiltersHandler({ role: e.target.value })}
             >
               <option value="">Все</option>
-              {roles.map(r => (
+              {roles.map((r) => (
                 <option key={r.name} value={r.name}>
                   {r.name}
                 </option>
@@ -177,15 +186,15 @@ const UsersSection = observer(() => {
           <div className={styles.controlBlock}>
             <label>Трек:</label>
             <select
-              value={filters.trackId ?? ''}
-              onChange={e =>
+              value={filters.trackId ?? ""}
+              onChange={(e) =>
                 updateFiltersHandler({
                   trackId: +e.target.value || null,
                 })
               }
             >
               <option value="">Все</option>
-              {tracks.map(t => (
+              {tracks.map((t) => (
                 <option key={t.id} value={t.id}>
                   {t.name}
                 </option>
@@ -194,39 +203,48 @@ const UsersSection = observer(() => {
           </div>
           <button
             className={styles.exportButton}
-            onClick={() => handleExport('csv')}
+            onClick={() => handleExport("csv")}
           >
             📥 CSV
           </button>
           <button
             className={styles.exportButton}
-            onClick={() => handleExport('xlsx')}
+            onClick={() => handleExport("xlsx")}
           >
             📥 Excel
           </button>
         </div>
 
-
         <div className={styles.tableContainer}>
           <DataTable
             columns={[
-              { key: 'id', title: 'ID' },
-              { key: 'fio', title: 'ФИО' },
-              { key: 'email', title: 'Email' },
-              { key: 'role', title: 'Роль' },
+              { key: "id", title: "ID" },
+              { key: "fio", title: "ФИО" },
+              { key: "email", title: "Email" },
               {
-                key: 'current_team_name',
-                title: 'Команда',
-                render: (_, u) => u.student?.current_team_name || '—',
+                key: "current_track_id",
+                title: "Трек",
+                render: (_, u) => {
+                  const trackId = u.student?.current_track_id;
+                  if (!trackId) return "—";
+                  const track = tracks.find((t) => t.id === trackId);
+                  return track ? track.name : "—";
+                },
+              },
+              { key: "role", title: "Роль" },
+              {
+                key: "current_team_name",
+                title: "Команда",
+                render: (_, u) => u.student?.current_team_name || "—",
               },
               {
-                key: 'is_enabled',
-                title: 'Активен',
-                render: (_, u) => (u.is_enabled ? '✅' : '❌'),
+                key: "is_enabled",
+                title: "Активен",
+                render: (_, u) => (u.is_enabled ? "✅" : "❌"),
               },
               {
-                key: 'actions',
-                title: '✏️',
+                key: "actions",
+                title: "✏️",
                 render: (_, u) => (
                   <>
                     <button onClick={() => openEdit(u)}>✏️</button>
@@ -240,13 +258,16 @@ const UsersSection = observer(() => {
 
         <div className={styles.pagination}>
           <button
-            onClick={() => updateFiltersHandler({ page: Math.max(0, filters.page - 1) })}
+            onClick={() =>
+              updateFiltersHandler({ page: Math.max(0, filters.page - 1) })
+            }
             disabled={filters.page === 0}
           >
             ← Назад
           </button>
           <span>
-            Стр. {filters.page + 1} из {Math.max(1, Math.ceil(total / filters.size))}
+            Стр. {filters.page + 1} из{" "}
+            {Math.max(1, Math.ceil(total / filters.size))}
           </span>
           <button
             onClick={() => updateFiltersHandler({ page: filters.page + 1 })}
@@ -265,25 +286,35 @@ const UsersSection = observer(() => {
             fio: selectedUser.fio,
             email: selectedUser.email,
             role: selectedUser.role,
-            teamId: selectedUser.student?.current_team_id || '',
+            teamId: selectedUser.student?.current_team_id || "",
+            current_track_id: selectedUser.student?.current_track_id || "",
             is_enabled: selectedUser.is_enabled,
           }}
           fields={[
-            { name: 'fio', label: 'ФИО', type: 'text' },
-            { name: 'email', label: 'Почта', type: 'email' },
+            { name: "fio", label: "ФИО", type: "text" },
+            { name: "email", label: "Почта", type: "email" },
             {
-              name: 'role',
-              label: 'Роль',
-              type: 'select',
-              options: roles.map(r => ({ value: r.name, label: r.name })),
+              name: "role",
+              label: "Роль",
+              type: "select",
+              options: roles.map((r) => ({ value: r.name, label: r.name })),
             },
             {
-              name: 'teamId',
-              label: 'Команда',
-              type: 'select',
-              options: teams.map(t => ({ value: t.id, label: t.name })),
+              name: "current_track_id", 
+              label: "Трек",
+              type: "select",
+              options: trackStore.tracks.map((t) => ({
+                value: t.id, 
+                label: t.name,
+              })),
             },
-            { name: 'is_enabled', label: 'Активен', type: 'checkbox' },
+            {
+              name: "teamId",
+              label: "Команда",
+              type: "select",
+              options: teams.map((t) => ({ value: t.id, label: t.name })),
+            },
+            { name: "is_enabled", label: "Активен", type: "checkbox" },
           ]}
           onSave={handleSave}
           onCancel={closeEdit}

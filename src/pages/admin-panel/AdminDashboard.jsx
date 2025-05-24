@@ -19,12 +19,14 @@ import TeamsSection from "./TeamsSection";
 import ApplicationsSection from "./ApplicationsSection";
 import TracksSection from "./TracksSection";
 import StatisticsSection from "./StatisticsSection";
+import TeamOptionsSection from "./TeamOptionsSection";
 const sidebarItems = [
   { name: 'Пользователи', icon: '👥' },
   { name: 'Команды', icon: '👤' },
   { name: 'Заявки', icon: '✉️' },
   { name: 'Треки', icon: '📄' },
   { name: 'Статистика', icon: '📊' },
+  { name: 'Типы проектов и технологии', icon: '⚙️' },
 ];
 
 const AdminDashboard = observer(() => {
@@ -37,6 +39,7 @@ const AdminDashboard = observer(() => {
       case 'Заявки':       return <ApplicationsSection />;
       case 'Треки':        return <TracksSection />;
       case 'Статистика':   return <StatisticsSection />;
+      case 'Типы проектов и технологии': return <TeamOptionsSection/>;
       default: return null;
     }
   };

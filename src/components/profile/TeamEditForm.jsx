@@ -23,7 +23,7 @@ const TeamEditForm = ({
       projectType: teamData.projectType || null,
       studentIds: teamData.students?.map((s) => s.id) || [],
       current_track_id: teamData.current_track,
-      captain_id: teamData.captain.id,
+      captain_id: teamData.captain?.id,
     });
   }, [teamData]);
 
@@ -138,7 +138,7 @@ const TeamEditForm = ({
           >
             <option value="">-- Выберите капитана --</option>
             {teamData.students?.map((student) => (
-              <option key={student.id} value={student.id}>
+              <option key={student?.id} value={student?.id}>
                 {student.user.fio}
               </option>
             ))}

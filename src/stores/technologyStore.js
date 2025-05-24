@@ -1,6 +1,5 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import TechnologyService from "../service/technologyService";
-
 class TechnologyStore {
   technologies = [];
   loading = false;
@@ -20,7 +19,45 @@ class TechnologyStore {
       });
     } catch (err) {
       runInAction(() => {
-        this.error = err.message || "Ошибка при загрузке технологий";
+        this.error = err.message || 'Ошибка при загрузке технологий';
+      });
+    } finally {
+      runInAction(() => {
+        this.loading = false;
+      });
+    }
+  }
+
+  async createTechnology(name) {
+    this.loading = true;
+    this.error = null;
+    try {
+      const newTech = await TechnologyService.createTechnology(name);
+      runInAction(() => {
+        this.technologies.push(newTech);
+      });
+    } catch (err) {
+      runInAction(() => {
+        this.error = err.message || 'Ошибка при создании технологии';
+      });
+    } finally {
+      runInAction(() => {
+        this.loading = false;
+      });
+    }
+  }
+
+  async deleteTechnology(id) {
+    this.loading = true;
+    this.error = null;
+    try {
+      await TechnologyService.deleteTechnology(id);
+      runInAction(() => {
+        this.technologies = this.technologies.filter(t => t.id !== id);
+      });
+    } catch (err) {
+      runInAction(() => {
+        this.error = err.message || 'Ошибка при удалении технологии';
       });
     } finally {
       runInAction(() => {

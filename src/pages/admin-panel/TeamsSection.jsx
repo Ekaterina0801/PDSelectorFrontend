@@ -13,6 +13,8 @@ import TeamEditModalAdmin from "./TeamEditFormAdmin";
 import authStore from "../../stores/authStore";
 import { Link } from "react-router-dom";
 import studentStore from "../../stores/studentStore";
+import projectTypeStore from "../../stores/projectTypeStore";
+import technologyStore from "../../stores/technologyStore";
 
 const TeamsSection = observer(() => {
   const {
@@ -32,6 +34,8 @@ const TeamsSection = observer(() => {
 
   const { tracks } = trackStore;
   const { users } = authStore;
+  const { projectTypes } = projectTypeStore;
+  const { technologies } = technologyStore;
 
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("id,asc");
@@ -45,6 +49,8 @@ const TeamsSection = observer(() => {
   useEffect(() => {
     trackStore.fetchTracks();
     authStore.fetchUsers();
+    projectTypeStore.fetchProjectTypes();
+    technologyStore.fetchTechnologies();
   }, []);
 
   useEffect(() => {
@@ -111,13 +117,10 @@ const TeamsSection = observer(() => {
   };
 
   if (loading) return <Loader />;
-  console.log("teamStore.allFilters", teamStore.allFilters);
-  if (error) return (
-    <ErrorModal
-      message={error}
-      onClose={() => teamStore.setError(null)}
-    />
-  );
+  if (error)
+    return (
+      <ErrorModal message={error} onClose={() => teamStore.setError(null)} />
+    );
 
   console.log("currTeam", currentTeam);
   return (
@@ -289,10 +292,7 @@ const TeamsSection = observer(() => {
                 className={styles.memberAvatar}
               />
               <div className={styles.memberDetails}>
-                <Link
-                  to={`/students/${m.user.id}`}
-                  className={styles.memberName}
-                >
+                <Link to={`/students/${m.id}`} className={styles.memberName}>
                   {m.user.fio}
                 </Link>
                 <p className={styles.memberMeta}>
@@ -314,19 +314,30 @@ const TeamsSection = observer(() => {
       )}
 
       {currentTeam && (
-        <TeamEditModalAdmin
-          show
-          onClose={clearCurrentTeam}
-          onSave={async (data) => {
-            await updateTeam(data);
-            clearCurrentTeam();
-          }}
-          team={currentTeam}
-          technologies={allFilters.technologies || []}
-          tracks={tracks}
-          projectTypes={allFilters.projectTypes || []}
-          students={users}
-        />
+        <>
+          <TeamEditModalAdmin
+            show
+            onClose={clearCurrentTeam}
+            onSave={async (data) => {
+              await updateTeam(data);
+              if (!teamStore.error) {
+                clearCurrentTeam();
+              }
+            }}
+            team={currentTeam}
+            technologies={technologies || []}
+            tracks={tracks}
+            projectTypes={projectTypes || []}
+            students={users}
+          />
+          {teamStore.error && (
+            <ErrorModal
+              title="Ошибка при сохранении"
+              message={teamStore.error}
+              onClose={() => teamStore.setError(null)}
+            />
+          )}
+        </>
       )}
     </>
   );

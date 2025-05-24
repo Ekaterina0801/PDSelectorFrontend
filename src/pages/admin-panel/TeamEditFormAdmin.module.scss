@@ -86,8 +86,8 @@
     border-radius: 50%;
     color: ui.$color-primary;
     font-size: ui.$font-size-base;
-    display: flex;           /* Включаем flex-контейнер */
-    justify-content: center; /* Центрирование по горизонтали */
+    display: flex;           
+    justify-content: center; 
     align-items: center; 
   }
   
@@ -128,9 +128,10 @@
     }
   }
   
-  /* Кнопка добавления */
+
   .addMemberBtn {
     margin-top: ui.$spacing-md;
+    color: ui.$color-white;
     width: 2.5rem;
     height: 2.5rem;
     background: ui.$color-primary;

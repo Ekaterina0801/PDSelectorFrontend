@@ -1,7 +1,5 @@
 import { makeAutoObservable, observable, action, runInAction, computed } from 'mobx';
 import StudentService from '../service/studentService';
-import authStore from './authStore';
-import { isCancel } from 'axios';
 
 class StudentStore {
   students = [];
@@ -25,10 +23,7 @@ class StudentStore {
 
     try {
       const data = await StudentService.fetchStudents(params);
-      console.log('studentsData', data);
       const filters = await StudentService.fetchFilterParamsByTrackId(params.trackId);
-      console.log('filters', filters);
-
       runInAction(() => {
         this.students = data.content;
         this.allFilters = filters;
@@ -69,7 +64,6 @@ class StudentStore {
     this.error = null;
 
     try {
-      console.log('CREATEDATA', studentData);
       const newStudent = await StudentService.createStudent(trackId, studentData);
       runInAction(() => {
         this.students.push(newStudent);
@@ -181,6 +175,10 @@ class StudentStore {
 
   clearStudent() {
     this.student = null;
+  }
+
+  setError(error) {
+    this.error = error;
   }
 }
 
