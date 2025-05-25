@@ -1,5 +1,6 @@
 import React from 'react';
 import base from '@/components/card/BaseCard.module.scss'
+import {API_BASE_URL} from "../../../api/apiController"
 
 import styles from './StudentCard.module.scss';
 
@@ -9,13 +10,14 @@ export default function StudentCard({
   course,
   aboutSelf,
   technologies = [],
-  profileLink
+  profileLink,
+  idUser
 }) {
   return (
     <div className={`${base.card} ${styles.studentCard}`}>
       <div className={styles.header}>
         <img
-          src="/images/placeholder2.png"
+          src={`${API_BASE_URL}/users/${idUser}/photo`}
           alt={name}
           className={styles.avatar}
           onError={e => { (e.target).src = '/images/placeholder2.png'; }}

@@ -129,19 +129,6 @@
   color: ui.$color-primary;
 }
 
-.teamsGrid {
-    display: grid;
-    gap: ui.$spacing-md;
-    grid-template-columns: 2fr;
-    justify-content: center;
-    justify-items: center;
-    width:100%;
-    //max-width:1200px;
-  
-    @include ui.respond-to (sm) {
-      grid-template-columns: 1fr;
-    }
-  }
 
 
 /* ------------------------------------------------------------------
@@ -149,14 +136,29 @@
 -------------------------------------------------------------------*/
 .teamsGrid,
 .studentsGrid {
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
   gap: ui.$spacing-md;
+  justify-content: center; // Центрируем все элементы
 
-  // Автоподбор числа колонок: min ширина 280px, макс — равномерно распределить
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  // Базовые стили для дочерних элементов
+  > * {
+    // Для обычных десктопов: 3 колонки
+    flex: 1 0 calc(33.333% - ui.$spacing-md * 2/3);
+    min-width: 280px;
+    //max-height: 500px;
+    // <=1024px
+    @include ui.respond-to(lg) {
+      flex-basis: calc(33.333% - ui.$spacing-md * 2/3);
+      min-width: 240px;
+    }
 
-  // Выравнить все карточки по верху
-  align-items: start;
+    // <=768px
+    @include ui.respond-to(md) {
+      flex-basis: 100%;
+      min-width: 0;
+    }
+  }
 }
 
 /* ------------------------------------------------------------------
@@ -347,10 +349,8 @@
   }
 
   .teamsGrid {
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: ui.$spacing-lg;
-    width:1200px;
-
+    min-width: 980px;
+    flex-grow: 1;
   }
 
   .successMessage,
@@ -392,19 +392,30 @@ margin-top: 1.5rem;
 
 
 .trackGroup {
-background-color: #f9f9f9; /* светло-серый фон для визуального разделения \*/
-border-radius: 8px;
-padding: 1rem;
-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #f9f9f9; /* светло-серый фон для визуального разделения \*/
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.comandState {
+  margin-bottom: ui.$spacing-lg;
+  font-size: ui.$font-size-2xl;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+}
 
 .trackTitle {
-font-size: 1.25rem;
-font-weight: 600;
-margin-bottom: 0.75rem;
-color: #333;
-text-align: center;
+  font-size: ui.$font-size-base;
+  font-weight: 600;
+  //margin-top: ui.$spacing-lg;
+  color: #333;
+  text-align: center;
+}
+
+.cardWithTrack{
+  margin-bottom: ui.$spacing-lg;
 }
 
 

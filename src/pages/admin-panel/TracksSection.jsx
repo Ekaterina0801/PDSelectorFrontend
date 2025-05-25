@@ -6,6 +6,8 @@ import Loader from "../../components/spinner/Loader";
 import trackStore from "../../stores/trackStore";
 import TrackEditModal from "./TrackEditModal";
 import ErrorModal from "../../components/error-display/ErrorDisplay";
+import SuccessMessage from '../../components/successMessage/SuccessMessage';
+import useSuccessMessage from '../../hooks/useSuccessMessage';
 const TracksSection = observer(() => {
   const {
     tracks,
@@ -19,6 +21,8 @@ const TracksSection = observer(() => {
     deleteTrack,
     clearTrack,
   } = trackStore;
+
+  const { successMessage, showSuccessMessage } = useSuccessMessage();
 
   const [search, setSearch] = useState('');
   const [sort, setSort]     = useState('id,asc');
@@ -86,6 +90,8 @@ const TracksSection = observer(() => {
 
   return (
     <>
+      {!!successMessage && <SuccessMessage message={successMessage} />}
+
       <div className={styles.sortPaginationControls}>
         <div className={styles.controlBlock}>
           <label>По названию:</label>
@@ -139,6 +145,7 @@ const TracksSection = observer(() => {
                 );
                 if (confirmed) {
                   deleteTrack(t.id);
+                  showSuccessMessage(`Трек "${t.name}" удален успешно`);
                 }
               }}
             >
@@ -165,6 +172,7 @@ const TracksSection = observer(() => {
           clearTrack();
           setCreating(false);
           await fetchTracks();
+          showSuccessMessage(`Изменения сохранены`);
         }}
       />
     </>
