@@ -74,6 +74,7 @@ const StudentsPage = observer(() => {
             course={s.course}
             technologies={s.technologies}
             profileLink={`/students/${s.id}`}
+            idUser={s.user?.id}
           />
         ))}
       </div>

@@ -9,8 +9,9 @@ import trackStore from "../../stores/trackStore";
 import ModalForm from "../../components/profile/ModalForm";
 import ErrorModal from "../../components/error-display/ErrorDisplay";
 import StudentService from "../../service/studentService";
+import SuccessMessage from '../../components/successMessage/SuccessMessage';
+import useSuccessMessage from '../../hooks/useSuccessMessage';
 import { saveAs } from "file-saver";
-
 const UsersSection = observer(() => {
   const {
     users,
@@ -24,6 +25,7 @@ const UsersSection = observer(() => {
   } = authStore;
   const { teams } = teamStore;
   const { tracks } = trackStore;
+  const { successMessage, showSuccessMessage } = useSuccessMessage();
 
   const [search, setSearch] = useState(filters.fio || "");
   const [modalEditOpen, setModalEditOpen] = useState(false);
@@ -139,6 +141,7 @@ const UsersSection = observer(() => {
     const payload = buildPayload(selectedUser, formData);
     await authStore.updateUser(payload);
     closeEdit();
+    showSuccessMessage(`Изменения сохранены`);
   };
   const handleDelete = async () => {
     if (!selectedUser) return;
@@ -158,6 +161,8 @@ const UsersSection = observer(() => {
 
   return (
     <div className={styles.container}>
+      {!!successMessage && <SuccessMessage message={successMessage} />}
+
       <main className={styles.content}>
         <div className={styles.sortPaginationControls}>
           <div className={styles.controlBlock}>

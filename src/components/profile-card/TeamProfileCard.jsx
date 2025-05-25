@@ -5,6 +5,8 @@ import authStore from "../../stores/authStore";
 import { useApplicationActions } from "../../hooks/useApplicationActions";
 import applicationStore from "../../stores/applicationStore";
 import Loader from "../spinner/Loader";
+import {API_BASE_URL} from "../../api/apiController"
+
 const STATUS_LABELS = {
   sent:      'Заявка отправлена',
   accepted:  'Заявка принята',
@@ -111,7 +113,8 @@ const TeamProfileCard = observer(({
           <h3 className={styles.sectionTitle}>Капитан команды</h3>
           <div className={styles.captainCard}>
             <img
-              src={team.captain?.avatarUrl || '/images/placeholder2.png'}
+              src ={`${API_BASE_URL}/users/${team.captain?.user.id}/photo`}
+              //src={team.captain?.avatarUrl || '/images/placeholder2.png'}
               alt="Аватар капитана"
               className={styles.captainAvatar}
             />

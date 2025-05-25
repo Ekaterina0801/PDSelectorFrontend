@@ -8,6 +8,7 @@ import ProfileCard from "../../components/card/profile-card/ProfileCard";
 import ProfileEditForm from "../../components/profile/ProfileEditForm";
 import ApplicationCard from "../../components/card/application-card/ApplicationCard";
 import useSuccessMessage from "../../hooks/useSuccessMessage";
+import SuccessMessage from '../../components/successMessage/SuccessMessage';
 import TeamForm from "../../components/forms/team-form/TeamForm";
 import { useNewTeam } from "../../hooks/useNewTeam";
 import Modal from "../../components/forms/modal/Modal";
@@ -27,6 +28,8 @@ import ErrorModal from "../../components/error-display/ErrorDisplay";
 import teamStore from "../../stores/teamStore";
 import trackStore from "../../stores/trackStore";
 import { groupBy } from "lodash";
+
+
 const sidebarItems = [
   { name: "Мои команды", icon: "👥" },
   { name: "Профиль", icon: "👤" },
@@ -34,6 +37,7 @@ const sidebarItems = [
 ];
 const StudentProfilePage = observer(() => {
   const { studentId } = useParams();
+
   const currentUserId = authStore.studentId;
   const isAdmin = authStore.isAdmin;
   const isOwnProfile = Number(studentId) === currentUserId;
@@ -43,7 +47,8 @@ const StudentProfilePage = observer(() => {
   const [isCreatingTeam, setIsCreatingTeam] = useState(false);
 
   const { student, loading, error: studentError } = studentStore;
-  const { successMessage } = useSuccessMessage();
+  const { successMessage, showSuccessMessage } = useSuccessMessage();
+
   const { showModal, toggleModal } = useModal();
 
   const {
@@ -80,6 +85,7 @@ const groupTeamsByTrack = (teams) => {
     async (data) => {
       await studentStore.updateStudent(data, studentId);
       stopEditing();
+      showSuccessMessage(`Изменения сохранены`);
     },
     [studentId, stopEditing]
   );
@@ -166,9 +172,9 @@ const renderMyTeams = () => {
         </button>
       )}
       {/* Блок текущей команды */}
-      <h3 className={styles.trackTitle}>Текущая команда</h3>
+      <h3 className={styles.comandState}>Текущая команда</h3>
       {current ? (
-        <div className={styles.currentTeamCard}>
+        <div className={styles.cardWithTrack}>
           <p className={styles.trackTitle}>
             Трек:{' '}
             {(() => {
@@ -193,13 +199,16 @@ const renderMyTeams = () => {
       )}
 
       {/* Блок старых команд */}
-      <h3 className={styles.trackTitle}>Старые команды</h3>
+      <h3 className={styles.comandState}>Старые команды</h3>
       {oldTeams.length ? (
         <div className={styles.teamsGrid}>
           {oldTeams.map(t => {
             const track = trackStore.tracks.find(tr => tr.id === t.current_track);
             return (
-              <div key={t.id}>
+              <div key={t.id} className={styles.cardWithTrack}>
+                <p className={styles.trackTitle}>
+                  Трек: {track ? track.name : '—'}
+                </p>
                 <TeamCard
                   name={t.name}
                   type={t.project_type?.name}
@@ -207,9 +216,6 @@ const renderMyTeams = () => {
                   technologies={t.technologies}
                   profileLink={`/teams/${t.id}`}
                 />
-                <p className={styles.trackTitle}>
-                  Трек: {track ? track.name : '—'}
-                </p>
               </div>
             );
           })}
@@ -263,9 +269,7 @@ const renderMyTeams = () => {
       <Navbar />
 
       <MainContent>
-        {successMessage && (
-          <div className={styles.successMessage}>{successMessage}</div>
-        )}
+      {!!successMessage && <SuccessMessage message={successMessage} />}
 
         <div className={styles.container}>
           {(isOwnProfile || isAdmin) && (

@@ -122,15 +122,13 @@ const TrackEditModal = observer(({ show, track, onClose, onSave }) => {
           </label>
   
           <label className={styles.field}>
-          Тип обучения
-          <select value={type} onChange={e => setType(e.target.value)}>
-            {Object.entries(typeLabels).map(([val, label]) => (
-              <option key={val} value={val}>
-                {label}
-              </option>
-            ))}
-          </select>
-        </label>
+            Тип обучения
+            <select value={type} onChange={e => setType(e.target.value)}>
+              <option value="bachelor">bachelor</option>
+              <option value="master">master</option>
+              <option value="phd">phd</option>
+            </select>
+          </label>
   
           <div className={styles.actions}>
             <button

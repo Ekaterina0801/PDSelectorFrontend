@@ -15,6 +15,9 @@ import { Link } from "react-router-dom";
 import studentStore from "../../stores/studentStore";
 import projectTypeStore from "../../stores/projectTypeStore";
 import technologyStore from "../../stores/technologyStore";
+import SuccessMessage from '../../components/successMessage/SuccessMessage';
+import useSuccessMessage from '../../hooks/useSuccessMessage';
+import {API_BASE_URL} from "../../api/apiController"
 
 const TeamsSection = observer(() => {
   const {
@@ -36,6 +39,7 @@ const TeamsSection = observer(() => {
   const { users } = authStore;
   const { projectTypes } = projectTypeStore;
   const { technologies } = technologyStore;
+  const { successMessage, showSuccessMessage } = useSuccessMessage();
 
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("id,asc");
@@ -114,6 +118,7 @@ const TeamsSection = observer(() => {
       await deleteTeam(teamToDelete.id);
       setTeamToDelete(null);
     }
+    showSuccessMessage(`Команда "${teamToDelete.name}" успешно удалена`);
   };
 
   if (loading) return <Loader />;
@@ -125,6 +130,7 @@ const TeamsSection = observer(() => {
   console.log("currTeam", currentTeam);
   return (
     <>
+      {!!successMessage && <SuccessMessage message={successMessage} />}
       <div className={styles.sortPaginationControls}>
         <div className={styles.controlBlock}>
           <label>Трек:</label>
@@ -287,7 +293,8 @@ const TeamsSection = observer(() => {
           {members.map((m) => (
             <div key={m.user.id} className={styles.memberCard}>
               <img
-                src={m.user.avatarUrl || "/images/placeholder2.png"}
+                src ={`${API_BASE_URL}/users/${m?.user.id}/photo`}
+                //src={m.user.avatarUrl || "/images/placeholder2.png"}
                 alt={m.user.fio}
                 className={styles.memberAvatar}
               />
@@ -323,6 +330,7 @@ const TeamsSection = observer(() => {
               if (!teamStore.error) {
                 clearCurrentTeam();
               }
+              showSuccessMessage(`Изменения сохранены`);
             }}
             team={currentTeam}
             technologies={technologies || []}

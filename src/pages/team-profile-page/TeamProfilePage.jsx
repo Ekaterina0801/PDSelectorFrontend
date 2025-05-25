@@ -3,7 +3,8 @@ import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import { useParams } from "react-router-dom";
 import ApplicationCard from "../../components/card/application-card/ApplicationCard";
-import useSuccessMessage from "../../hooks/useSuccessMessage";
+import useSuccessMessage from '../../hooks/useSuccessMessage';
+import SuccessMessage from '../../components/successMessage/SuccessMessage';
 import TeamEditForm from "../../components/profile/TeamEditForm";
 import StudentCard from "../../components/card/student-card/StudentCard";
 import { observer } from "mobx-react-lite";
@@ -30,7 +31,7 @@ const TeamProfilePage = observer(() => {
   const [currentSection, setCurrentSection] = useState(sidebarItems[0].name)
   const [showEditForm, setShowEditForm]     = useState(false)
   const [localAppError, setLocalAppError]   = useState(null)
-  const { showSuccessMessage } = useSuccessMessage()
+  const { successMessage, showSuccessMessage } = useSuccessMessage();
 
   useEffect(() => {
     teamStore.clearTeam()
@@ -89,6 +90,7 @@ const TeamProfilePage = observer(() => {
               aboutSelf={s.about_self}
               technologies={s.technologies}
               profileLink={`/students/${s.id}`}
+              idUser={s.user?.id}
             />
           ))}
         </div>
@@ -114,6 +116,7 @@ const TeamProfilePage = observer(() => {
     <>
       <Navbar />
       <MainContent>
+      {!!successMessage && <SuccessMessage message={successMessage} />}
         {/* Ошибка операций по заявкам */}
         {localAppError && (
           <ErrorModal
