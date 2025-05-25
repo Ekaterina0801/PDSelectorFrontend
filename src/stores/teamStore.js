@@ -45,7 +45,7 @@ class TeamStore {
 
     try {
       const apiParams = {
-        input: params.searchTerm || undefined,
+        input: params.input || undefined,
         trackId: params.trackId || undefined,
         isFull: params.isFull ?? undefined,
         projectType: params.projectType || undefined,
@@ -54,6 +54,7 @@ class TeamStore {
         size: params.size,
         sort: params.sort
       };
+      console.log('fetchTeams params', apiParams);
 
       const cleanedParams = Object.fromEntries(
         Object.entries(apiParams).filter(([_, v]) => v !== undefined)

@@ -15,12 +15,13 @@ import { StudentFilter } from "../../components/forms/filters/StudentFilter";
 const StudentsPage = observer(() => {
   const { trackId, isLoading } = authStore;
   const { students, loading, error, filters } = studentStore;
-
-  const [page, setPage] = useState(0);
-  const [size] = useState(10);
-  const [sort, setSort] = useState('name,asc');
+  const initialInput = filters.input || ''
+  
+  const [page, setPage]   = useState(filters.page ?? 0)
+  const [sort, setSort]   = useState(filters.sort ?? 'name,asc')
+  const [input, setInput] = useState(filters.input ?? '')
   const [showMobileFilters, setShowMobileFilters] = useState(false);
-
+  const size = 10
   const loadData = useCallback(async () => {
     if (isLoading) return;
     const params = {...studentStore.filters,
@@ -36,12 +37,16 @@ const StudentsPage = observer(() => {
     loadData();
   }, [loadData]);
 
+  useEffect(() => {
+      setPage(0)
+      studentStore.setFilters({ ...studentStore.filters, page: 0 })
+    }, [trackId])
+
   const handleApplyFilters = useCallback(async (newFilters) => {
-    studentStore.setFilters({ ...studentStore.filters, ...newFilters, trackId });
+    const params = { ...studentStore.filters, ...newFilters, trackId, page: 0, size, sort };
+    studentStore.setFilters(params);
     setPage(0);
     setShowMobileFilters(false);
-    const params = { ...studentStore.filters, ...newFilters, trackId, page: 0, size, sort };
-    await studentStore.fetchStudents(params);
     await studentStore.fetchFilters(trackId);
   }, [trackId, size, sort]);
 
@@ -79,7 +84,7 @@ const StudentsPage = observer(() => {
     <>
       <Navbar />
       <MainContent>
-        <SearchBar onSearch={handleSearch} />
+         <SearchBar onSearch={handleSearch} defaultValue={input} />
         <button
           className={styles.mobileFiltersButton}
           onClick={() => setShowMobileFilters(true)}

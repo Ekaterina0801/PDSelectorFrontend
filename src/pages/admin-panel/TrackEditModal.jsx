@@ -2,6 +2,12 @@ import Modal from "../../components/forms/modal/Modal"
 import { observer } from "mobx-react"
 import styles from "./TrackEditModal.module.scss";
 import { useState, useEffect } from "react";
+
+const typeLabels = {
+  bachelor: "Бакалавриат",
+  master:   "Магистратура",
+}
+
 const TrackEditModal = observer(({ show, track, onClose, onSave }) => {
     const [name,        setName]        = useState('');
     const [startDate,   setStartDate]   = useState('');
@@ -12,11 +18,9 @@ const TrackEditModal = observer(({ show, track, onClose, onSave }) => {
     const [minConstraint, setMinConstraint] = useState(3);
     const [type, setType] = useState('bachelor');
   
-    // инициализация полей
     useEffect(() => {
       if (!track) return;
       setName(track.name || '');
-      // даты
       if (Array.isArray(track.startDate)) {
         const [Y, M, D] = track.startDate;
         setStartDate(new Date(Y, M - 1, D).toISOString().slice(0, 10));
@@ -118,13 +122,15 @@ const TrackEditModal = observer(({ show, track, onClose, onSave }) => {
           </label>
   
           <label className={styles.field}>
-            Тип обучения
-            <select value={type} onChange={e => setType(e.target.value)}>
-              <option value="bachelor">bachelor</option>
-              <option value="master">master</option>
-              <option value="phd">phd</option>
-            </select>
-          </label>
+          Тип обучения
+          <select value={type} onChange={e => setType(e.target.value)}>
+            {Object.entries(typeLabels).map(([val, label]) => (
+              <option key={val} value={val}>
+                {label}
+              </option>
+            ))}
+          </select>
+        </label>
   
           <div className={styles.actions}>
             <button

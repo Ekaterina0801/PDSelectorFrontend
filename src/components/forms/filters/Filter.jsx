@@ -17,6 +17,7 @@ const Filter = ({ availableFilters, currentFilters, onApply }) => {
     projectType: [],
     technologies: []
   });
+  console.log("availableFilters", availableFilters);
 
   const { projectTypes = [], technologies: allTechnologies = [] } = useMemo(
     () => availableFilters,

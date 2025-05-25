@@ -75,12 +75,13 @@ const TeamEditModalAdmin = observer(({
   }));
 
   const handleSubmit = () => {
+    console.log('team', team);
     onSave({
       id:                 team.id,
       name,
-      project_description:"",
+      project_description: team.project_description || "",
       project_type:       { id: +projectType },
-      technologies:       [],
+      technologies:       team.technologies || [],
       captain_id:         +captain,
       studentIds:         teamMembers.filter(Boolean).map(id=>+id),
       current_track_id:   +track

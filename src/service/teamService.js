@@ -3,13 +3,14 @@ import requests from "../agent";
 
 
 export const TeamService = {
-  fetchTeams: ({ input, trackId, isFull, projectType, technologies }) => {
+  fetchTeams: ({ input, trackId, isFull, projectType, technologies, sort }) => {
     const queryParams = [];
   
     if (input) queryParams.push(`input=${encodeURIComponent(input)}`);
     if (trackId) queryParams.push(`track_id=${encodeURIComponent(trackId)}`);
     if (isFull !== undefined) queryParams.push(`is_full=${isFull}`);
     if (projectType) queryParams.push(`project_type=${encodeURIComponent(projectType)}`);
+    if (sort) queryParams.push(`sort=${encodeURIComponent(sort)}`);
     
     if (technologies?.length) {
 
@@ -18,11 +19,9 @@ export const TeamService = {
     }
   
     const queryString = queryParams.length ? `?${queryParams.join('&')}` : '';
-    console.log("API Request:", queryString);
     
     return requests.get(`/teams/search${queryString}`)
       .then(data => {
-        console.log("API Response:", data);
         return data;
       })
       .catch(error => {

@@ -13,14 +13,19 @@ import styles from "./TeamsPage.module.scss";
 import ErrorDisplay from "../../components/error-display/ErrorDisplay";
 import NoDataDisplay from "../../components/nodata-display/NoDataDisplay";
 import ErrorModal from "../../components/error-display/ErrorDisplay";
-const TeamsPage = observer(() => {
+import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+export default observer(function TeamsPage() {
+  const navigate = useNavigate();
   const { trackId } = authStore;
   const { teams, loading, error, filters } = teamStore;
 
-  const [page, setPage] = useState(0);
-  const [size] = useState(10);
-  const [sort, setSort] = useState('name,asc');
+  const [page, setPage] = useState(() => filters.page ?? 0);
+  const [sort, setSort] = useState(() => filters.sort ?? "name,asc");
+  const [input, setInput] = useState(() => filters.input ?? "");
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+
+  const size = 10;
 
   const loadData = useCallback(async () => {
     await teamStore.fetchTeams({
@@ -30,76 +35,58 @@ const TeamsPage = observer(() => {
       size,
       sort,
     });
+    console.log("filters", teamStore.filters);
     await teamStore.fetchFilters(trackId);
-  }, [page, size, sort, trackId]);
+  }, [page, size, sort, trackId, location]);
 
   useEffect(() => {
     loadData();
   }, [loadData]);
 
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+    teamStore.setFilters({ ...filters, trackId, page: newPage });
+  };
 
-  const handleApplyFilters = useCallback(async (newFilters) => {
-    teamStore.setFilters(newFilters);
-    setPage(0);
-    setShowMobileFilters(false);
-
-    await teamStore.fetchTeams({ ...newFilters, page: 0, size, sort });
-    await teamStore.fetchFilters(newFilters.trackId);
-  }, [size, sort]);
-
-  const handleSearch = useCallback((term) => {
-    const updated = { ...filters, searchTerm: term, trackId };
-    handleApplyFilters(updated);
-  }, [filters, trackId, handleApplyFilters]);
-
-  const handlePageChange = (newPage) => setPage(newPage);
   const handleSortChange = (e) => {
-    setSort(e.target.value);
+    const val = e.target.value;
+    setSort(val);
     setPage(0);
+    teamStore.setFilters({ ...filters, trackId, sort: val, page: 0 });
   };
+
   const handleSortReset = () => {
-    setSort('name,asc');
+    setSort("name,asc");
     setPage(0);
+    teamStore.setFilters({ ...filters, trackId, sort: "name,asc", page: 0 });
   };
 
-  const renderTeams = () => {
-    if (loading) return <Loader />;
-    if (!loading && error) {
-      return (
-        <ErrorModal
-          message={error}
-          onClose={() => teamStore.setError(null)}
-        />
-      );
-    }
-    if (!teams.length) return <NoDataDisplay message="Команд нет" />;
-
-    return (
-      <div className={styles.teamsGrid}>
-        {teams.map(team => (
-          <TeamCard
-            key={team.id}
-            name={team.name}
-            projectType={team.project_type?.name || 'Не указано'}
-            description={team.project_description}
-            technologies={team.technologies || []}
-            profileLink={`/teams/${team.id}`}
-          />
-        ))}
-      </div>
-    );
+  const handleSearch = (term) => {
+    setInput(term);
+    setPage(0);
+    teamStore.setFilters({ ...filters, trackId, input: term, page: 0 });
   };
+
+  const handleApplyFilters = useCallback(
+    async (newFilters) => {
+      const params = { ...newFilters, trackId, page: 0, size, sort };
+      teamStore.setFilters(params);
+      setPage(0);
+      setShowMobileFilters(false);
+      await teamStore.fetchFilters(authStore.trackId);
+    },
+    [size, sort]
+  );
 
   return (
     <>
       <Navbar />
       <MainContent>
-        <SearchBar onSearch={handleSearch} />
+        <SearchBar defaultValue={input} onSearch={handleSearch} />
 
         <button
           className={styles.mobileFiltersButton}
           onClick={() => setShowMobileFilters(true)}
-          aria-label="Открыть фильтры"
         >
           <FaFilter size={18} /> Фильтры
         </button>
@@ -108,7 +95,7 @@ const TeamsPage = observer(() => {
           <aside className={styles.filtersColumn}>
             <Filter
               availableFilters={teamStore.allFilters}
-              currentFilters={teamStore.filters}
+              currentFilters={filters}
               onApply={handleApplyFilters}
             />
           </aside>
@@ -117,39 +104,48 @@ const TeamsPage = observer(() => {
             <div className={styles.contentHeader}>
               <h1 className={styles.pageTitle}>Команды</h1>
               <div className={styles.sortControls}>
-                <label className={styles.sortLabel}>Сортировка:</label>
-                <select
-                  className={styles.sortSelect}
-                  value={sort}
-                  onChange={handleSortChange}
-                >
+                <label>Сортировка:</label>
+                <select value={sort} onChange={handleSortChange}>
                   <option value="name,asc">Имя (А-Я)</option>
                   <option value="name,desc">Имя (Я-А)</option>
-                  <option value="createdAt,asc">Дата создания (старые)</option>
-                  <option value="createdAt,desc">Дата создания (новые)</option>
                 </select>
-                <button
-                  className={styles.resetButton}
-                  onClick={handleSortReset}
-                >
-                  Сбросить
-                </button>
+                <button onClick={handleSortReset}>Сбросить</button>
               </div>
             </div>
 
-            {renderTeams()}
+            {loading ? (
+              <Loader />
+            ) : error ? (
+              <ErrorModal
+                message={error}
+                onClose={() => teamStore.setError(null)}
+              />
+            ) : !teams.length ? (
+              <NoDataDisplay message="Команд нет" />
+            ) : (
+              <div className={styles.teamsGrid}>
+                {teams.map((team) => (
+                  <TeamCard
+                    key={team.id}
+                    name={team.name}
+                    projectType={team.project_type?.name || "Не указано"}
+                    description={team.project_description}
+                    technologies={team.technologies || []}
+                    profileLink={`/teams/${team.id}`}
+                  />
+                ))}
+              </div>
+            )}
 
             <div className={styles.paginationControls}>
               <button
-                className={styles.paginationButton}
                 onClick={() => handlePageChange(page - 1)}
                 disabled={page === 0}
               >
                 Назад
               </button>
-              <span className={styles.pageIndicator}>Страница {page + 1}</span>
+              <span>Страница {page + 1}</span>
               <button
-                className={styles.paginationButton}
                 onClick={() => handlePageChange(page + 1)}
                 disabled={teams.length < size}
               >
@@ -159,33 +155,24 @@ const TeamsPage = observer(() => {
           </section>
         </div>
 
-        <div
-          className={
-            [
-              styles.filtersModal,
-              showMobileFilters && styles.filtersModalOpen,
-            ]
-              .filter(Boolean)
-              .join(' ')
-          }
-        >
-          <div className={styles.filtersModalContent}>
-            <button
-              className={styles.filtersModalClose}
-              onClick={() => setShowMobileFilters(false)}
-            >
-              <FaTimes size={16} />
-            </button>
-            <Filter
-              availableFilters={teamStore.allFilters}
-              currentFilters={teamStore.filters}
-              onApply={handleApplyFilters}
-            />
+        {showMobileFilters && (
+          <div className={styles.filtersModal}>
+            <div className={styles.filtersModalContent}>
+              <button
+                className={styles.filtersModalClose}
+                onClick={() => setShowMobileFilters(false)}
+              >
+                <FaTimes />
+              </button>
+              <Filter
+                availableFilters={teamStore.allFilters}
+                currentFilters={filters}
+                onApply={handleApplyFilters}
+              />
+            </div>
           </div>
-        </div>
+        )}
       </MainContent>
     </>
   );
 });
-
-export default TeamsPage;

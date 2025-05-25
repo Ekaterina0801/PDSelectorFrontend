@@ -176,6 +176,7 @@ class StudentStore {
 
   setFilters(newFilters) {
     const parsedFilters = {
+      ...(newFilters.input && { input: newFilters.input }),
       ...(newFilters.trackId && { trackId: newFilters.trackId }),
       ...(newFilters.technologies && { technologies: newFilters.technologies.map(t => t.id || t) }),
       ...(newFilters.hasTeam !== undefined && { hasTeam: newFilters.hasTeam }),

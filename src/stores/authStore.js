@@ -125,8 +125,6 @@ class AuthStore {
         this.studentId = student;
         this.authStudent = studentData;
         this.isAdmin = user.role === "ADMIN";
-        console.log("user", user);
-        console.log('isAdmin', this.isAdmin);
         commonStore.loadToken();
       });
     } catch (err) {
@@ -154,7 +152,6 @@ class AuthStore {
     this.loading = true;
     this.error   = null;
     try {
-      // не передавать туда ничего лишнего:
       const cleaned = Object.fromEntries(
         Object.entries(dto).filter(([_, v]) => v != null)
       );
@@ -186,7 +183,6 @@ class AuthStore {
       await this.fetchUsers();
     } catch (err) {
       runInAction(() => {
-        console.log('errroooor');
         console.log(err);
          this.error = extractErrorMessage(err) || "Ошибка при удалении пользователя";
       });

@@ -26,7 +26,7 @@ const sidebarItems = [
 ];
 const TeamProfilePage = observer(() => {
   const { teamId } = useParams()
-  const { currentUser, isAdmin } = authStore
+  const { currentUser, isAdmin, studentId } = authStore
   const [currentSection, setCurrentSection] = useState(sidebarItems[0].name)
   const [showEditForm, setShowEditForm]     = useState(false)
   const [localAppError, setLocalAppError]   = useState(null)
@@ -42,9 +42,8 @@ const TeamProfilePage = observer(() => {
   const team       = teamStore.team
   const loading    = teamStore.loading
   const teamError  = teamStore.error
-  const isCaptain  = team?.captain?.id === currentUser?.id
+  const isCaptain  = team?.captain?.id === studentId
 
-  console.log('team', team)
   useEffect(() => {
     if (applicationStore.error) {
       setLocalAppError(applicationStore.error)

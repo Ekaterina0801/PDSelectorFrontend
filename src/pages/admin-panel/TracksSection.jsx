@@ -6,6 +6,11 @@ import Loader from "../../components/spinner/Loader";
 import trackStore from "../../stores/trackStore";
 import TrackEditModal from "./TrackEditModal";
 import ErrorModal from "../../components/error-display/ErrorDisplay";
+
+const typeLabels = {
+  bachelor: "Бакалавриат",
+  master:   "Магистратура",
+};
 const TracksSection = observer(() => {
   const {
     tracks,
@@ -73,7 +78,11 @@ const TracksSection = observer(() => {
     { key: 'minConstraint',             title: 'Min участников' },
     { key: 'maxConstraint',             title: 'Max участников' },
     { key: 'maxSecondCourseConstraint', title: 'Max 2-го курса' },
-    { key: 'type',                      title: 'Тип обучения' },
+    {
+      key: "type",
+      title: "Тип обучения",
+      render: (_, t) => typeLabels[t.type] || "—",
+    },
   ];
 
   if (loading) return <Loader />;

@@ -21,27 +21,19 @@ export function useApplicationActions({ type, teamId, studentId }) {
       }
     }, [teamId, studentId, type])
   
-    // достаём из стора
     const app     = applicationStore.getApplication(teamId, studentId)  
     const loading = applicationStore.getLoading   (teamId, studentId)
     const error   = applicationStore.getError     (teamId, studentId)
   
-    // приводим статус к строке
+
     const status = app?.status?.toLowerCase() || ''
   
-    // ролевая логика
+
     const currentUserId  = authStore.studentId
     const isCaptainView  = authStore.authStudent?.is_captain
-    //app?.team?.captainId === authStore.user?.id
+
     const isStudentView  = (currentUserId === studentId) && (teamId!==authStore.authStudent?.current_team?.id) &&(!authStore.authStudent?.current_team) && (authStore.authStudent?.current_track?.id) && (authStore.authStudent?.current_track?.id === teamStore.team?.current_track)
-    console.log('isCaptainView', isCaptainView)
-    console.log('isStudentView', isStudentView)
-    console.log('status', status)
-    console.log('app', app)
-    console.log('teamId', teamId)
-    console.log('studentId', studentId)
-    console.log('currentUserId', currentUserId)
-    console.log('type', type)
+    
 
   
     // универсальный метод для create/update
@@ -54,20 +46,17 @@ export function useApplicationActions({ type, teamId, studentId }) {
           updated = await applicationStore.updateApplication(payload)
         }
         showSuccessMessage(successMsg)
-        // обновляем локальный кэш
         runInAction(() => {
           applicationStore.applicationsByKey.set(key, updated)
         })
       } catch {
-        // error уже в сторе
       }
     }
   
     const actions = [];
 
   if (type === 'request') {
-    // === ЗАЯВКИ ===
-    // Капитан может принять/отклонить, если «sent»
+
     if (isCaptainView && status === 'sent') {
       actions.push({
         key: 'approve',
@@ -88,7 +77,6 @@ export function useApplicationActions({ type, teamId, studentId }) {
         )
       });
     }
-    // Студент может подать/отменить/подавать снова
     if (isStudentView ) {
       if (!status) {
         actions.push({
