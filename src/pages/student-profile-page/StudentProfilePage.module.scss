@@ -15,6 +15,7 @@
   @include ui.respond-to(lg) {
     display: none;
   }
+  max-width: 280px;
 }
 
 .contentColumn {
@@ -322,6 +323,42 @@
 .successMessage {
   text-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
+
+.trackGroupsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem; /* расстояние между группами \*/
+  margin-top: 1.5rem;
+  }
+  
+  
+  .trackGroup {
+    background-color: #f9f9f9; /* светло-серый фон для визуального разделения \*/
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .comandState {
+    margin-bottom: ui.$spacing-lg;
+    font-size: ui.$font-size-2xl;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+  }
+  
+  .trackTitle {
+    font-size: ui.$font-size-base;
+    font-weight: 600;
+    //margin-top: ui.$spacing-lg;
+    color: #333;
+    text-align: center;
+  }
+  
+  .cardWithTrack{
+    margin-bottom: ui.$spacing-lg;
+  }
+  
 @media (min-width: 2560px) {
   .container {
     padding-left: ui.$spacing-lg;
@@ -332,6 +369,8 @@
 
   .sidebarWrapper {
     @include ui.col(4);
+    max-width: 363px;
+
   }
 
   .contentColumn {
@@ -378,45 +417,17 @@
       font-size: ui.$font-size-2xl;
     }
   }
+  .comandState {
+    font-size: ui.$font-size-3xl;
+  }
   
+  .trackTitle {
+    font-size: ui.$font-size-2xl;
+  }
 }
 
 
 
-.trackGroupsContainer {
-display: flex;
-flex-direction: column;
-gap: 2rem; /* расстояние между группами \*/
-margin-top: 1.5rem;
-}
-
-
-.trackGroup {
-  background-color: #f9f9f9; /* светло-серый фон для визуального разделения \*/
-  border-radius: 8px;
-  padding: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.comandState {
-  margin-bottom: ui.$spacing-lg;
-  font-size: ui.$font-size-2xl;
-  font-weight: 600;
-  color: #333;
-  text-align: center;
-}
-
-.trackTitle {
-  font-size: ui.$font-size-base;
-  font-weight: 600;
-  //margin-top: ui.$spacing-lg;
-  color: #333;
-  text-align: center;
-}
-
-.cardWithTrack{
-  margin-bottom: ui.$spacing-lg;
-}
 
 
 

@@ -46,7 +46,6 @@ $color-pink:        #e83e8c !default;
 $color-teal:        #20c997 !default;
 $color-purple:      #6f42c1 !default;
 $color-purple-light: #d6bbf6 !default; // светлый оттенок purple
-$breakpoint-xs:  320px;
 
 // Тени
 $shadow-light:  0 4px 8px rgba(0,0,0,0.1);
@@ -81,6 +80,7 @@ $font-size-2xl: 1.5rem;
 $line-height-base: 1.5;
 
 // Точки останова
+$breakpoint-xs:  320px;
 $breakpoint-sm:  480px;
 $breakpoint-md:  768px;
 $breakpoint-lg: 1024px;

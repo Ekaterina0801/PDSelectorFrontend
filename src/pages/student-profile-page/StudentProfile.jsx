@@ -100,8 +100,8 @@ const groupTeamsByTrack = (teams) => {
         />
       );
     }
-
-    if (isOwnProfile && isEditing) {
+    
+    if ((isOwnProfile || isAdmin) && isEditing) {
       return (
         <ProfileEditForm
           studentData={student}
@@ -159,7 +159,7 @@ const renderMyTeams = () => {
 
   return (
     
-    <div>
+    <div className={styles.contentColumn}>
       {authStore.authStudent?.id===student?.id&&!student.current_team && (
         <button
           className={styles.createButton}

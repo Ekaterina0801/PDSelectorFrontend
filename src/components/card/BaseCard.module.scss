@@ -19,7 +19,6 @@
 }
 
 .card {
-
   display: flex;
   flex-direction: column;
   //height: 100%;
@@ -29,10 +28,8 @@
   border: 1px solid ui.$color-primary-light;
   overflow: hidden;
   transition: all 0.3s ease;
-  //width: 100%; // займет всю ширину родителя
-  //max-width: 1000px;
-  width:100%;
-  
+  width: 100%; // займет всю ширину родителя
+
   // === Header ===
   &-header {
     padding: ui.$spacing-lg;
@@ -115,23 +112,19 @@
     @include action-button();
     width: 100%;
   }
+}
 
-
-  @include ui.respond-to(lg) {
-    &-header   { padding: ui.$spacing-md; }
-    &-body     { padding: ui.$spacing-md; }
-    &-resume   { -webkit-line-clamp: 2; }
-    .action-button { font-size: 0.9rem; }
-  }
-
-
-  @include ui.respond-to(md) {
+@media (min-width: 320px) {.card {min-width: 300px;}}
+@media (min-width: 480px) {.card {min-width: 460px;}}
+@media (min-width: 768px) {
+  .card {
+    min-width: 748px;
     &-header   { padding: ui.$spacing-sm; }
     &-body     { padding: ui.$spacing-sm; }
     &-resume   {
-      -webkit-line-clamp: 3;     
-      font-size: 0.9rem;
-      max-height: calc(3 * 1.5em);
+    -webkit-line-clamp: 3;     
+    font-size: 0.9rem;
+    max-height: calc(3 * 1.5em);
     }
     &-name     { font-size: 1.25rem; }
     &-type     { font-size: 1rem; }
@@ -143,10 +136,20 @@
   }
 }
 
+@media (min-width: 1024px) {
+  .card {
+    min-width: 1004px;
+    &-header   { padding: ui.$spacing-md; }
+    &-body     { padding: ui.$spacing-md; }
+    &-resume   { -webkit-line-clamp: 2; }
+    .action-button { font-size: 0.9rem; }
+  } 
+}
+
 // === Адаптив для ультрашироких экранов (2560px+) ===
 @media (min-width: 2560px) {
   .card {
-    //width: 1200px; // Увеличиваем максимальную ширину карточки
+    width: 1200px; // Увеличиваем максимальную ширину карточки
     border-radius: ui.$radius-lg; // Используем увеличенный радиус скругления
     box-shadow: ui.$shadow-strong; // Более выраженная тень
 

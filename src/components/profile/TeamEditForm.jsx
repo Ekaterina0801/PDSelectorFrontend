@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Modal from "../forms/modal/Modal";
 import styles from "./TeamEditForm.module.scss";
 import teamStore from "../../stores/teamStore";
+import {toJS} from "mobx";
 const TeamEditForm = ({
   teamData,
   onSave,
@@ -15,7 +16,7 @@ const TeamEditForm = ({
     projectType: teamData.projectType || null,
   });
   const [showModal, setShowModal] = useState(false);
-  console.log("teamData", teamData);
+  console.log("teamData", toJS(teamData));
   useEffect(() => {
     setFormData({
       ...teamData,
@@ -36,7 +37,7 @@ const TeamEditForm = ({
     const id = e.target.value;
     setFormData((prev) => ({
       ...prev,
-      projectType: projectTypes.find((t) => Number(t.id) === Number(id)),
+      project_type: projectTypes.find((t) => Number(t.id) === Number(id)),
     }));
   };
 
@@ -50,7 +51,7 @@ const TeamEditForm = ({
   const toggleModal = () => setShowModal((prev) => !prev);
 
   const handleSave = () => {
-    console.log('Saving payload', formData);
+    console.log('Saving payload', toJS(formData));
     onSave(formData);
   };
 
@@ -95,14 +96,14 @@ const TeamEditForm = ({
               <li key={type.id} className={styles.projectTypeItem}>
                 <input
                   type="radio"
-                  id={`projectType-${type.id}`}
-                  name="projectType"
+                  id={`project_type-${type.id}`}
+                  name="project_type"
                   value={type.id}
-                  checked={formData.projectType?.id === type.id}
+                  checked={formData.project_type?.id === type.id}
                   onChange={handleProjectTypeChange}
                   className="sr-only"
                 />
-                <label htmlFor={`projectType-${type.id}`}>{type.name}</label>
+                <label htmlFor={`project_type-${type.id}`}>{type.name}</label>
               </li>
             ))}
           </ul>
@@ -132,7 +133,7 @@ const TeamEditForm = ({
         <label>
           Капитан команды:
           <select
-            name="captainId"
+            name="captain_id"
             value={formData.captain_id || ""}
             onChange={handleChange}
           >

@@ -18,6 +18,7 @@
   @include ui.respond-to(lg) {
     display: none;
   }
+  max-width: 280px;
 }
 
 .contentColumn {
@@ -158,7 +159,7 @@
 
   .sidebarWrapper {
     @include ui.col(3);
-    min-width: 400px;
+    max-width: 363px;
   }
 
   .pageTitle {

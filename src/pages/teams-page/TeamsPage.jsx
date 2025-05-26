@@ -109,7 +109,7 @@ export default observer(function TeamsPage() {
                   <option value="name,asc">Имя (А-Я)</option>
                   <option value="name,desc">Имя (Я-А)</option>
                 </select>
-                <button onClick={handleSortReset}>Сбросить</button>
+                <button className={styles.resetButton} onClick={handleSortReset}>Сбросить</button>
               </div>
             </div>
 
