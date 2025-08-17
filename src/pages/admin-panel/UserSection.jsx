@@ -12,6 +12,7 @@ import StudentService from "../../service/studentService";
 import SuccessMessage from '../../components/successMessage/SuccessMessage';
 import useSuccessMessage from '../../hooks/useSuccessMessage';
 import { saveAs } from "file-saver";
+import { group } from "d3";
 const UsersSection = observer(() => {
   const {
     users,
@@ -106,20 +107,24 @@ const UsersSection = observer(() => {
       id: current.id,
       fio: current.fio,
       email: current.email,
-      role: current.role,
+      role: current.role, 
       student: { ...(current.student || {}) },
       is_enabled: current.is_enabled,
       isRemindEnabled: current.isRemindEnabled,
     };
     Object.entries(changes).forEach(([k, v]) => {
-    if (k === "teamId") {
-      p.student.current_team_id = v;
-    } else if (k === "current_track_id") {
-      p.student.current_track_id = v;
-    } else {
-      p[k] = v;
-    }
-  });
+      if (k === "teamId") {
+        p.student.current_team_id = v;
+      } else if (k === "current_track_id") {
+        p.student.current_track_id = v;
+      } else if (k === "course") {
+        p.student.course = v;
+      } else if (k === "group") {
+        p.student.group_number = v;
+      } else {
+        p[k] = v;
+      }
+    });
     Object.entries(changes).forEach(([k, v]) => {
       if (k === "teamId") {
         p.student.current_team_id = v;
@@ -133,6 +138,7 @@ const UsersSection = observer(() => {
     if (p.student && Object.keys(p.student).length === 0) {
       delete p.student;
     }
+
     return p;
   };
 
@@ -289,6 +295,8 @@ const UsersSection = observer(() => {
           title="Редактировать пользователя"
           initialData={{
             fio: selectedUser.fio,
+            course: selectedUser.student?.course || "",//*
+            group: selectedUser.student?.group_number || "",//*
             email: selectedUser.email,
             role: selectedUser.role,
             teamId: selectedUser.student?.current_team_id || "",
@@ -297,7 +305,9 @@ const UsersSection = observer(() => {
           }}
           fields={[
             { name: "fio", label: "ФИО", type: "text" },
-            { name: "email", label: "Почта", type: "email" },
+            { name: "course", label: "Курс", type: "number" },
+            { name: "group", label: "Группа", type: "text" },
+            { name: "email", label: "Email", type: "text" },
             {
               name: "role",
               label: "Роль",

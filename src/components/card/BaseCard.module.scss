@@ -141,7 +141,7 @@
     min-width: 1004px;
     &-header   { padding: ui.$spacing-md; }
     &-body     { padding: ui.$spacing-md; }
-    &-resume   { -webkit-line-clamp: 2; }
+    &-resume   { -webkit-line-clamp: 3; }
     .action-button { font-size: 0.9rem; }
   } 
 }

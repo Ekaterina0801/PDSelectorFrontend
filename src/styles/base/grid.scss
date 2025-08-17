@@ -22,9 +22,9 @@ $gutter: t.$spacing-md;
 
 // Колонка: параметризуется сколько колонок занимает
 @mixin col($span) {
-  width: percentage($span / $grid-columns);
-  padding-left: ($gutter / 2);
-  padding-right: ($gutter / 2);
+  width: calc($span / $grid-columns);
+  padding-left: calc($gutter / 2);
+  padding-right: calc($gutter / 2);
 }
 // Адаптивная колонка: на экранах ниже md — 100%
 @mixin col-responsive {

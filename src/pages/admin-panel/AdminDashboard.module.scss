@@ -20,6 +20,17 @@
   }
 }
 
+@media (min-width: 2560px) {
+  .sidebarWrapper {
+  max-width: 353px;
+  width: 353px;
+  }
+
+  .text {
+    font-size: ui.$font-size-2xl;
+  }
+}
+
 .content {
   flex: 1;
 }
