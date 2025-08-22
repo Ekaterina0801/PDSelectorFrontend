@@ -139,7 +139,7 @@ const TeamsSection = observer(() => {
             onChange={(e) =>
               updateFilter(
                 "trackId",
-                e.target.value === "" ? null : +e.target.value
+                e.target.value === "" ? null : + e.target.value
               )
             }
           >

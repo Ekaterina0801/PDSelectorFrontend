@@ -49,6 +49,7 @@ class AuthStore {
 
   setTrackId(trackId) {
     this.trackId = trackId;
+    localStorage.setItem("trackId", trackId);
     this.setFilters({ trackId });
   }
 

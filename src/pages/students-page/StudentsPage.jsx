@@ -29,8 +29,8 @@ const StudentsPage = observer(() => {
           page,
           size,
           sort,};
-    await studentStore.fetchStudents(params);
     await studentStore.fetchFilters(authStore.trackId);
+    await studentStore.fetchStudents(params);
   }, [trackId, page, size, sort]);
 
   useEffect(() => {

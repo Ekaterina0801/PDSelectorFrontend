@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Modal from "../forms/modal/Modal";
 import styles from "./TeamEditForm.module.scss";
+import authStore from "../../stores/authStore";
+
 const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => {
   const [formData, setFormData] = useState({
     ...studentData,
@@ -8,6 +10,7 @@ const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => 
     technologies: studentData.technologies || [],
   });
   const [showModal, setShowModal] = useState(false);
+  const isAdmin = authStore.isAdmin;
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -50,7 +53,7 @@ const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => 
       <div className={styles.profileEditForm}>
         <h2>Редактировать профиль</h2>
 
-        <label>
+        {isAdmin && <label>
           ФИО:
           <input
             type="text"
@@ -58,9 +61,9 @@ const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => 
             value={formData.user?.fio || ''}
             onChange={handleChange}
           />
-        </label>
+        </label>}
 
-        <label>
+        {isAdmin && <label>
           Курс:
           <input
             type="number"
@@ -68,9 +71,9 @@ const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => 
             value={formData.course || ''}
             onChange={handleChange}
           />
-        </label>
+        </label>}
 
-        <label>
+        {isAdmin && <label>
           Группа:
           <input
             type="text"
@@ -78,7 +81,7 @@ const ProfileEditForm = ({ studentData, onSave, onCancel, allTechnologies }) => 
             value={formData.group_number || ''}
             onChange={handleChange}
           />
-        </label>
+        </label>}
 
         <label>
           О себе:
