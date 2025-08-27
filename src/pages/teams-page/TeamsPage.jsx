@@ -69,7 +69,7 @@ export default observer(function TeamsPage() {
 
   const handleApplyFilters = useCallback(
     async (newFilters) => {
-      const params = { ...newFilters, trackId, page: 0, size, sort };
+      const params = { ...newFilters, page: 0, size, sort };
       teamStore.setFilters(params);
       setPage(0);
       setShowMobileFilters(false);

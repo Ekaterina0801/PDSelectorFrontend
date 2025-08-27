@@ -39,10 +39,10 @@ class StudentStore {
   async fetchStudents(params = {}) {
     this.loading = true;
     this.error = null;
-
     try {
       const data = await StudentService.fetchStudents(params);
       const filters = await StudentService.fetchFilterParamsByTrackId(params.trackId);
+
       runInAction(() => {
         this.students = data.content;
         this.allFilters = filters;
@@ -157,7 +157,6 @@ class StudentStore {
   async fetchFilters(trackId) {
     this.loading = true;
     this.error = null;
-
     try {
       const filters = await StudentService.fetchFilterParamsByTrackId(trackId);
       runInAction(() => {
@@ -182,6 +181,7 @@ class StudentStore {
       ...(newFilters.hasTeam !== undefined && { hasTeam: newFilters.hasTeam }),
       ...(newFilters.course !== undefined && { course: newFilters.course }),
       ...(newFilters.isCaptain !== undefined && { isCaptain: newFilters.isCaptain }),
+      ...(newFilters.groups !== undefined && { groups: newFilters.groups })
     };
 
     this.filters = parsedFilters;

@@ -2,12 +2,12 @@ import requests from '../agent';
 
 class StudentService {
 
-  static async fetchStudents({ input, trackId, course, groupNumber, hasTeam, isCaptain, technologies, page = 0, size = 10, sort = 'name,asc' }) {
+  static async fetchStudents({ input, trackId, course, groups, hasTeam, isCaptain, technologies, page = 0, size = 10, sort = 'name,asc' }) {
     const queryParams = [];
   
     if (input) queryParams.push(`input=${encodeURIComponent(input)}`);
     if (course) queryParams.push(`course=${encodeURIComponent(course)}`);
-    if (groupNumber) queryParams.push(`group_number=${encodeURIComponent(groupNumber)}`);
+    if (groups) queryParams.push(`group_number=${encodeURIComponent(groups)}`);
     if (hasTeam !== undefined) queryParams.push(`has_team=${hasTeam}`);
     if (isCaptain !== undefined) queryParams.push(`is_captain=${isCaptain}`);
     if (trackId) queryParams.push(`track_id=${encodeURIComponent(trackId)}`);
@@ -38,7 +38,10 @@ class StudentService {
   }
 
   static async fetchFilterParamsByTrackId(trackId) {
-      return requests.get(`/students/filters?track_id=${trackId}`);
+      if (trackId){
+        return requests.get(`/students/filters?track_id=${trackId}`);
+
+      }
     }
 
   // Получение студента по ID
