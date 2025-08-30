@@ -17,7 +17,6 @@ const Filter = ({ availableFilters, currentFilters, onApply }) => {
     projectType: [],
     technologies: []
   });
-  console.log("availableFilters", availableFilters);
 
   const { projectTypes = [], technologies: allTechnologies = [] } = useMemo(
     () => availableFilters,
@@ -27,7 +26,7 @@ const Filter = ({ availableFilters, currentFilters, onApply }) => {
   useEffect(() => {
     setLocalFilters({
       isFull: currentFilters.isFull !== null ? [String(currentFilters.isFull)] : [],
-      projectType: currentFilters.projectType ? [currentFilters.projectType] : [],
+      projectType: currentFilters.projectType || [],  // Теперь это всегда массив
       technologies: Array.isArray(currentFilters.technologies) ? currentFilters.technologies : [],
     });
   }, [currentFilters]);
@@ -36,17 +35,17 @@ const Filter = ({ availableFilters, currentFilters, onApply }) => {
     setLocalFilters(prev => ({
       ...prev,
       [field]: prev[field].includes(value)
-        ? prev[field].filter(v => v !== value)
-        : [...prev[field], value]
+        ? prev[field].filter(v => v !== value) // Убираем, если уже выбран
+        : [...prev[field], value] // Добавляем в массив, если не выбран
     }));
   };
 
   const handleApply = () => {
     const applied = {
       isFull: localFilters.isFull.length === 1 ? localFilters.isFull[0] === 'true' : null,
-      projectType: localFilters.projectType.length > 0 ? localFilters.projectType[0] : null,
+      projectType: localFilters.projectType.length > 0 ? localFilters.projectType : null, // Применяем все выбранные типы
       technologies: localFilters.technologies,
-      trackId: authStore.trackId,
+      trackId: authStore.trackId,  // Здесь предполагается, что trackId есть в authStore
     };
     onApply(applied);
   };
@@ -61,6 +60,7 @@ const Filter = ({ availableFilters, currentFilters, onApply }) => {
     <div className={styles.filterSection}>
       <h3 className={styles.filterSection__title}>Фильтры</h3>
 
+      {/* Фильтры по заполненности */}
       <div className={styles.filterSection__group}>
         <h4 className={styles.filterSection__groupTitle}>Заполненность</h4>
         <CheckboxOption
@@ -79,6 +79,7 @@ const Filter = ({ availableFilters, currentFilters, onApply }) => {
         />
       </div>
 
+      {/* Фильтры по типу проекта */}
       <div className={styles.filterSection__group}>
         <h4 className={styles.filterSection__groupTitle}>Тип проекта</h4>
         {projectTypes.length > 0 ? (
@@ -89,7 +90,7 @@ const Filter = ({ availableFilters, currentFilters, onApply }) => {
                 id={`projectType-${pt.id}`}
                 label={pt.name}
                 value={pt.name}
-                checked={localFilters.projectType.includes(pt.name)}
+                checked={localFilters.projectType.includes(pt.name)} // Проверяем, выбран ли тип
                 onChange={v => handleFilterChange('projectType', v)}
               />
             ))}
@@ -99,6 +100,7 @@ const Filter = ({ availableFilters, currentFilters, onApply }) => {
         )}
       </div>
 
+      {/* Фильтры по технологиям */}
       <div className={styles.filterSection__group}>
         <h4 className={styles.filterSection__groupTitle}>Технологии</h4>
         {allTechnologies.length > 0 ? (
@@ -109,7 +111,7 @@ const Filter = ({ availableFilters, currentFilters, onApply }) => {
                 id={`tech-${tech.id}`}
                 label={tech.name}
                 value={tech.id}
-                checked={localFilters.technologies.includes(tech.id)}
+                checked={localFilters.technologies.includes(tech.id)} // Проверяем, выбрана ли технология
                 onChange={v => handleFilterChange('technologies', v)}
               />
             ))}

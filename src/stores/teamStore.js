@@ -48,7 +48,7 @@ class TeamStore {
         input: params.input || undefined,
         trackId: params.trackId || undefined,
         isFull: params.isFull ?? undefined,
-        projectType: params.projectType || undefined,
+        projectType: params.projectType || [],
         technologies: params.technologies?.length ? params.technologies : undefined,
         page: params.page,
         size: params.size,
@@ -238,7 +238,6 @@ class TeamStore {
   }
   setCurrentTeam(team) {
     this.team = team
-    console.log('team', this.team);
   }
 
   clearCurrentTeam() {

@@ -9,7 +9,10 @@ export const TeamService = {
     if (input) queryParams.push(`input=${encodeURIComponent(input)}`);
     if (trackId) queryParams.push(`track_id=${encodeURIComponent(trackId)}`);
     if (isFull !== undefined) queryParams.push(`is_full=${isFull}`);
-    if (projectType) queryParams.push(`project_type=${encodeURIComponent(projectType)}`);
+    if (projectType?.length) {
+    projectType.forEach(type => queryParams.push(`project_type=${encodeURIComponent(type)}`));
+  }
+
     if (sort) queryParams.push(`sort=${encodeURIComponent(sort)}`);
     
     if (technologies?.length) {

@@ -1,255 +1,205 @@
+@use "sass:color";
 @use "@/styles/index" as ui;
-*, *::before, *::after {
-  box-sizing: border-box;
-}
+@use "@/styles/tokens" as t;
 
-/* фон */
+*, *::before, *::after { box-sizing: border-box; }
+
+/* ==== КОНТЕЙНЕР И ФОН ==== */
 .background {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   min-height: 100vh;
+  padding: t.$spacing-lg t.$spacing-md;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(60% 80% at 20% 10%, rgba(t.$color-primary-light, 0.25) 0%, rgba(t.$color-primary-light, 0) 70%),
+    radial-gradient(60% 80% at 90% 80%, rgba(t.$color-primary, 0.08) 0%, rgba(t.$color-primary, 0) 70%),
+    t.$color-background;
+  color: t.$color-text;
+}
+
+/* ==== КАРТОЧКА ==== */
+.card {
   width: 100%;
-  overflow: hidden;
-  background: url('/images/back-reg.jpg') no-repeat center/cover;
-}
+  max-width: 760px;
+  padding: t.$spacing-lg;
+  border-radius: t.$radius-md;
+  background: t.$color-white;
+  border: 1px solid t.$color-grey-200;
+  box-shadow: t.$shadow-light;
+  transition: t.$transition-medium;
 
-/* внешний белый блок */
-.loginContainer {
-  display: flex;
-  width: 80%;
-  max-width: 800px;
-  background: #fff;
-  border-radius: 20px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-  min-height: 500px;
-}
-
-/* картинка */
-.loginImage {
-  flex: 1.5;
-  padding: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* контент с формой */
-.loginContent {
-  flex: 2;
-  padding: 50px;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;    /* <-- скролл если слишком высоко */
-  max-height: 100vh;    /* ограничение по высоте экрана */
-}
-
-  
-  .welcomeText {
-    font-size: 2rem;
-    font-weight: 600;
-    color: ui.$color-primary;
-    margin-bottom: 30px;
+  @media (min-width: t.$breakpoint-md) {
+    padding: 28px;
   }
-  
-  .registrationForm {
-    width: 100%;
-    display: flex;
+}
+
+/* ==== ЗАГОЛОВОК ==== */
+.header { margin-bottom: t.$spacing-md; }
+.title {
+  margin: 0 0 t.$spacing-xs;
+  font-size: t.$font-size-2xl;
+  font-weight: 700;
+  letter-spacing: .2px;
+  color: t.$color-primary;
+}
+.subtitle {
+  margin: 0;
+  color: t.$color-grey-600;
+  font-size: 0.95rem;
+  line-height: t.$line-height-base;
+}
+
+/* ==== ФОРМА И СЕТКА ==== */
+.form { width: 100%; }
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: t.$spacing-md;
+}
+@media (min-width: t.$breakpoint-md) {
+  .grid { grid-template-columns: 1fr 1fr; }
+  .colSpan2 { grid-column: span 2; }
+}
+
+/* ==== ПОЛЯ ==== */
+.field { display: flex; flex-direction: column; gap: t.$spacing-sm; }
+
+.labelRow { display: flex; align-items: baseline; justify-content: space-between; }
+.label { font-size: 0.95rem; color: t.$color-grey-700; }
+.hint  { font-size: 0.85rem; color: t.$color-grey-600; }
+
+.input {
+  width: 100%;
+  border-radius: t.$radius-sm;
+  padding: 12px 14px;
+  background: t.$color-white;
+  border: 1px solid t.$color-grey-300;
+  color: t.$color-text;
+  outline: none;
+  transition: t.$transition-fast;
+  box-shadow: 0 0 0 0 rgba(t.$color-primary, 0);
+
+  &::placeholder { color: t.$color-grey-500; }
+
+  &:hover { border-color: t.$color-grey-400; }
+
+  &:focus {
+    border-color: t.$color-primary;
+    box-shadow: 0 0 0 3px rgba(t.$color-primary, 0.15);
+  }
+
+  &:disabled { opacity: .6; cursor: not-allowed; }
+}
+
+.select {
+  @extend .input;
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, t.$color-grey-500 50%),
+    linear-gradient(135deg, t.$color-grey-500 50%, transparent 50%);
+  background-position: calc(100% - 18px) calc(50% - 3px),
+                       calc(100% - 12px) calc(50% - 3px);
+  background-size: 6px 6px;
+  background-repeat: no-repeat;
+}
+
+.textarea { @extend .input; resize: vertical; min-height: 110px; }
+
+/* ==== ОШИБКИ ==== */
+.hasError .input {
+  border-color: t.$color-danger;
+  box-shadow: 0 0 0 3px rgba(t.$color-danger, 0.15);
+}
+.errorText {
+  margin: -2px 0 0;
+  font-size: 0.85rem;
+  color: t.$color-danger;
+}
+
+/* ==== КНОПКИ ==== */
+.actions {
+  display: flex;
+  gap: t.$spacing-sm;
+  margin-top: t.$spacing-lg;
+  flex-wrap: wrap;
+
+  @media (max-width: t.$breakpoint-sm) {
     flex-direction: column;
-    gap: 12px;
-  
-    label {
-      text-align: left;
-      font-weight: 500;
-      color: #333;
-    }
-  
-    input,
-    select,
-    textarea {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      font-size: 14px;
-      transition: border-color 0.3s;
-  
-      &:focus {
-        border-color: ui.$color-primary;
-        outline: none;
-        box-shadow: 0 0 8px rgba(106,27,154,0.2);
-      }
-    }
-  }
-  
-  .inputError {
-    border-color: red !important;
-  }
-  
-  .errorText {
-    color: red;
-    font-size: 12px;
-    margin-top: -8px;
-  }
-  
-  .formButtons {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  
-    button {
-      padding: 12px;
-      font-size: 16px;
-      font-weight: bold;
-      border-radius: 30px;
-      cursor: pointer;
-      border: none;
-      transition: background 0.3s;
-    }
-  }
-  
-  .registerButton {
-    background: ui.$color-primary;
-    color: #fff;
-  
-    &:hover {
-      background: #4b007d;
-    }
-  }
-  
-  .skipButton {
-    background: #ff5722;
-    color: #fff;
-  
-    &:hover {
-      background: #e64a19;
-    }
-  }
-  
-@media (min-width: 320px) {
-  .loginContainer {
-    min-height: 200px;
-  }
-  .loginContent {
-    padding: 10px;
-  }
-  .loginImage{
-    display: none;
-  }
-  .welcomeText {
-    font-size: ui.$font-size-base;
-  }
-  .formButtons {  
-    button {
-      padding: ui.$spacing-sm;
-    }
+    & > button { width: 100%; }
   }
 }
 
-@media (min-width: 480px) {
-  .loginContent {
-    padding: 20px;
-  }
-  .loginImage{
-    display: none;
-  }
-  .welcomeText {
-    font-size: ui.$font-size-2xl;
+.primaryBtn,
+.ghostBtn {
+  height: 44px;
+  padding: 0 16px;
+  border-radius: t.$radius-sm;
+  font-weight: 600;
+  letter-spacing: .2px;
+  transition: t.$transition-fast;
+  border: 1px solid transparent;
+
+  &:disabled {
+    opacity: .6; cursor: not-allowed; box-shadow: none; transform: none;
   }
 }
 
-@media (min-width: 768px) {
-  .loginContent {
-    padding: 35px;
+.primaryBtn {
+  color: t.$color-white;
+  background: linear-gradient(
+    135deg,
+    t.$color-primary 0%,
+    color.scale(t.$color-primary, $lightness: -8%) 100%
+  );
+  box-shadow: t.$shadow-strong;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.15);
+    background: linear-gradient(
+      135deg,
+      color.scale(t.$color-primary, $lightness: +2%) 0%,
+      color.scale(t.$color-primary, $lightness: -6%) 100%
+    );
   }
-  .loginImage{
-    display: flex;
-    padding: 35px;
-  }
-  .welcomeText {
-    font-size: ui.$font-size-2xl;
-  }
-  .formButtons {  
-    button {
-      padding: ui.$spacing-md;
-    }
-  }
+  &:active { transform: translateY(0); }
+  &:focus-visible { box-shadow: 0 0 0 3px rgba(t.$color-primary, 0.25); }
 }
 
-@media (min-width: 1024px) {
-  .loginContent {
-    padding: 50px;
+.ghostBtn {
+  color: t.$color-grey-700;
+  background: transparent;
+  border-color: t.$color-grey-300;
+
+  &:hover {
+    border-color: t.$color-grey-400;
+    background: t.$color-grey-100;
   }
-  .loginImage{
-    display: flex;
-    padding: 50px;
-  }
-  .welcomeText {
-    font-size: ui.$font-size-3xl;
-  }
-  .formButtons {  
-    button {
-      padding: 12px;
-    }
-  }
+  &:focus-visible { box-shadow: 0 0 0 3px rgba(t.$color-primary, 0.18); }
 }
 
-@media (min-width: 2560px) {
-  .background {
-    background-size: cover;
-  }
-
-  .loginContainer {
-    width: 60vw;
-    max-width: 1200px;
-    max-height: 1250px;
-    border-radius: ui.$radius-lg;
-  }
-
-  .loginImage {
-    padding: 60px;
-    
-    img {
-      max-width: 350px;
-    }
-  }
-
-  .loginContent {
-    padding: 70px;
-  }
-
-  .welcomeText {
-    font-size: ui.$font-size-4xl;
-    margin-bottom: 45px;
-  }
-
-  .registrationForm {
-    gap: 16px;
-
-    label {
-      font-size: ui.$font-size-2xl;
-    }
-
-    input,
-    select,
-    textarea {
-      padding: 16px;
-      font-size: ui.$font-size-2xl;
-      border-radius: ui.$radius-sm;
-    }
-  }
-
-  .errorText {
-    font-size: ui.$font-size-2xl;
-  }
-
-  .formButtons {
-    gap: 14px;
-
-    button {
-      padding: 16px;
-      font-size: ui.$font-size-2xl;
-      border-radius: ui.$radius-xxl;
-    }
-  }
+/* ==== СТАТУСНЫЕ ТОНЫ ==== */
+.badge--success {
+  background: t.$color-green-100;
+  color: t.$color-green-700;
+  border: 1px solid color.scale(t.$color-green-100, $lightness: -10%);
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: .8rem;
+}
+.badge--warning {
+  background: t.$color-yellow-100;
+  color: t.$color-yellow-700;
+  border: 1px solid color.scale(t.$color-yellow-100, $lightness: -10%);
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: .8rem;
+}
+.badge--danger {
+  background: t.$color-red-100;
+  color: t.$color-red-700;
+  border: 1px solid color.scale(t.$color-red-100, $lightness: -10%);
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: .8rem;
 }

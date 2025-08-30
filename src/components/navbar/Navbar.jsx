@@ -1,100 +1,170 @@
 import React, { useState, useRef, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { FaChevronDown } from "react-icons/fa";
 import { observer } from "mobx-react";
 import authStore from "../../stores/authStore";
 import trackStore from "../../stores/trackStore";
+import { FaChevronDown, FaUsers, FaUserGraduate, FaLayerGroup, FaTools, FaCheck } from "react-icons/fa";
 
 import styles from "./Navbar.module.scss";
 const Navbar = observer(() => {
   const { tracks, fetchTracks } = trackStore;
-  const trackId = authStore.trackId;
-  const studentId = authStore.studentId;
-  const isAdmin = authStore.isAdmin;
-  console.log("isAdmin", isAdmin);
-
+  const { trackId, studentId, isAdmin, setTrackId } = authStore;
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
-    fetchTracks();
-  }, [fetchTracks]);
+    if (!tracks.length) fetchTracks();
+  }, [tracks.length, fetchTracks]);
+
+  useEffect(() => {
+    const onDocClick = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    const onKey = (e) => e.key === "Escape" && setIsDropdownOpen(false);
+    document.addEventListener("mousedown", onDocClick);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDocClick);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, []);
 
   const toggleMenu = () => setMenuOpen((prev) => !prev);
 
   const handleTrackChange = (id) => {
-    authStore.setTrackId(id);
+    setTrackId(id);
     setIsDropdownOpen(false);
+    setMenuOpen(false);
   };
 
   const selectedTrackName =
-    tracks.find((t) => t.id === parseInt(trackId, 10))?.name || "Выберите трек";
+    tracks.find((t) => String(t.id) === String(trackId))?.name || "Выберите трек";
 
   return (
-    <nav className={styles.NavbarItems}>
-      <div className={styles.logo}>
-        <h3>Конструктор команд</h3>
-      </div>
-      <div className={styles.HamburgerCrossIcons} onClick={toggleMenu}>
-        <i className={menuOpen ? "fas fa-times" : "fas fa-bars"} />
-      </div>
-      <ul className={`${styles.MenuItems} ${menuOpen ? styles.active : ""}`}>
-        <li>
-          <NavLink to="/teams" className="nav-link">
-            Команды
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/students" className="nav-link">
-            Участники
-          </NavLink>
-        </li>
-        { studentId&& (
-          <li>
-            <NavLink to={`/students/${studentId}`} end className="nav-link">
-              Профиль
-            </NavLink>
-          </li>
-        )}
+    <nav className={styles.nav}>
+      <div className={styles.container}>
+        <div className={styles.brand}>
+          <span className={styles.logoDot} />
+          <h3>Конструктор команд</h3>
+        </div>
 
-        {isAdmin && (
-          <li>
-            <NavLink to={`/admin`} end className="nav-link">
-              Админка
-            </NavLink>
-          </li>
-        )}
+        <button
+          type="button"
+          className={styles.burger}
+          aria-label="Открыть меню"
+          aria-expanded={menuOpen}
+          onClick={toggleMenu}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
 
-        <li style={{ width: "100%", position: "relative" }}>
-          <div className={styles.trackSelector} ref={dropdownRef}>
-            <div
-              className={`${styles.selectIcon} ${
-                isDropdownOpen ? styles.open : ""
-              }`}
-              onClick={() => setIsDropdownOpen((prev) => !prev)}
+        <ul className={`${styles.menu} ${menuOpen ? styles.isOpen : ""}`}>
+          <li>
+            <NavLink
+              to="/teams"
+              end
+              className={({ isActive }) =>
+                `${styles.link} ${isActive ? styles.isActive : ""}`
+              }
             >
-              <span>{selectedTrackName}</span>
-              <FaChevronDown />
-            </div>
-            {isDropdownOpen && (
-              <div className={styles.dropdown}>
-                <ul>
-                  {tracks.map((track) => (
-                    <li
-                      key={track.id}
-                      onClick={() => handleTrackChange(track.id)}
-                    >
-                      {track.name}
-                    </li>
-                  ))}
+              <FaLayerGroup aria-hidden className={styles.icon} />
+              <span>Команды</span>
+            </NavLink>
+          </li>
+
+          <li>
+            <NavLink
+              to="/students"
+              className={({ isActive }) =>
+                `${styles.link} ${isActive ? styles.isActive : ""}`
+              }
+            >
+              <FaUsers aria-hidden className={styles.icon} />
+              <span>Участники</span>
+            </NavLink>
+          </li>
+
+          {studentId && (
+            <li>
+              <NavLink
+                to={`/students/${studentId}`}
+                end
+                className={({ isActive }) =>
+                  `${styles.link} ${isActive ? styles.isActive : ""}`
+                }
+              >
+                <FaUserGraduate aria-hidden className={styles.icon} />
+                <span>Профиль</span>
+              </NavLink>
+            </li>
+          )}
+
+          {isAdmin && (
+            <li>
+              <NavLink
+                to="/admin"
+                end
+                className={({ isActive }) =>
+                  `${styles.link} ${isActive ? styles.isActive : ""}`
+                }
+              >
+                <FaTools aria-hidden className={styles.icon} />
+                <span>Админка</span>
+              </NavLink>
+            </li>
+          )}
+
+          <li className={styles.trackLi}>
+            <div className={styles.trackSelector} ref={dropdownRef}>
+              <button
+                type="button"
+                className={`${styles.selectBtn} ${isDropdownOpen ? styles.open : ""}`}
+                aria-haspopup="listbox"
+                aria-expanded={isDropdownOpen}
+                onClick={() => setIsDropdownOpen((p) => !p)}
+                title={selectedTrackName}
+              >
+                <span className={styles.selectLabel} aria-live="polite">
+                  {selectedTrackName}
+                </span>
+                <FaChevronDown className={styles.chevron} aria-hidden />
+              </button>
+
+              <div
+                className={`${styles.dropdown} ${isDropdownOpen ? styles.dropOpen : ""}`}
+                role="listbox"
+              >
+                <ul className={styles.dropList}>
+                  {tracks.map((track) => {
+                    const selected = String(track.id) === String(trackId);
+                    return (
+                      <li key={track.id}>
+                        <button
+                          type="button"
+                          role="option"
+                          aria-selected={selected}
+                          className={`${styles.dropItem} ${selected ? styles.selected : ""}`}
+                          onClick={() => handleTrackChange(track.id)}
+                          title={track.name}
+                        >
+                          <span className={styles.itemName}>{track.name}</span>
+                          {selected && <FaCheck className={styles.check} aria-hidden />}
+                        </button>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
-            )}
-          </div>
-        </li>
-      </ul>
+            </div>
+          </li>
+        </ul>
+      </div>
     </nav>
   );
 });
