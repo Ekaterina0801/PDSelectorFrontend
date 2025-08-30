@@ -22,6 +22,10 @@ const routes = [
     element: <TeamsPage />
   },
   {
+    path: '/',
+    element: <TeamsPage />
+  },
+  {
     path: '/profile',
     element: <StudentProfilePage />
   },

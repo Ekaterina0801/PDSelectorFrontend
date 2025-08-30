@@ -1,6 +1,6 @@
-/* TeamProfilePage.module.scss */
 @use "@/styles/index" as ui;
 
+$bottom-nav-h: 64px;
 .container {
   @include ui.container(100%);
   display: flex;
@@ -28,6 +28,9 @@
   gap: ui.$spacing-lg;
   align-items: center;
   width: 100%;
+  @include ui.respond-to(lg) {
+    padding-bottom: calc(#{$bottom-nav-h} + env(safe-area-inset-bottom));
+  }
 }
 
 .pageTitle {

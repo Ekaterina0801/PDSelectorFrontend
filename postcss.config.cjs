@@ -15,6 +15,7 @@ module.exports = {
         }
         return path.resolve(basedir, importPath);
       }
-    }
+    },
+    tailwindcss: {}
   }
 };

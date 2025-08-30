@@ -1,5 +1,6 @@
 @use "@/styles/index" as ui;
 
+$bottom-nav-h: 64px;
 .container {
   @include ui.container(100%);
   display: flex;
@@ -24,6 +25,9 @@
   flex-direction: column;
   gap: ui.$spacing-lg;
   align-items: center;
+  @include ui.respond-to(lg) {
+    padding-bottom: calc(#{$bottom-nav-h} + env(safe-area-inset-bottom));
+  }
 }
 
 .pageTitle {
