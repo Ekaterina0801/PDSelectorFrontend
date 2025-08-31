@@ -12,6 +12,29 @@ class StudentStore {
 
   constructor() {
     makeAutoObservable(this);
+    this.loadFilterData();
+  }
+
+  loadFilterData() {
+    try {
+      const studentFilters = localStorage.getItem("studentFilters");
+      if (studentFilters) {
+        const studentFiltersParse = JSON.parse(studentFilters);
+        this.filters = {...this.filters, ...studentFiltersParse};
+      }
+    }
+    catch (error) {
+      console.error("Ошибка при извлечении фильтров из localStorage: ", error);
+    }
+  }
+
+  setStudentsFilters(newFilters) {
+    try {
+    localStorage.setItem("studentFilters", JSON.stringify(newFilters));
+    }
+    catch (error) {
+      console.error("Ошибка при сохранении фильтров в localStorage: ", error);
+    }
   }
 
   get hasError() {
@@ -183,9 +206,9 @@ class StudentStore {
       ...(newFilters.isCaptain !== undefined && { isCaptain: newFilters.isCaptain }),
       ...(newFilters.groups !== undefined && { groups: newFilters.groups })
     };
-
     this.filters = parsedFilters;
     this.fetchStudents(this.filters);
+    this.setStudentsFilters(parsedFilters);
   }
 
   resetFilters() {

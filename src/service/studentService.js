@@ -6,8 +6,16 @@ class StudentService {
     const queryParams = [];
   
     if (input) queryParams.push(`input=${encodeURIComponent(input)}`);
-    if (course) queryParams.push(`course=${encodeURIComponent(course)}`);
-    if (groups) queryParams.push(`group_number=${encodeURIComponent(groups)}`);
+    if (course && course.length > 0) 
+    {
+      //queryParams.push(`course=${encodeURIComponent(course)}`);
+      course.forEach(c => queryParams.push(`course=${encodeURIComponent(c)}`));
+    }
+    if (groups && groups.length > 0)
+    { 
+      //queryParams.push(`group_number=${encodeURIComponent(groups)}`);
+      groups.forEach(g => queryParams.push(`group_number=${encodeURIComponent(g)}`));
+    }
     if (hasTeam !== undefined) queryParams.push(`has_team=${hasTeam}`);
     if (isCaptain !== undefined) queryParams.push(`is_captain=${isCaptain}`);
     if (trackId) queryParams.push(`track_id=${encodeURIComponent(trackId)}`);
@@ -40,7 +48,6 @@ class StudentService {
   static async fetchFilterParamsByTrackId(trackId) {
       if (trackId){
         return requests.get(`/students/filters?track_id=${trackId}`);
-
       }
     }
 

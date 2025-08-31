@@ -28,8 +28,16 @@ const Filter = ({ availableFilters, currentFilters, onApply }) => {
       isFull: currentFilters.isFull !== null ? [String(currentFilters.isFull)] : [],
       projectType: currentFilters.projectType || [],  // Теперь это всегда массив
       technologies: Array.isArray(currentFilters.technologies) ? currentFilters.technologies : [],
-    });
+    });    
   }, [currentFilters]);
+/*
+  useEffect(() => {
+    setLocalFilters({
+      isFull: currentFilters.isFull !== null ? [String(currentFilters.isFull)] : [],
+      projectType: currentFilters.projectType ? [currentFilters.projectType] : [],
+      technologies: [],
+    });
+  }, [authStore.trackId]);*/
 
   const handleFilterChange = (field, value) => {
     setLocalFilters(prev => ({

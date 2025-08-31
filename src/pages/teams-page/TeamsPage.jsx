@@ -28,6 +28,7 @@ export default observer(function TeamsPage() {
   const size = 10;
 
   const loadData = useCallback(async () => {
+    await teamStore.fetchFilters(trackId);
     await teamStore.fetchTeams({
       ...teamStore.filters,
       trackId: authStore.trackId,
@@ -35,8 +36,6 @@ export default observer(function TeamsPage() {
       size,
       sort,
     });
-    console.log("filters", teamStore.filters);
-    await teamStore.fetchFilters(trackId);
   }, [page, size, sort, trackId, location]);
 
   useEffect(() => {
@@ -68,7 +67,7 @@ export default observer(function TeamsPage() {
   };
 
   const handleApplyFilters = useCallback(
-    async (newFilters) => {
+    async (newFilters) => {      
       const params = { ...newFilters, page: 0, size, sort };
       teamStore.setFilters(params);
       setPage(0);

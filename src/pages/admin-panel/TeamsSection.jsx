@@ -60,12 +60,11 @@ const TeamsSection = observer(() => {
   useEffect(() => {
     const load = async () => {
       await teamStore.fetchFilters(filters.trackId);
-
       await teamStore.fetchTeams({ ...filters, searchTerm: search, sort });
     };
-
+    console.log("СРАБОТАЛ МЕТОД load с фильтрами: ", filters);
     load();
-  }, [filters.trackId, filters.page, filters.size, search, sort, currentTeam]);
+  }, [filters.trackId, filters.page, filters.size, sort, currentTeam]);
 
   const displayed = useMemo(() => {
     let arr = teams.slice();
@@ -82,8 +81,8 @@ const TeamsSection = observer(() => {
   }, [teams, search, sort]);
 
   const updateFilter = useCallback(
-    (key, value) => {
-      setFilters({ ...filters, [key]: value, page: 0 });
+    (diff) => {
+      setFilters({ ...filters, ...diff});
     },
     [filters, setFilters]
   );
@@ -137,10 +136,10 @@ const TeamsSection = observer(() => {
           <select
             value={filters.trackId ?? ""}
             onChange={(e) =>
-              updateFilter(
-                "trackId",
-                e.target.value === "" ? null : + e.target.value
-              )
+              updateFilter({
+                trackId : (e.target.value === "" ? null : + e.target.value),
+                page: 0
+              })
             }
           >
             <option value="">Все</option>
@@ -167,10 +166,10 @@ const TeamsSection = observer(() => {
           <select
             value={filters.isFull ?? ""}
             onChange={(e) =>
-              updateFilter(
-                "isFull",
-                e.target.value === "" ? null : e.target.value === "true"
-              )
+              updateFilter({
+                isFull : (e.target.value === "" ? null : e.target.value === "true"),
+                page: 0
+              })
             }
           >
             <option value="">Все</option>
@@ -184,7 +183,10 @@ const TeamsSection = observer(() => {
           <select
             value={filters.projectType ?? ""}
             onChange={(e) =>
-              updateFilter("projectType", e.target.value || null)
+              updateFilter({
+                projectType : e.target.value || null,
+                page : 0
+              })
             }
           >
             <option value="">Все</option>
@@ -260,20 +262,20 @@ const TeamsSection = observer(() => {
 
       <div className={styles.pagination}>
         <button
-          onClick={() => updateFilter("page", Math.max(0, filters.page - 1))}
+          onClick={() => updateFilter({page : Math.max(0, filters.page - 1)})}
           disabled={filters.page === 0}
         >
-          ← Назад
+          Назад
         </button>
         <span>
           Стр. {filters.page + 1} из{" "}
           {Math.max(1, Math.ceil(filters.total / filters.size))}
         </span>
         <button
-          onClick={() => updateFilter("page", filters.page + 1)}
+          onClick={() => updateFilter({page : Math.max(0, filters.page + 1)})}
           disabled={(filters.page + 1) * filters.size >= filters.total}
         >
-          Далее →
+          Далее
         </button>
       </div>
 

@@ -184,7 +184,7 @@ const UsersSection = observer(() => {
             <label>Роль:</label>
             <select
               value={filters.role || ""}
-              onChange={(e) => updateFiltersHandler({ role: e.target.value })}
+              onChange={(e) => updateFiltersHandler({ role: e.target.value, page: 0 })}
             >
               <option value="">Все</option>
               {roles.map((r) => (
@@ -200,7 +200,7 @@ const UsersSection = observer(() => {
               value={filters.trackId ?? ""}
               onChange={(e) =>
                 updateFiltersHandler({
-                  trackId: +e.target.value || null,
+                  trackId: +e.target.value || null, page: 0
                 })
               }
             >
@@ -274,7 +274,7 @@ const UsersSection = observer(() => {
             }
             disabled={filters.page === 0}
           >
-            ← Назад
+            Назад
           </button>
           <span>
             Стр. {filters.page + 1} из{" "}
@@ -284,7 +284,7 @@ const UsersSection = observer(() => {
             onClick={() => updateFiltersHandler({ page: filters.page + 1 })}
             disabled={(filters.page + 1) * filters.size >= total}
           >
-            Далее →
+            Далее
           </button>
         </div>
       </main>

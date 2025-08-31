@@ -37,12 +37,33 @@ class TeamStore {
         autoBind: true
       }
     )
+
+    this.loadFiltersFromLocalStorage();
+  }
+
+  loadFiltersFromLocalStorage() {
+    try {
+      const savedFilters = localStorage.getItem('teamFilters');
+      if (savedFilters) {
+        const parsedFilters = JSON.parse(savedFilters);
+        this.filters = { ...this.filters, ...parsedFilters };
+      }
+    } catch (error) {
+      console.error('Ошибка при загрузке фильтров из localStorage:', error);
+    }
+  }
+
+  saveFiltersToLocalStorage(newFilters) {
+    try {
+      localStorage.setItem('teamFilters', JSON.stringify(newFilters));
+    } catch (error) {
+      console.error('Ошибка при сохранении фильтров в localStorage:', error);
+    }
   }
 
   async fetchTeams(params = {}) {
     this.loading = true;
     this.error = null;
-
     try {
       const apiParams = {
         input: params.input || undefined,
@@ -212,9 +233,6 @@ class TeamStore {
     }
   }
 
-  
-  
-
   setFilters(newFilters) {
     runInAction(() => {
       this.filters = {
@@ -223,7 +241,9 @@ class TeamStore {
       };
     });
     this.fetchTeams(this.filters);
+    this.saveFiltersToLocalStorage(this.filters);
   }
+
   resetFilters() {
     this.filters = {};
     this.fetchTeams({});

@@ -189,7 +189,9 @@ StudentFilter.propTypes = {
     )
   }).isRequired,
   currentFilters: PropTypes.shape({
-    course: PropTypes.string,
+    course: PropTypes.arrayOf(
+      PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    ),
     groups: PropTypes.arrayOf(
       PropTypes.oneOfType([PropTypes.string, PropTypes.number])
     ),
