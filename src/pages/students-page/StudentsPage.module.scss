@@ -33,6 +33,7 @@
   @include ui.col(9);
   @include ui.col-responsive;
 
+  align-items: center;
   display: flex;
   flex-direction: column;
   gap: ui.$spacing-lg;
@@ -40,8 +41,6 @@
     width: 100%;
     flex: 1;
   }
-  align-items: center;
-
 }
 
 .mobileFiltersButton {

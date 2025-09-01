@@ -127,23 +127,14 @@ export function useApplicationActions({ type, teamId, studentId }) {
         )
       });
     }
-    // 2) Капитан может отменить/пригласить снова, если «cancelled»
-    if (isCaptainView && status === 'cancelled') {
+    // 2) Капитан может отменить, если sent
+    if (isCaptainView && status === 'sent') {
       actions.push({
         key: 'cancelInvite',
         text: 'Отменить приглашение',
         handler: () => doAction(
           { id: app.id, status: 'cancelled', team_id: teamId, student_id: studentId, type },
           'Приглашение отменено',
-          'update'
-        )
-      });
-      actions.push({
-        key: 'resendInvite',
-        text: 'Пригласить снова',
-        handler: () => doAction(
-          { id: app.id, status: 'sent', team_id: teamId, student_id: studentId, type },
-          'Приглашение отправлено',
           'update'
         )
       });
@@ -165,6 +156,18 @@ export function useApplicationActions({ type, teamId, studentId }) {
         handler: () => doAction(
           { id: app.id, status: 'rejected', team_id: teamId, student_id: studentId, type },
           'Приглашение отклонено',
+          'update'
+        )
+      });
+    }
+    // 4) Капитан может отправить снова, если cancelled
+    if (isCaptainView && status === 'cancelled') {
+      actions.push({
+        key: 'resendInvite',
+        text: 'Пригласить снова',
+        handler: () => doAction(
+          { id: app.id, status: 'sent', team_id: teamId, student_id: studentId, type },
+          'Приглашение отправлено',
           'update'
         )
       });
