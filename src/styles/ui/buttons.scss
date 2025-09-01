@@ -1,4 +1,6 @@
+@use "sass:color";
 @use "@/styles/tokens" as t;
+
 // общий миксин для круглых кнопок-иконок
 @mixin btn-icon($size: 30px) {
   background: t.$color-primary;
@@ -30,6 +32,6 @@
   box-shadow: t.$shadow-light;
 
   &:hover {
-    background-color: scale-color($bg, $lightness: 10%);
+    background-color: color.scale($bg, $lightness: 10%);
   }
 }

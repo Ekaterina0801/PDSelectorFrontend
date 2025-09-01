@@ -1,3 +1,4 @@
+@use "sass:color";
 @use "@/styles/index" as ui;
 @use "sass:meta";
 
@@ -101,7 +102,7 @@
   background: ui.$color-danger;
   color: ui.$color-white;
   &:hover {
-    background: darken(ui.$color-danger, 5%);
+    background: color.adjust(ui.$color-danger, $lightness: -5%);
     box-shadow: ui.$shadow-strong;
   }
 }

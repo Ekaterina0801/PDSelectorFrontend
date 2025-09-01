@@ -1,4 +1,6 @@
 // StatisticsSection.module.scss
+@use "sass:color";
+
 @use "@/styles/index" as ui;
 
 
@@ -56,7 +58,7 @@
 
     select {
       @include ui.form-control(ui.$radius-sm);
-      background-color: lighten(ui.$color-primary-light, 40%);
+      background-color: color.scale(ui.$color-primary-light, $lightness: 40%);
       color: ui.$color-primary;
       cursor: pointer;
       transition: border-color 0.2s, box-shadow 0.2s;
