@@ -11,12 +11,12 @@ $bottom-nav-h: 64px;
 }
 
 .sidebarWrapper {
+  max-width: 280px;
   @include ui.col(3);
   @include ui.col-responsive;
   @include ui.respond-to(lg) {
     display: none;
   }
-  max-width: 280px;
 }
 
 .contentColumn {
