@@ -76,7 +76,7 @@ const groupTeamsByTrack = (teams) => {
     projectTypeStore.fetchProjectTypes();
     technologyStore.fetchTechnologies();
     trackStore.fetchTracks();
-  }, []); 
+  }, [studentId]); 
 
   const startEditing = useCallback(() => setIsEditing(true), []);
   const stopEditing  = useCallback(() => setIsEditing(false), []);
