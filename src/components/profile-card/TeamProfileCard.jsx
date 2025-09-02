@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styles from './TeamProfileCard.module.scss';
 import { observer } from "mobx-react";
 import authStore from "../../stores/authStore";
@@ -6,6 +6,7 @@ import { useApplicationActions } from "../../hooks/useApplicationActions";
 import applicationStore from "../../stores/applicationStore";
 import Loader from "../spinner/Loader";
 import {API_BASE_URL} from "../../api/apiController"
+import ErrorModal from '../error-display/ErrorDisplay';
 
 const STATUS_LABELS = {
   sent:      'Заявка отправлена',
@@ -21,6 +22,8 @@ const TeamProfileCard = observer(({
   showEditForm,
   onEditClick,
 }) => {
+  const [modalDeleteOpen, setModalDeleteOpen] = useState(false);
+
   // ID текущего пользователя-студента
   const currentUserId = authStore.studentId
 
@@ -32,6 +35,22 @@ const TeamProfileCard = observer(({
     teamId:    team.id,
     studentId: currentUserId,
   })
+
+  useEffect(() => {
+    if (error) {
+      setModalDeleteOpen(true); // Открываем модальное окно при ошибке
+    }
+  }, [error]);
+
+  if (modalDeleteOpen) {
+    return (
+      <ErrorModal
+        title="УПС" 
+        message={error}
+        onClose={() => setModalDeleteOpen(false)}
+      />
+    )
+  }
 
   return (
     <div className={styles.teamInfoCard}>
@@ -55,11 +74,12 @@ const TeamProfileCard = observer(({
             <div className={styles.requestActions}>
               {loading && <Loader size="small" />}
 
-              {error && (
+              {/*error && (
                 <span className={styles.error}>
                   {error}
                 </span>
-              )}
+              )*/}
+
 
               {status && (
                 <span className={`${styles.statusTag} ${styles[status] || ''}`}>
@@ -128,7 +148,7 @@ const TeamProfileCard = observer(({
             </div>
           </div>
         </div>
-      </div>
+      </div>   
     </div>
   )
 })
