@@ -9,6 +9,7 @@ import styles from "./Navbar.module.scss";
 const Navbar = observer(() => {
   const { tracks, fetchTracks } = trackStore;
   const { trackId, studentId, isAdmin, setTrackId } = authStore;
+  console.log('trackId', trackId);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -19,30 +20,37 @@ const Navbar = observer(() => {
   }, [tracks.length, fetchTracks]);
 
   useEffect(() => {
-    const onDocClick = (e) => {
+    const handleDocumentClick = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setIsDropdownOpen(false);
       }
     };
-    const onKey = (e) => e.key === "Escape" && setIsDropdownOpen(false);
-    document.addEventListener("mousedown", onDocClick);
-    document.addEventListener("keydown", onKey);
+
+    const handleEscapeKey = (e) => {
+      if (e.key === 'Escape') {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleDocumentClick);
+    document.addEventListener('keydown', handleEscapeKey);
+
     return () => {
-      document.removeEventListener("mousedown", onDocClick);
-      document.removeEventListener("keydown", onKey);
+      document.removeEventListener('mousedown', handleDocumentClick);
+      document.removeEventListener('keydown', handleEscapeKey);
     };
   }, []);
 
   const toggleMenu = () => setMenuOpen((prev) => !prev);
 
   const handleTrackChange = (id) => {
-    setTrackId(id);
+    authStore.setTrackId(id);
     setIsDropdownOpen(false);
     setMenuOpen(false);
   };
 
   const selectedTrackName =
-    tracks.find((t) => String(t.id) === String(trackId))?.name || "Выберите трек";
+    tracks.find((t) => t.id === parseInt(trackId, 10))?.name || "Выберите трек";
 
   return (
     <nav className={styles.nav}>
@@ -64,13 +72,13 @@ const Navbar = observer(() => {
           <span />
         </button>
 
-        <ul className={`${styles.menu} ${menuOpen ? styles.isOpen : ""}`}>
+        <ul className={`${styles.menu} ${menuOpen ? styles.isOpen : ''}`}>
           <li>
             <NavLink
               to="/teams"
               end
               className={({ isActive }) =>
-                `${styles.link} ${isActive ? styles.isActive : ""}`
+                `${styles.link} ${isActive ? styles.isActive : ''}`
               }
             >
               <FaLayerGroup aria-hidden className={styles.icon} />
@@ -82,7 +90,7 @@ const Navbar = observer(() => {
             <NavLink
               to="/students"
               className={({ isActive }) =>
-                `${styles.link} ${isActive ? styles.isActive : ""}`
+                `${styles.link} ${isActive ? styles.isActive : ''}`
               }
             >
               <FaUsers aria-hidden className={styles.icon} />
@@ -96,7 +104,7 @@ const Navbar = observer(() => {
                 to={`/students/${studentId}`}
                 end
                 className={({ isActive }) =>
-                  `${styles.link} ${isActive ? styles.isActive : ""}`
+                  `${styles.link} ${isActive ? styles.isActive : ''}`
                 }
               >
                 <FaUserGraduate aria-hidden className={styles.icon} />
@@ -111,7 +119,7 @@ const Navbar = observer(() => {
                 to="/admin"
                 end
                 className={({ isActive }) =>
-                  `${styles.link} ${isActive ? styles.isActive : ""}`
+                  `${styles.link} ${isActive ? styles.isActive : ''}`
                 }
               >
                 <FaTools aria-hidden className={styles.icon} />
@@ -124,7 +132,7 @@ const Navbar = observer(() => {
             <div className={styles.trackSelector} ref={dropdownRef}>
               <button
                 type="button"
-                className={`${styles.selectBtn} ${isDropdownOpen ? styles.open : ""}`}
+                className={`${styles.selectBtn} ${isDropdownOpen ? styles.open : ''}`}
                 aria-haspopup="listbox"
                 aria-expanded={isDropdownOpen}
                 onClick={() => setIsDropdownOpen((p) => !p)}
@@ -137,19 +145,19 @@ const Navbar = observer(() => {
               </button>
 
               <div
-                className={`${styles.dropdown} ${isDropdownOpen ? styles.dropOpen : ""}`}
+                className={`${styles.dropdown} ${isDropdownOpen ? styles.dropOpen : ''}`}
                 role="listbox"
               >
                 <ul className={styles.dropList}>
                   {tracks.map((track) => {
-                    const selected = String(track.id) === String(trackId);
+                    const selected = track.id === parseInt(trackId, 10);
                     return (
                       <li key={track.id}>
                         <button
                           type="button"
                           role="option"
                           aria-selected={selected}
-                          className={`${styles.dropItem} ${selected ? styles.selected : ""}`}
+                          className={`${styles.dropItem} ${selected ? styles.selected : ''}`}
                           onClick={() => handleTrackChange(track.id)}
                           title={track.name}
                         >

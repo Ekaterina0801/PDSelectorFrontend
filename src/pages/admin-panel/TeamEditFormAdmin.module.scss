@@ -6,7 +6,7 @@
     gap: ui.$spacing-lg;
     max-height: 80vh;          
     //overflow-y: auto;          
-    padding-right: ui.$spacing-sm; 
+    padding: ui.$spacing-sm; 
   }
   
   .field {
@@ -159,7 +159,8 @@
     display: flex;
     justify-content: flex-end;
     gap: ui.$spacing-md;
-    margin-top: ui.$spacing-lg;
+    margin: ui.$spacing-lg;
+    padding: ui.$spacing-md;
   }
   
   /* Сохранить */
@@ -203,7 +204,7 @@
     .form {
       max-height: 85vh;
       gap: ui.$spacing-lg;
-      padding-right: ui.$spacing-md;
+      padding: ui.$spacing-md;
     }
   
     .field {
@@ -275,7 +276,8 @@
   
     .actions {
       gap: ui.$spacing-lg;
-      margin-top: ui.$spacing-lg;
+      margin: ui.$spacing-lg;
+      padding: ui.$spacing-md;
     }
   
     .btnSave,
@@ -285,3 +287,124 @@
       border-radius: ui.$radius-lg;
     }
   }
+
+
+.techHeader {
+  display: flex;
+  align-items: center;
+  gap: ui.$spacing-md;
+  margin-bottom: ui.$spacing-sm;
+
+  .sectionTitle {
+    font-weight: 700;
+    color: ui.$color-grey-700;
+  }
+}
+
+.techSearch {
+  flex: 1;
+  min-width: 200px;
+  height: 40px;
+  padding: 0 ui.$spacing-md;
+  border-radius: ui.$radius-sm;
+  border: 1px solid ui.$color-grey-300;
+  background: ui.$color-white;
+  outline: none;
+  transition: ui.$transition-fast;
+
+  &::placeholder { color: ui.$color-grey-500; }
+  &:hover { border-color: ui.$color-grey-400; }
+  &:focus {
+    border-color: ui.$color-primary;
+    box-shadow: 0 0 0 3px rgba(ui.$color-primary, 0.12);
+  }
+}
+
+/* Выбранные теги (чипы) */
+.techSelected {
+  display: flex;
+  flex-wrap: wrap;
+  gap: ui.$spacing-sm;
+  margin-bottom: ui.$spacing-sm;
+}
+
+.techChipSelected {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: ui.$radius-xxl;
+  background: ui.$color-primary;
+  color: ui.$color-white;
+  border: 1px solid transparent;
+  box-shadow: ui.$shadow-light;
+  transition: ui.$transition-fast;
+
+  .techDot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: ui.$color-white;
+    opacity: .85;
+  }
+  .techLabel {
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .techClose {
+    opacity: .9;
+  }
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: ui.$shadow-strong;
+  }
+}
+
+.techEmpty {
+  color: ui.$color-grey-600;
+}
+
+/* Облако доступных тегов */
+.techCloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: ui.$spacing-sm;
+  margin-top: ui.$spacing-sm;
+}
+
+.techChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: ui.$radius-xxl;
+  background: ui.$color-primary-light;
+  color: ui.$color-primary;
+  border: 1px solid rgba(0,0,0,0.04);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+  transition: ui.$transition-fast;
+  user-select: none;
+
+  .checkIcon {
+    font-size: 14px;
+  }
+  .techLabel {
+    line-height: 1;
+    white-space: nowrap;
+    font-weight: 600;
+  }
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: ui.$shadow-strong;
+  }
+}
+
+.techChip.active {
+  background: ui.$color-primary;
+  color: ui.$color-white;
+  border-color: transparent;
+
+  .checkIcon { opacity: .95; }
+}

@@ -18,7 +18,9 @@ import technologyStore from "../../stores/technologyStore";
 import SuccessMessage from '../../components/successMessage/SuccessMessage';
 import useSuccessMessage from '../../hooks/useSuccessMessage';
 import {API_BASE_URL} from "../../api/apiController"
-
+import { saveAs } from "file-saver";
+import TeamCreateModalAdmin from "./TeamCreateModalAdmin";
+import { useNewTeam } from "../../hooks/useNewTeam";
 const TeamsSection = observer(() => {
   const {
     teams,
@@ -29,20 +31,21 @@ const TeamsSection = observer(() => {
     setFilters,
     deleteTeam,
     updateTeam,
+    createTeam,
     setCurrentTeam,
     clearCurrentTeam,
     team: currentTeam,
-    total,
   } = teamStore;
 
   const { tracks } = trackStore;
-  const { users } = authStore;
+  const { users, trackId: userTrackId } = authStore;
   const { projectTypes } = projectTypeStore;
   const { technologies } = technologyStore;
   const { successMessage, showSuccessMessage } = useSuccessMessage();
 
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("id,asc");
+
   const [showTrackModal, setShowTrackModal] = useState(false);
 
   const [showMembersModal, setShowMembersModal] = useState(false);
@@ -50,6 +53,11 @@ const TeamsSection = observer(() => {
 
   const [teamToDelete, setTeamToDelete] = useState(null);
 
+  // Локальное состояние создания (НЕ через currentTeam)
+  const [isCreatingNew, setIsCreatingNew] = useState(false);
+  const [createDraftTrackId, setCreateDraftTrackId] = useState(null);
+
+  // ===== Bootstrap справочников
   useEffect(() => {
     trackStore.fetchTracks();
     authStore.fetchUsers();
@@ -57,33 +65,39 @@ const TeamsSection = observer(() => {
     technologyStore.fetchTechnologies();
   }, []);
 
+  // ===== Очистка стора при монтировании (чтобы модалки сами не открывались)
+  useEffect(() => {
+    setIsCreatingNew(false);
+    clearCurrentTeam();
+  }, [clearCurrentTeam]);
+
+  // ===== Загрузка команд при смене фильтров/сортировки
   useEffect(() => {
     const load = async () => {
       await teamStore.fetchFilters(filters.trackId);
       await teamStore.fetchTeams({ ...filters, searchTerm: search, sort });
     };
-    console.log("СРАБОТАЛ МЕТОД load с фильтрами: ", filters);
     load();
-  }, [filters.trackId, filters.page, filters.size, sort, currentTeam]);
+  }, [filters.trackId, filters.page, filters.size, sort, currentTeam, search]);
 
+  // ===== Отображаемые строки таблицы (локальный поиск + сортировка)
   const displayed = useMemo(() => {
     let arr = teams.slice();
     const q = search.trim().toLowerCase();
-    if (q) arr = arr.filter((t) => t.name.toLowerCase().includes(q));
+    if (q) arr = arr.filter((t) => t.name?.toLowerCase().includes(q));
     const [field, dir] = sort.split(",");
     return arr.sort((a, b) => {
-      const va = ("" + (a[field] || "")).toLowerCase();
-      const vb = ("" + (b[field] || "")).toLowerCase();
+      const va = ("" + (a[field] ?? "")).toLowerCase();
+      const vb = ("" + (b[field] ?? "")).toLowerCase();
       if (va < vb) return dir === "asc" ? -1 : 1;
       if (va > vb) return dir === "asc" ? 1 : -1;
       return 0;
     });
   }, [teams, search, sort]);
 
+  // ===== Хелперы
   const updateFilter = useCallback(
-    (diff) => {
-      setFilters({ ...filters, ...diff});
-    },
+    (diff) => setFilters({ ...filters, ...diff }),
     [filters, setFilters]
   );
 
@@ -93,10 +107,7 @@ const TeamsSection = observer(() => {
       return;
     }
     try {
-      const svc =
-        fmt === "csv"
-          ? TeamService.exportTeamsCsv
-          : TeamService.exportTeamsExcel;
+      const svc = fmt === "csv" ? TeamService.exportTeamsCsv : TeamService.exportTeamsExcel;
       const blob = await svc(filters.trackId);
       saveAs(blob, `teams_track_${filters.trackId}.${fmt}`);
     } catch {
@@ -104,32 +115,48 @@ const TeamsSection = observer(() => {
     }
   };
 
-  const confirmDelete = (team) => {
-    setTeamToDelete(team);
-  };
-
-  const cancelDelete = () => {
-    setTeamToDelete(null);
-  };
+  const confirmDelete = (team) => setTeamToDelete(team);
+  const cancelDelete = () => setTeamToDelete(null);
 
   const doDelete = async () => {
     if (teamToDelete) {
       await deleteTeam(teamToDelete.id);
+      showSuccessMessage(`Команда "${teamToDelete.name}" успешно удалена`);
       setTeamToDelete(null);
     }
-    showSuccessMessage(`Команда "${teamToDelete.name}" успешно удалена`);
   };
 
+  // ===== Логика создания (локально)
+  const getDefaultTrackId = () =>
+    filters.trackId ?? userTrackId ?? tracks[0]?.id ?? null;
+
+  const handleCreateNewTeam = () => {
+    setCreateDraftTrackId(getDefaultTrackId());
+    setIsCreatingNew(true);
+  };
+
+  // ===== Рендер
   if (loading) return <Loader />;
   if (error)
     return (
-      <ErrorModal message={error} onClose={() => teamStore.setError(null)} />
+      <ErrorModal
+        message={error}
+        onClose={() => teamStore.setError(null)}
+      />
     );
 
-  console.log("currTeam", currentTeam);
   return (
     <>
       {!!successMessage && <SuccessMessage message={successMessage} />}
+
+      {/* Кнопка создания */}
+      <div className={styles.createButtonContainer}>
+        <button className={styles.createButton} onClick={handleCreateNewTeam}>
+          + Создать новую команду
+        </button>
+      </div>
+
+      {/* Панель фильтров/экспорта */}
       <div className={styles.sortPaginationControls}>
         <div className={styles.controlBlock}>
           <label>Трек:</label>
@@ -137,8 +164,8 @@ const TeamsSection = observer(() => {
             value={filters.trackId ?? ""}
             onChange={(e) =>
               updateFilter({
-                trackId : (e.target.value === "" ? null : + e.target.value),
-                page: 0
+                trackId: e.target.value === "" ? null : +e.target.value,
+                page: 0,
               })
             }
           >
@@ -167,8 +194,11 @@ const TeamsSection = observer(() => {
             value={filters.isFull ?? ""}
             onChange={(e) =>
               updateFilter({
-                isFull : (e.target.value === "" ? null : e.target.value === "true"),
-                page: 0
+                isFull:
+                  e.target.value === ""
+                    ? null
+                    : e.target.value === "true",
+                page: 0,
               })
             }
           >
@@ -184,8 +214,8 @@ const TeamsSection = observer(() => {
             value={filters.projectType ?? ""}
             onChange={(e) =>
               updateFilter({
-                projectType : e.target.value || null,
-                page : 0
+                projectType: e.target.value || null,
+                page: 0,
               })
             }
           >
@@ -208,61 +238,108 @@ const TeamsSection = observer(() => {
           </select>
         </div>
 
-        {/* Export */}
-        <button
-          onClick={() => handleExport("csv")}
-          className={styles.exportButton}
-        >
+        <button onClick={() => handleExport("csv")} className={styles.exportButton}>
           📥 CSV
         </button>
-        <button
-          onClick={() => handleExport("xlsx")}
-          className={styles.exportButton}
-        >
+        <button onClick={() => handleExport("xlsx")} className={styles.exportButton}>
           📥 Excel
         </button>
       </div>
 
+      {/* Таблица */}
       <DataTable
-        columns={[
-          { key: "id", title: "ID" },
-          { key: "name", title: "Название" },
-          {
-            key: "projectType",
-            title: "Тип проекта",
-            render: (_, t) => t.project_type?.name || "—",
-          },
-          {
-            key: "captain",
-            title: "Капитан",
-            render: (_, t) => t.captain?.user.fio || "—",
-          },
-        ]}
-        rows={displayed}
-        renderRowActions={(t) => (
-          <>
-            <button
-              onClick={() => {
-                setMembers(t.students || []);
-                setShowMembersModal(true);
-              }}
-              title="Состав команды"
-            >
-              ℹ️
-            </button>
-            <button onClick={() => setCurrentTeam(t)} title="Редактировать">
-              ✏️
-            </button>
-            <button onClick={() => confirmDelete(t)} title="Удалить">
-              🗑️
-            </button>
-          </>
-        )}
-      />
+  columns={[
+    { key: "id", title: "ID" },
+    { key: "name", title: "Название" },
+    {
+      key: "projectType",
+      title: "Тип проекта",
+      render: (_, t) => t.project_type?.name || "—",
+    },
+    {
+      key: "captain",
+      title: "Капитан",
+      render: (_, t) => t.captain?.user.fio || "—",
+    },
+    {
+      key: "technologies",
+      title: "Технологии",
+      render: (_, t) => {
+        const techs = t.technologies || [];
+        if (!techs.length) return "—";
+        const shown = techs.slice(0, 4);
+        const rest = techs.length - shown.length;
+        return (
+          <div className={styles.tagList}>
+            {shown.map((tech) => (
+              <span key={`tech-${tech.id}`} className={styles.tag}>
+                {tech.name}
+              </span>
+            ))}
+            {rest > 0 && (
+              <span className={styles.moreTag}>+{rest}</span>
+            )}
+          </div>
+        );
+      },
+    },
+    {
+      key: "projectDescription",
+      title: "Описание",
+      render: (_, t) => {
+        const text = t.project_description || "";
+        if (!text) return "—";
+        return (
+          <div
+            className={styles.descCell}
+            title={text}
+          >
+            {text}
+          </div>
+        );
+      },
+    },
+  ]}
+  rows={displayed}
+  renderRowActions={(t) => (
+    <>
+      <button
+        onClick={() => {
+          const m = (t.students || []).map((s) => ({
+            id: s.id,
+            userId: s.user?.id,
+            fio: s.user?.fio || "—",
+            course: s.course,
+            group: s.group_number,
+          }));
+          setMembers(m);
+          setShowMembersModal(true);
+        }}
+        title="Состав команды"
+      >
+        ℹ️
+      </button>
+      <button
+        onClick={() => {
+          setIsCreatingNew(false);
+          setCurrentTeam(t);
+        }}
+        title="Редактировать"
+      >
+        ✏️
+      </button>
+      <button onClick={() => confirmDelete(t)} title="Удалить">
+        🗑️
+      </button>
+    </>
+  )}
+/>
 
+
+      {/* Пагинация */}
       <div className={styles.pagination}>
         <button
-          onClick={() => updateFilter({page : Math.max(0, filters.page - 1)})}
+          onClick={() => updateFilter({ page: Math.max(0, filters.page - 1) })}
           disabled={filters.page === 0}
         >
           Назад
@@ -272,13 +349,14 @@ const TeamsSection = observer(() => {
           {Math.max(1, Math.ceil(filters.total / filters.size))}
         </span>
         <button
-          onClick={() => updateFilter({page : Math.max(0, filters.page + 1)})}
+          onClick={() => updateFilter({ page: Math.max(0, filters.page + 1) })}
           disabled={(filters.page + 1) * filters.size >= filters.total}
         >
           Далее
         </button>
       </div>
 
+      {/* Гард для экспорта */}
       {showTrackModal && (
         <ErrorModal
           message="Чтобы скачать отчёт, выберите трек"
@@ -286,6 +364,7 @@ const TeamsSection = observer(() => {
         />
       )}
 
+      {/* Модалка состава */}
       <Modal
         show={showMembersModal}
         onClose={() => setShowMembersModal(false)}
@@ -293,19 +372,18 @@ const TeamsSection = observer(() => {
       >
         <div className={styles.membersList}>
           {members.map((m) => (
-            <div key={m.user.id} className={styles.memberCard}>
+            <div key={m.id} className={styles.memberCard}>
               <img
-                src ={`${API_BASE_URL}/users/${m?.user.id}/photo`}
-                //src={m.user.avatarUrl || "/images/placeholder2.png"}
-                alt={m.user.fio}
+                src={`${API_BASE_URL}/users/${m.userId}/photo`}
+                alt={m.fio}
                 className={styles.memberAvatar}
               />
               <div className={styles.memberDetails}>
                 <Link to={`/students/${m.id}`} className={styles.memberName}>
-                  {m.user.fio}
+                  {m.fio}
                 </Link>
                 <p className={styles.memberMeta}>
-                  Курс {m.course || "—"} &bull; Группа {m.group_number || "—"}
+                  Курс {m.course || "—"} &bull; Группа {m.group || "—"}
                 </p>
               </div>
             </div>
@@ -313,26 +391,47 @@ const TeamsSection = observer(() => {
         </div>
       </Modal>
 
+      {/* Подтверждение удаления */}
       {teamToDelete && (
         <ErrorModal
-          title={"Удаление команды"}
+          title="Удаление команды"
           message={`Удалить команду "${teamToDelete.name}"?`}
           onClose={cancelDelete}
           onConfirm={doDelete}
         />
       )}
 
-      {currentTeam && (
+      {/* Модалка СОЗДАНИЯ: только по локальному флагу */}
+      {isCreatingNew && (
+        <TeamCreateModalAdmin
+          show
+          onClose={() => setIsCreatingNew(false)}
+          onSave={async (payload) => {
+            await createTeam(payload); // важно: не мержить с currentTeam
+            setIsCreatingNew(false);
+            showSuccessMessage("Команда успешно создана");
+            // при необходимости можно обновить список:
+            // teamStore.fetchTeams({ ...filters, searchTerm: search, sort });
+          }}
+          tracks={tracks}
+          projectTypes={projectTypes || []}
+          technologies={technologies || []}
+          defaultTrackId={createDraftTrackId}
+        />
+      )}
+
+      {/* Модалка РЕДАКТИРОВАНИЯ: по стору */}
+      {currentTeam && !isCreatingNew && (
         <>
           <TeamEditModalAdmin
             show
-            onClose={clearCurrentTeam}
+            onClose={() => clearCurrentTeam()}
             onSave={async (data) => {
               await updateTeam(data);
               if (!teamStore.error) {
                 clearCurrentTeam();
+                showSuccessMessage("Изменения сохранены");
               }
-              showSuccessMessage(`Изменения сохранены`);
             }}
             team={currentTeam}
             technologies={technologies || []}

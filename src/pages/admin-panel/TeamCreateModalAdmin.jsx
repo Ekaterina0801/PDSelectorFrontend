@@ -1,103 +1,71 @@
 import styles from "./TeamEditFormAdmin.module.scss";
 import { useState, useEffect } from "react";
 import Modal from "../../components/forms/modal/Modal";
+import { observer } from "mobx-react";
+import { useNewTeam } from "../../hooks/useNewTeamAdmin";
+import studentStore from "../../stores/studentStore";
 import { FiTrash2, FiPlus, FiCheck, FiX } from "react-icons/fi";
 import { useMemo } from "react";
-import { observer } from "mobx-react";
-import studentStore from "../../stores/studentStore";
-const TeamEditModalAdmin = observer(function TeamEditModalAdmin({
+const TeamCreateModalAdmin = observer(function TeamCreateModalAdmin({
   show,
   onClose,
   onSave,
   tracks,
   projectTypes = [],
-  team,
   technologies = [],
+  defaultTrackId = null,
 }) {
-  const [name, setName] = useState("");
-  const [projectType, setProjectType] = useState("");
-  const [track, setTrack] = useState("");
-  const [teamMembers, setTeamMembers] = useState([]); 
-  const [captain, setCaptain] = useState(""); 
-
-  const [techQuery, setTechQuery] = useState("");
+  const [name, setName]                 = useState("");
+  const [projectType, setProjectType]   = useState("");
+  const [track, setTrack]               = useState(defaultTrackId ? String(defaultTrackId) : "");
   const [projectDescription, setProjectDescription] = useState("");
-  const [techIds, setTechIds] = useState([]); 
+
+  const [techIds, setTechIds]           = useState([]);      // number[]
+  const [techQuery, setTechQuery]       = useState("");      // поиск по технологиям
+
+  const [teamMembers, setTeamMembers]   = useState([]);      // string[] id студентов
+  const [captain, setCaptain]           = useState("");      // string id капитана
 
   const { loading, availableStudents } = studentStore;
-  const filteredTechnologies = useMemo(
-    () =>
-      (technologies || []).filter((t) =>
-        t.name.toLowerCase().includes(techQuery.toLowerCase())
-      ),
-    [technologies, techQuery]
-  );
-  
+
+  // Сброс при открытии
   useEffect(() => {
-    if (!team) return;
-
-    setName(team.name || "");
-    setProjectType(team.project_type?.id?.toString() || "");
-
-    const tId = team.current_track?.toString() || "";
-    setTrack(tId);
-
-    const memberIds = (team.students || []).map((s) => s.id.toString());
-    setTeamMembers(memberIds);
-
-    const capId = team.captain?.id?.toString() || "";
-    setCaptain(memberIds.includes(capId) ? capId : "");
-
-    setProjectDescription(team.project_description || "");
-    setTechIds((team.technologies || []).map((t) => Number(t.id)));
-
-    if (tId && team.id) {
-    
-      studentStore.fetchAvailableStudents({ trackId: +tId, teamId: team.id });
-    }
-  }, [team]);
-
-  
-  useEffect(() => {
-    if (!track || !team?.id) return;
-
-    studentStore.fetchAvailableStudents({ trackId: +track, teamId: team.id });
-
-    
-    if (track === team.current_track?.toString()) {
-      const original = (team.students || []).map((s) => s.id.toString());
-      setTeamMembers(original);
-      const capId = team.captain?.id?.toString() || "";
-      setCaptain(original.includes(capId) ? capId : "");
-    } else {
-   
-      setTeamMembers([]);
-      setCaptain("");
-    }
-  }, [track, team?.id]);
-
-  const onTrackChange = (e) => {
-    setTrack(e.target.value);
+    if (!show) return;
+    setName("");
+    setProjectType("");
+    setTrack(defaultTrackId ? String(defaultTrackId) : "");
+    setProjectDescription("");
+    setTechIds([]);
+    setTechQuery("");
     setTeamMembers([]);
     setCaptain("");
-  };
+  }, [show, defaultTrackId]);
 
+  // При смене трека — тянем «свободных» студентов (у новой команды teamId: -1)
+  useEffect(() => {
+    if (!track) return;
+    studentStore.fetchAvailableStudents({ trackId: +track, teamId: -1 });
+    setTeamMembers([]);
+    setCaptain("");
+  }, [track]);
 
+  // Базовый пул опций студентов
   const baseOptions = useMemo(
     () =>
-      (availableStudents || []).map((u) => ({
-        id: u.id.toString(),
-        fio: u.user?.fio || "—",
+      (availableStudents || []).map((s) => ({
+        id: s.id.toString(),
+        fio: s.user?.fio || "—",
       })),
     [availableStudents]
   );
 
-
+  // Выбранные id (без пустых)
   const selectedIds = useMemo(
     () => new Set(teamMembers.filter(Boolean)),
     [teamMembers]
   );
 
+  // Опции для конкретного ряда селекта — исключаем выбранных в других рядах
   const getRowOptions = (currentId, rowIndex) => {
     const selectedExceptSelf = new Set(
       teamMembers.map((id, i) => (i === rowIndex ? null : id)).filter(Boolean)
@@ -107,6 +75,7 @@ const TeamEditModalAdmin = observer(function TeamEditModalAdmin({
     );
   };
 
+  // Можно ли добавить еще участника?
   const canAddMore = baseOptions.length > selectedIds.size;
 
   const addMember = () => {
@@ -114,7 +83,7 @@ const TeamEditModalAdmin = observer(function TeamEditModalAdmin({
     setTeamMembers((ms) => [...ms, ""]);
   };
 
-
+  // Если в другом ряду уже выбран этот студент — там очищаем
   const changeMember = (rowIndex, newId) => {
     setTeamMembers((prev) => {
       const next = [...prev];
@@ -136,40 +105,61 @@ const TeamEditModalAdmin = observer(function TeamEditModalAdmin({
     });
   };
 
-
+  // Кандидаты в капитаны — уникальные выбранные участники
   const captainCandidates = useMemo(
     () => Array.from(new Set(teamMembers.filter(Boolean))),
     [teamMembers]
   );
 
+  // Технологии: поиск и тумблер
+  const filteredTechnologies = useMemo(
+    () =>
+      (technologies || []).filter((t) =>
+        t.name.toLowerCase().includes(techQuery.toLowerCase())
+      ),
+    [technologies, techQuery]
+  );
 
   const toggleTech = (id) =>
     setTechIds((prev) =>
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
     );
 
+  // Сабмит
   const handleSubmit = () => {
-    onSave({
-      id: team.id,
-      name,
-      project_description: projectDescription,
+    if (!name.trim() || !projectType || !track) {
+      alert("Заполните: Название, Тип проекта и Трек.");
+      return;
+    }
+    const cleanMembers = teamMembers.filter(Boolean);
+    if (!cleanMembers.length) {
+      alert("Добавьте хотя бы одного участника.");
+      return;
+    }
+    if (!captain || !cleanMembers.includes(captain)) {
+      alert("Выберите капитана из списка участников.");
+      return;
+    }
+
+    const payload = {
+      name: name.trim(),
+      project_description: projectDescription.trim(),
       project_type: { id: +projectType },
+      current_track_id: +track,
       technologies: techIds.map((id) => ({ id })),
       captain_id: +captain,
-      studentIds: teamMembers.filter(Boolean).map((id) => +id),
-      current_track_id: +track,
-    });
+      studentIds: cleanMembers.map((id) => +id),
+    };
+
+    onSave(payload);
   };
 
   if (!show) return null;
 
   return (
-    <Modal
-      show
-      onClose={onClose}
-      title={team?.id ? "Редактирование команды" : "Новая команда"}
-    >
+    <Modal show onClose={onClose} title="Новая команда">
       <div className={styles.form}>
+
         {/* Название */}
         <label className={styles.field}>
           Название
@@ -195,7 +185,7 @@ const TeamEditModalAdmin = observer(function TeamEditModalAdmin({
         {/* Трек */}
         <label className={styles.field}>
           Трек
-          <select value={track} onChange={onTrackChange}>
+          <select value={track} onChange={(e) => setTrack(e.target.value)}>
             <option value="">— выберите трек —</option>
             {tracks.map((ti) => (
               <option key={`tr-${ti.id}`} value={ti.id.toString()}>
@@ -217,8 +207,7 @@ const TeamEditModalAdmin = observer(function TeamEditModalAdmin({
           />
         </label>
 
-        {/* Технологии */}
-        {/* Технологии */}
+        {/* Технологии — чипы + поиск */}
         <div className={styles.field}>
           <div className={styles.techHeader}>
             <div className={styles.sectionTitle}>Технологии</div>
@@ -256,7 +245,7 @@ const TeamEditModalAdmin = observer(function TeamEditModalAdmin({
             )}
           </div>
 
-          {/* Облако тегов (доступные / отфильтрованные) */}
+          {/* Облако доступных тегов */}
           <div className={styles.techCloud}>
             {filteredTechnologies.map((t) => {
               const active = techIds.includes(t.id);
@@ -264,9 +253,7 @@ const TeamEditModalAdmin = observer(function TeamEditModalAdmin({
                 <button
                   key={`tech-${t.id}`}
                   type="button"
-                  className={`${styles.techChip} ${
-                    active ? styles.active : ""
-                  }`}
+                  className={`${styles.techChip} ${active ? styles.active : ""}`}
                   onClick={() => toggleTech(t.id)}
                   aria-pressed={active}
                 >
@@ -359,20 +346,8 @@ const TeamEditModalAdmin = observer(function TeamEditModalAdmin({
 
         {/* Кнопки */}
         <div className={styles.actions}>
-          <button
-            className={styles.btnSave}
-            onClick={handleSubmit}
-            disabled={
-              !name ||
-              !projectType ||
-              !track ||
-              !teamMembers.filter(Boolean).length ||
-              !captain ||
-              !teamMembers.includes(captain) ||
-              teamMembers.some((m) => !m)
-            }
-          >
-            Сохранить изменения
+          <button className={styles.btnSave} onClick={handleSubmit}>
+            Создать команду
           </button>
           <button className={styles.btnCancel} onClick={onClose} type="button">
             Отменить
@@ -383,4 +358,4 @@ const TeamEditModalAdmin = observer(function TeamEditModalAdmin({
   );
 });
 
-export default TeamEditModalAdmin;
+export default TeamCreateModalAdmin;

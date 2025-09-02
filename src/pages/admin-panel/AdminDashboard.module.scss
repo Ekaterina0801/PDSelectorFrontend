@@ -31,6 +31,39 @@
   }
 }
 
+
+.tagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: ui.$radius-sm;
+  background: ui.$color-primary-light;
+  color: ui.$color-primary;
+  font-size: 0.85rem;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.moreTag {
+  @extend .tag;
+  background: ui.$color-grey-200;
+  color: ui.$color-grey-700;
+}
+
+.descCell {
+  max-width: 420px; // подрежь под ширину таблицы
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .content {
   flex: 1;
 }
@@ -267,4 +300,28 @@
     font-size: ui.$font-size-2xl;
   }
   
+}
+.createButtonContainer {
+  margin-bottom: 20px;
+  text-align: right;
+}
+
+.createButton {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
 }

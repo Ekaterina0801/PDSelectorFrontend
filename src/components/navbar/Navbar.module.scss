@@ -1,14 +1,12 @@
 @use "sass:color";
 @use "@/styles/tokens" as t;
 
-
 /* ===== NAV ROOT: высокий, «воздушный» ===== */
 .nav {
   position: fixed;
   inset-inline: 0;
   top: 0;
   z-index: 1000;
-
   background: linear-gradient(
     135deg,
     color.scale(t.$color-primary-dark, $lightness: -2%) 0%,
@@ -23,13 +21,11 @@
 
 /* ===== ВНУТРЕННИЙ КОНТЕЙНЕР ===== */
 .container {
-  /* ширина и внутренние отступы делают макет «широким» */
   max-width: min(1320px, 100% - clamp(24px, 6vw, 64px));
   margin: clamp(10px, 1.5vh, 18px) auto;
   padding: clamp(10px, 1.2vh, 16px) 0;
-
   display: grid;
-  grid-template-columns: auto 1fr; /* бренд слева, контент справа */
+  grid-template-columns: auto 1fr;
   align-items: center;
   gap: clamp(12px, 2vw, 28px);
 }
@@ -49,8 +45,11 @@
     line-height: 1.2;
   }
 }
+
 .logoDot {
-  width: 12px; height: 12px; border-radius: 50%;
+  width: 12px; 
+  height: 12px; 
+  border-radius: 50%;
   background: radial-gradient(circle at 30% 30%, t.$color-primary-light, t.$color-white 60%, transparent 70%);
   box-shadow: 0 0 12px rgba(255,255,255,0.6);
 }
@@ -59,7 +58,8 @@
 .burger {
   justify-self: end;
   display: none;
-  width: 44px; height: 44px; /* крупнее зона нажатия */
+  width: 44px; 
+  height: 44px;
   border-radius: 12px;
   background: rgba(255,255,255,0.12);
   border: 1px solid rgba(255,255,255,0.18);
@@ -67,53 +67,84 @@
   position: relative;
   transition: t.$transition-fast;
 
-  &:hover { background: rgba(255,255,255,0.16); }
+  &:hover { 
+    background: rgba(255,255,255,0.16); 
+  }
 
   span {
-    position: absolute; left: 12px; right: 12px;
-    height: 2px; border-radius: 1px; background: t.$color-white;
+    position: absolute; 
+    left: 12px; 
+    right: 12px;
+    height: 2px; 
+    border-radius: 1px; 
+    background: t.$color-white;
     transition: t.$transition-fast;
-    &:nth-child(1){ top: 13px; } &:nth-child(2){ top: 21px; } &:nth-child(3){ top: 29px; }
+    
+    &:nth-child(1){ top: 13px; } 
+    &:nth-child(2){ top: 21px; } 
+    &:nth-child(3){ top: 29px; }
   }
 
   @media (max-width: t.$breakpoint-lg) {
-    display: inline-flex; align-items: center; justify-content: center;
+    display: inline-flex; 
+    align-items: center; 
+    justify-content: center;
   }
 }
 
 /* ===== МЕНЮ ===== */
 .menu {
   list-style: none;
-  margin: 0; padding: 0;
-
-  /* центрируем пункты и даём «воздух» между ними */
-  display: flex; align-items: center; justify-content: center;
+  margin: 0; 
+  padding: 0;
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
   gap: clamp(14px, 3vw, 36px);
-
-  /* растягиваем зону меню, чтобы трек уехал вправо */
   grid-column: 2 / -1;
 }
 
-.menu li { position: relative; display: flex; align-items: center; }
+.menu li { 
+  position: relative; 
+  display: flex; 
+  align-items: center; 
+}
 
-/* ===== ССЫЛКИ (крупнее, больше паддингов) ===== */
+/* ===== ССЫЛКИ ===== */
 .link {
-  display: inline-flex; align-items: center; gap: 10px;
-  text-decoration: none; color: t.$color-white;
-  font-weight: 700; letter-spacing: .2px;
+  display: inline-flex; 
+  align-items: center; 
+  gap: 10px;
+  text-decoration: none; 
+  color: t.$color-white;
+  font-weight: 700; 
+  letter-spacing: .2px;
   padding: 10px clamp(14px, 1.8vw, 20px);
   border-radius: 999px;
   transition: t.$transition-fast;
-  min-height: 44px; /* цель 44–48px */
+  min-height: 44px;
   font-size: clamp(.98rem, 1.2vw, 1.05rem);
+  position: relative;
 
   &::before {
-    content: ""; position: absolute; inset: 0; border-radius: inherit;
-    background: rgba(255,255,255,0); transition: t.$transition-fast; z-index: -1;
+    content: ""; 
+    position: absolute; 
+    inset: 0; 
+    border-radius: inherit;
+    background: rgba(255,255,255,0); 
+    transition: t.$transition-fast; 
+    z-index: -1;
   }
-  &:hover::before { background: rgba(255,255,255,0.12); }
+  
+  &:hover::before { 
+    background: rgba(255,255,255,0.12); 
+  }
 }
-.icon { font-size: 1rem; opacity: .9; }
+
+.icon { 
+  font-size: 1rem; 
+  opacity: .9; 
+}
 
 .isActive {
   color: t.$color-primary-dark;
@@ -121,88 +152,141 @@
   box-shadow: 0 8px 22px rgba(0,0,0,0.12);
 }
 
-/* ===== СЕЛЕКТОР ТРЕКА (справа) ===== */
+/* ===== СЕЛЕКТОР ТРЕКА ===== */
 .trackLi {
-  margin-left: auto; /* уводим вправо */
+  margin-left: auto;
 }
 
 .trackSelector {
   position: relative;
   width: 100%;
-  max-width: clamp(240px, 26vw, 320px); /* шире — читабельнее */
+  max-width: clamp(240px, 26vw, 320px);
+  overflow: visible;
+  z-index: 1001;
 }
 
 .selectBtn {
   width: 100%;
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
+  gap: 12px;
   padding: 12px clamp(14px, 1.8vw, 18px);
   border-radius: 999px;
   color: t.$color-primary;
   background: linear-gradient(180deg, t.$color-white 0%, color.scale(t.$color-white, $lightness: -3%) 100%);
   border: 1px solid t.$color-grey-200;
   box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-  cursor: pointer; transition: t.$transition-fast; text-align: left;
+  cursor: pointer; 
+  transition: t.$transition-fast; 
+  text-align: left;
   min-height: 46px;
 
-  &:hover { transform: translateY(-1px); box-shadow: 0 12px 24px rgba(0,0,0,0.14); }
+  &:hover { 
+    transform: translateY(-1px); 
+    box-shadow: 0 12px 24px rgba(0,0,0,0.14); 
+  }
 }
 
 .selectLabel {
   display: inline-block;
   max-width: clamp(150px, 18vw, 220px);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis;
 }
 
-.chevron { transition: transform .25s ease; }
-.open .chevron { transform: rotate(180deg); }
+.chevron { 
+  transition: transform .25s ease; 
+}
 
-/* ===== ДРОПДАУН ТРЕКА (крупнее, аккуратнее) ===== */
+.open .chevron { 
+  transform: rotate(180deg); 
+}
+
+/* ===== ДРОПДАУН ТРЕКА ===== */
 .dropdown {
-  position: absolute; inset-inline: 0; top: calc(100% + 10px);
+  position: absolute; 
+  inset-inline: 0; 
+  top: calc(100% + 10px);
   background: t.$color-white;
   border-radius: 16px;
   padding: 10px;
   box-shadow: 0 24px 44px rgba(0,0,0,0.18);
   border: 1px solid t.$color-grey-200;
-  opacity: 0; transform: translateY(-8px);
-  pointer-events: none; transition: t.$transition-fast; z-index: 1001;
+  opacity: 0; 
+  transform: translateY(-8px);
+  pointer-events: none; 
+  transition: t.$transition-fast; 
+  z-index: 1100;
 }
-.dropOpen { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+.dropOpen { 
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
 
 .dropList {
-  list-style: none; margin: 0; padding: 6px;
-  max-height: 360px; overflow: auto; /* выше — меньше скролла */
+  list-style: none; 
+  margin: 0; 
+  padding: 6px;
+  max-height: 360px; 
+  overflow: auto;
 }
 
 .dropItem {
   width: 100%;
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between;
   gap: 12px;
   padding: 12px 14px;
-  background: transparent; border: none; cursor: pointer;
-  color: t.$color-primary; text-align: left;
-  border-radius: 12px; transition: t.$transition-fast;
-  font-weight: 600; font-size: 0.98rem;
+  background: transparent; 
+  border: none; 
+  cursor: pointer;
+  color: t.$color-primary; 
+  text-align: left;
+  border-radius: 12px; 
+  transition: t.$transition-fast;
+  font-weight: 600; 
+  font-size: 0.98rem;
   min-height: 44px;
 
-  &:hover { background: t.$color-primary-light; color: t.$color-primary-dark; }
+  &:hover { 
+    background: t.$color-primary-light; 
+    color: t.$color-primary-dark; 
+  }
 }
-.itemName {
-  display: inline-block; max-width: 100%;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.selected { background: t.$color-primary-light; color: t.$color-primary-dark; }
-.check   { color: t.$color-primary; }
 
-/* ===== МОБИЛЬНОЕ МЕНЮ (оверлей с «воздухом») ===== */
+.itemName {
+  display: inline-block; 
+  max-width: 100%;
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis;
+}
+
+.selected { 
+  background: t.$color-primary-light; 
+  color: t.$color-primary-dark; 
+}
+
+.check { 
+  color: t.$color-primary; 
+}
+
+/* ===== МОБИЛЬНОЕ МЕНЮ ===== */
 @media (max-width: t.$breakpoint-lg) {
-  .burger { display: inline-flex; }
+  .burger { 
+    display: inline-flex; 
+  }
 
   .menu {
     position: fixed;
     left: clamp(10px, 3vw, 20px);
     right: clamp(10px, 3vw, 20px);
-    top: calc( var(--nav-top, 70px) );
+    top: calc(var(--nav-top, 70px));
     padding: clamp(14px, 2vh, 20px);
     flex-direction: column;
     gap: clamp(12px, 2vh, 16px);
@@ -217,26 +301,53 @@
     box-shadow: t.$shadow-strong;
     backdrop-filter: saturate(140%) blur(10px);
     display: none;
+    z-index: 999;
 
-    &.isOpen { display: flex; animation: slideDown .22s ease-out both; }
+    &.isOpen { 
+      display: flex; 
+      animation: slideDown .22s ease-out both; 
+    }
   }
 
-  .trackLi { width: 100%; margin-left: 0; }
-  .trackSelector { max-width: none; }
+  .trackLi { 
+    width: 100%; 
+    margin-left: 0; 
+  }
+  
+  .trackSelector { 
+    max-width: none; 
+  }
 }
 
-/* плавное появление для меню */
 @keyframes slideDown {
-  from { transform: translateY(-6px); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
+  from { 
+    transform: translateY(-6px); 
+    opacity: 0; 
+  }
+  to { 
+    transform: translateY(0); 
+    opacity: 1; 
+  }
 }
 
 /* ===== УЧЁТ ВЫСОТЫ ФИКСИРОВАННОГО НАВБАРА ===== */
-:global(body) { padding-top: clamp(74px, 10vh, 96px); }
+:global(body) { 
+  padding-top: clamp(74px, 10vh, 96px); 
+}
 
 /* ===== XXL ===== */
 @media (min-width: 2560px) {
-  .link      { font-size: t.$font-size-2xl; padding: 12px 22px; min-height: 48px; }
-  .brand h3  { font-size: t.$font-size-3xl; }
-  .selectBtn { min-height: 50px; }
+  .link { 
+    font-size: t.$font-size-2xl; 
+    padding: 12px 22px; 
+    min-height: 48px; 
+  }
+  
+  .brand h3 { 
+    font-size: t.$font-size-3xl; 
+  }
+  
+  .selectBtn { 
+    min-height: 50px; 
+  }
 }
