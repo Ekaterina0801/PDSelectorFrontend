@@ -35,8 +35,6 @@ class StudentService {
   
   // Создание студента
   static async createStudent(trackId, studentData) {
-    console.log('trackId',trackId);
-    console.log('studentData',studentData);
     return requests.post(`/students?trackId=${encodeURIComponent(trackId)}`, studentData);
   }
 

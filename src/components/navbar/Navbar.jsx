@@ -9,7 +9,6 @@ import styles from "./Navbar.module.scss";
 const Navbar = observer(() => {
   const { tracks, fetchTracks } = trackStore;
   const { trackId, studentId, isAdmin, setTrackId } = authStore;
-  console.log('trackId', trackId);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);

@@ -38,7 +38,6 @@ export const fetchTeams = async ({ input, trackId, isFull, projectType, technolo
 
 // Получение данных о командах
 export const fetchTeamById = async (teamId) => {
-  console.log('id team',teamId);
     try {
       const response = await fetch(`${API_BASE_URL}/teams/${teamId}`, {
         method: 'GET',
@@ -70,7 +69,6 @@ export const fetchFilterParamsByTrackId = async (trackId) => {
 
 
   export const createTeam = async (teamData) => {
-    console.log('sent', teamData);
     try {
       const response = await fetch(`${API_BASE_URL}/teams`, {
         method: "POST",
