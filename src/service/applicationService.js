@@ -22,7 +22,6 @@ export const ApplicationService = {
 
   // Получение заявки по студенту и команде
   fetchApplicationByTeamIdAndStudentId: (teamId, studentId) => {
-    console.log('fetchApplicationByTeamIdAndStudentId', teamId, studentId);
     return requests.get(`/applications/team/${teamId}/student/${studentId}`);
   },
 

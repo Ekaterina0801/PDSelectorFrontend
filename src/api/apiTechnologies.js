@@ -12,9 +12,7 @@ export const fetchTechnologies = async () => {
       if (!response.ok) {
         throw new Error(`Ошибка HTTP: ${response.status}`);
       }
-      console.log('response', response);
       const data = await response.json();
-      console.log('data',data);
   
       return data;
     } catch (error) {

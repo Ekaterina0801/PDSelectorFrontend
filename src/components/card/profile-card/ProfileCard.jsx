@@ -30,9 +30,6 @@ const ProfileCard = observer(function ProfileCard({
 }) {
   if (!studentData) return <Loader />;
 
-
-
-  console.log('')
   const authStudent = authStore.authStudent;
   const currentUserId = authStudent?.id;
   console.log('authStudent', authStudent)
