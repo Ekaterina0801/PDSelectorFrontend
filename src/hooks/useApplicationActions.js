@@ -51,8 +51,18 @@ export function useApplicationActions({ type, teamId, studentId }) {
       return { status, actions, loading, error };
     }
 
-    if (type === 'request') {
-    
+    if (app?.type === 'REQUEST') {
+      if (app.possibleTransitions.includes('sent')) {
+        actions.push({
+          key: 'send',
+          text: 'Подать заявку',
+          handler: () => doAction(
+            { team_id: teamId, student_id: studentId, status: 'sent', type },
+            'Заявка отправлена',
+            'update'
+          )
+        });
+      }
       if (app.possibleTransitions.includes('accepted')) {
         actions.push({
           key: 'approve',
@@ -75,17 +85,6 @@ export function useApplicationActions({ type, teamId, studentId }) {
           )
         });
       }
-      if (app.possibleTransitions.includes('sent')) {
-        actions.push({
-          key: 'send',
-          text: 'Подать заявку',
-          handler: () => doAction(
-            { team_id: teamId, student_id: studentId, status: 'sent', type },
-            'Заявка отправлена',
-            'create'
-          )
-        });
-      }
       if (app.possibleTransitions.includes('cancelled')) {
         actions.push({
           key: 'cancel',
@@ -97,7 +96,7 @@ export function useApplicationActions({ type, teamId, studentId }) {
           )
         });
       }
-  } else /* type === 'invite' */ {
+    } else /* type === 'invite' */ {
     // === ПРИГЛАШЕНИЯ ===
     // 1) Первичное приглашение (если статус пуст)
       if (app.possibleTransitions.includes('sent')) {

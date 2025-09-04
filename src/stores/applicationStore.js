@@ -108,9 +108,11 @@ class ApplicationStore {
     this.errorByKey.set(key, null)
     try {
       const data = await ApplicationService.fetchApplicationByTeamIdAndStudentId(teamId, studentId)
-      data.possibleTransitions = data.possibleTransitions?.map(element =>
-        element.toLowerCase()
-      );
+      if (data !== null) {
+        data.possibleTransitions = data.possibleTransitions.map(element =>
+          element.toLowerCase()
+        );
+      }
       runInAction(() => {
         this.applicationsByKey.set(key, data)
       })
