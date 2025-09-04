@@ -25,7 +25,6 @@ function TeamForm({ newTeam, onChange, onSubmit, onCancel, technologies, project
           value={newTeam.projectDescription}
           onChange={onChange}
           placeholder="Краткое описание"
-          required
         />
       </div>
 
@@ -36,7 +35,6 @@ function TeamForm({ newTeam, onChange, onSubmit, onCancel, technologies, project
           name="projectType"
           value={newTeam.projectType?.id}
           onChange={onChange}
-          required
         >
           <option value="">-- выберите тип --</option>
           {projectTypes.map(pt => (

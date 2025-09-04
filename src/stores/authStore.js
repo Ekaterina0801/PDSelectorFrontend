@@ -5,14 +5,21 @@ import commonStore from "./commonStore";
 import trackStore from "./trackStore";
 import { extractErrorMessage } from "../utils/errorUtils";
 class AuthStore {
+  // --- observable state ---
   user = null;
   isAdmin = false;
+
   studentId = null;
   authStudent = null;
+
   users = [];
   total = 0;
-  loading = false;
+
+  loading = false;      // текущее состояние загрузки (авторизация/запросы)
+  initialized = false;  // первичная инициализация завершена?
+
   error = null;
+
   trackId = null;
   filters = {
     page: 0,
@@ -25,17 +32,17 @@ class AuthStore {
     trackId: null,
     isEnabled: null
   };
+
   roles = [];
 
   constructor() {
-    makeAutoObservable(this);
+    makeAutoObservable(this, {}, { autoBind: true });
     this.loadTrackId();
   }
 
-  loadTrackId() {
-    const stored = localStorage.getItem("trackId");
-    this.trackId = stored ? Number(stored) : 1;
-    this.filters.trackId = this.trackId;
+  // ---------- computed ----------
+  get isAuthenticated() {
+    return !!this.user;
   }
 
   get isTrackActive() {
@@ -47,12 +54,30 @@ class AuthStore {
     return today >= start && today <= end;
   }
 
+  // ---------- basic setters ----------
+  setError(error) {
+    this.error = error;
+  }
+
+  // ---------- track helpers ----------
+  loadTrackId() {
+    try {
+      const stored = typeof window !== "undefined" ? localStorage.getItem("trackId") : null;
+      this.trackId = stored ? Number(stored) : 1;
+      this.filters.trackId = this.trackId; // без fetchUsers на старте
+    } catch {
+      this.trackId = 1;
+      this.filters.trackId = 1;
+    }
+  }
+
   setTrackId(trackId) {
     this.trackId = trackId;
-    localStorage.setItem("trackId", trackId);
+    try { localStorage.setItem("trackId", String(trackId)); } catch {}
     this.setFilters({ trackId });
   }
 
+  // ---------- users table ----------
   setFilters(newFilters) {
     this.filters = { ...this.filters, ...newFilters };
     this.fetchUsers();
@@ -61,9 +86,7 @@ class AuthStore {
   async fetchRoles() {
     try {
       const data = await AuthService.getRoles();
-      runInAction(() => {
-        this.roles = data;
-      });
+      runInAction(() => { this.roles = data ?? []; });
     } catch {}
   }
 
@@ -72,20 +95,11 @@ class AuthStore {
     this.error = null;
     try {
       const {
-        page,
-        size,
-        sort,
-        fio,
-        role,
-        course,
-        groupNumber,
-        trackId,
-        isEnabled
+        page, size, sort, fio, role, course, groupNumber, trackId, isEnabled
       } = this.filters;
+
       const data = await AuthService.fetchUsers({
-        page,
-        size,
-        sort,
+        page, size, sort,
         filterFio: fio,
         filterRole: role,
         filterCourse: course,
@@ -93,90 +107,38 @@ class AuthStore {
         trackId,
         isEnabled
       });
+
       runInAction(() => {
-        this.users = data.content;
-        this.total = data.totalElements;
+        this.users = data?.content ?? [];
+        this.total = data?.totalElements ?? 0;
       });
     } catch (err) {
       runInAction(() => {
-         this.error = extractErrorMessage(err) || "Ошибка при загрузке пользователей";
+        this.error = extractErrorMessage(err) || "Ошибка при загрузке пользователей";
       });
     } finally {
-      runInAction(() => {
-        this.loading = false;
-      });
+      runInAction(() => { this.loading = false; });
     }
-  }
-
-  async checkAuth() {
-    if (this.trackId == null) {
-      this.trackId = 1;
-    }
-    this.loading = true;
-    this.error = null;
-    try {
-      const user = await AuthService.getCurrentUser();
-      const student = await StudentService.getCurrentStudentId();
-      let studentData = null;
-      if (student)
-        studentData = await StudentService.fetchStudentById(student);
-      this.loadTrackId();
-      runInAction(() => {
-        this.user = user;
-        this.studentId = student;
-        this.authStudent = studentData;
-        this.isAdmin = user.role === "ADMIN";
-        commonStore.loadToken();
-      });
-    } catch (err) {
-      runInAction(() => {
-        this.user = null;
-         this.error = extractErrorMessage(err) || "Ошибка авторизации";
-      });
-      if (err?.response?.status === 401) {
-        window.location.href = "/login";
-      }
-    } finally {
-      runInAction(() => {
-        this.loading = false;
-      });
-    }
-  }
-
-  logout() {
-    this.user = null;
-    commonStore.setToken(null);
-    window.location.href = "/login";
   }
 
   async updateUser(dto) {
     this.loading = true;
     this.error   = null;
     try {
-      const cleaned = Object.fromEntries(
-        Object.entries(dto).filter(([_, v]) => v != null)
-      );
+      const cleaned = Object.fromEntries(Object.entries(dto).filter(([, v]) => v != null));
       await AuthService.updateUser(cleaned);
       await this.fetchUsers();
     } catch (err) {
       runInAction(() => {
-         this.error = extractErrorMessage(err) || "Ошибка при сохранении пользователя";
+        this.error = extractErrorMessage(err) || "Ошибка при сохранении пользователя";
       });
     } finally {
-      runInAction(() => {
-        this.loading = false;
-      });
+      runInAction(() => { this.loading = false; });
     }
   }
-  
 
   async deleteUser(id) {
-    if (!window.confirm("Вы уверены, что хотите деактивировать этого пользователя?")) {
-      console.log("User deletion cancelled");
-      return;
-    
-    }
-    console.log("Deleting user with ID:", id);
+    if (!window.confirm("Вы уверены, что хотите деактивировать этого пользователя?")) return;
     this.loading = true;
     this.error = null;
     try {
@@ -184,23 +146,91 @@ class AuthStore {
       await this.fetchUsers();
     } catch (err) {
       runInAction(() => {
-        console.log(err);
-         this.error = extractErrorMessage(err) || "Ошибка при удалении пользователя";
+        this.error = extractErrorMessage(err) || "Ошибка при удалении пользователя";
       });
+    } finally {
+      runInAction(() => { this.loading = false; });
+    }
+  }
+
+  // ---------- auth lifecycle ----------
+  async bootstrap() {
+    if (this.initialized) return;
+
+    // подхватываем токен (если commonStore ещё не успел)
+    commonStore.loadToken?.();
+
+    // если токена нет — не дёргаем бекенд: сразу считаем неавторизованным
+    const token =
+      commonStore.token ||
+      (typeof window !== "undefined" ? localStorage.getItem("token") : null);
+
+    if (!token) {
+      runInAction(() => {
+        this.user = null;
+        this.isAdmin = false;
+        this.studentId = null;
+        this.authStudent = null;
+        this.loading = false;
+        this.initialized = true;
+      });
+      return;
+    }
+
+    // токен есть — проверяем
+    this.loading = true;
+    try {
+      await this.checkAuth();
     } finally {
       runInAction(() => {
         this.loading = false;
+        this.initialized = true;
       });
     }
   }
 
-  get isAuthenticated() {
-    return !!this.user;
+  async checkAuth() {
+    if (this.trackId == null) this.trackId = 1;
+
+    this.error = null;
+    try {
+      const user = await AuthService.getCurrentUser();
+      const student = await StudentService.getCurrentStudentId();
+      const studentData = student ? await StudentService.fetchStudentById(student) : null;
+
+      this.loadTrackId(); // синк трека из LS
+
+      runInAction(() => {
+        this.user = user ?? null;
+        this.studentId = student ?? null;
+        this.authStudent = studentData ?? null;
+
+        // роли на фронте: считаем админом только при точном ADMIN
+        this.isAdmin = (user?.role === "ADMIN");
+      });
+    } catch (err) {
+      runInAction(() => {
+        this.user = null;
+        this.studentId = null;
+        this.authStudent = null;
+        this.isAdmin = false;
+        this.error = extractErrorMessage(err) || "Ошибка авторизации";
+      });
+    }
   }
 
-  setError(error) {
-    this.error = error;
+  logout() {
+    this.user = null;
+    this.isAdmin = false;
+    this.studentId = null;
+    this.authStudent = null;
+    this.error = null;
+
+    commonStore.setToken?.(null);
+    try { localStorage.removeItem("token"); } catch {}
+    window.location.href = "/login";
   }
 }
 
-export default new AuthStore();
+const authStore = new AuthStore();
+export default authStore;

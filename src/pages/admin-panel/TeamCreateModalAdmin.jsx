@@ -20,15 +20,14 @@ const TeamCreateModalAdmin = observer(function TeamCreateModalAdmin({
   const [track, setTrack]               = useState(defaultTrackId ? String(defaultTrackId) : "");
   const [projectDescription, setProjectDescription] = useState("");
 
-  const [techIds, setTechIds]           = useState([]);      // number[]
-  const [techQuery, setTechQuery]       = useState("");      // поиск по технологиям
+  const [techIds, setTechIds]           = useState([]);      
+  const [techQuery, setTechQuery]       = useState("");     
 
-  const [teamMembers, setTeamMembers]   = useState([]);      // string[] id студентов
-  const [captain, setCaptain]           = useState("");      // string id капитана
-
+  const [teamMembers, setTeamMembers]   = useState([]);      
+  const [captain, setCaptain]           = useState("");      
   const { loading, availableStudents } = studentStore;
 
-  // Сброс при открытии
+
   useEffect(() => {
     if (!show) return;
     setName("");
@@ -41,7 +40,7 @@ const TeamCreateModalAdmin = observer(function TeamCreateModalAdmin({
     setCaptain("");
   }, [show, defaultTrackId]);
 
-  // При смене трека — тянем «свободных» студентов (у новой команды teamId: -1)
+
   useEffect(() => {
     if (!track) return;
     studentStore.fetchAvailableStudents({ trackId: +track, teamId: -1 });
@@ -49,7 +48,7 @@ const TeamCreateModalAdmin = observer(function TeamCreateModalAdmin({
     setCaptain("");
   }, [track]);
 
-  // Базовый пул опций студентов
+ 
   const baseOptions = useMemo(
     () =>
       (availableStudents || []).map((s) => ({
@@ -59,13 +58,13 @@ const TeamCreateModalAdmin = observer(function TeamCreateModalAdmin({
     [availableStudents]
   );
 
-  // Выбранные id (без пустых)
+
   const selectedIds = useMemo(
     () => new Set(teamMembers.filter(Boolean)),
     [teamMembers]
   );
 
-  // Опции для конкретного ряда селекта — исключаем выбранных в других рядах
+
   const getRowOptions = (currentId, rowIndex) => {
     const selectedExceptSelf = new Set(
       teamMembers.map((id, i) => (i === rowIndex ? null : id)).filter(Boolean)
@@ -75,7 +74,7 @@ const TeamCreateModalAdmin = observer(function TeamCreateModalAdmin({
     );
   };
 
-  // Можно ли добавить еще участника?
+  
   const canAddMore = baseOptions.length > selectedIds.size;
 
   const addMember = () => {
@@ -83,7 +82,7 @@ const TeamCreateModalAdmin = observer(function TeamCreateModalAdmin({
     setTeamMembers((ms) => [...ms, ""]);
   };
 
-  // Если в другом ряду уже выбран этот студент — там очищаем
+
   const changeMember = (rowIndex, newId) => {
     setTeamMembers((prev) => {
       const next = [...prev];
@@ -105,13 +104,11 @@ const TeamCreateModalAdmin = observer(function TeamCreateModalAdmin({
     });
   };
 
-  // Кандидаты в капитаны — уникальные выбранные участники
   const captainCandidates = useMemo(
     () => Array.from(new Set(teamMembers.filter(Boolean))),
     [teamMembers]
   );
 
-  // Технологии: поиск и тумблер
   const filteredTechnologies = useMemo(
     () =>
       (technologies || []).filter((t) =>
@@ -145,7 +142,7 @@ const TeamCreateModalAdmin = observer(function TeamCreateModalAdmin({
       name: name.trim(),
       project_description: projectDescription.trim(),
       project_type: { id: +projectType },
-      current_track_id: +track,
+      current_track: +track,
       technologies: techIds.map((id) => ({ id })),
       captain_id: +captain,
       studentIds: cleanMembers.map((id) => +id),

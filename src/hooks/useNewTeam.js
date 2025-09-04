@@ -47,7 +47,7 @@ export const useNewTeam = (currentTrackId, studentId, technologies, projectTypes
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Submitting new team:", newTeam);
-    if (!newTeam.name || !newTeam.projectDescription || !newTeam.projectType || !newTeam.technologies.length) {
+    if (!newTeam.name || !newTeam.projectType) {
       alert("Заполните все обязательные поля.");
       return;
     }

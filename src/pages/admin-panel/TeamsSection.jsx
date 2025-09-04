@@ -53,11 +53,9 @@ const TeamsSection = observer(() => {
 
   const [teamToDelete, setTeamToDelete] = useState(null);
 
-  // Локальное состояние создания (НЕ через currentTeam)
   const [isCreatingNew, setIsCreatingNew] = useState(false);
   const [createDraftTrackId, setCreateDraftTrackId] = useState(null);
 
-  // ===== Bootstrap справочников
   useEffect(() => {
     trackStore.fetchTracks();
     authStore.fetchUsers();
@@ -65,22 +63,15 @@ const TeamsSection = observer(() => {
     technologyStore.fetchTechnologies();
   }, []);
 
-  // ===== Очистка стора при монтировании (чтобы модалки сами не открывались)
-  useEffect(() => {
-    setIsCreatingNew(false);
-    clearCurrentTeam();
-  }, [clearCurrentTeam]);
-
-  // ===== Загрузка команд при смене фильтров/сортировки
+  // грузим список команд/фильтры (НЕ завязываемся на currentTeam — это вызывало лишние перезагрузки)
   useEffect(() => {
     const load = async () => {
       await teamStore.fetchFilters(filters.trackId);
       await teamStore.fetchTeams({ ...filters, searchTerm: search, sort });
     };
     load();
-  }, [filters.trackId, filters.page, filters.size, sort, currentTeam, search]);
+  }, [filters.trackId, filters.page, filters.size, sort, search]);
 
-  // ===== Отображаемые строки таблицы (локальный поиск + сортировка)
   const displayed = useMemo(() => {
     let arr = teams.slice();
     const q = search.trim().toLowerCase();
@@ -95,7 +86,6 @@ const TeamsSection = observer(() => {
     });
   }, [teams, search, sort]);
 
-  // ===== Хелперы
   const updateFilter = useCallback(
     (diff) => setFilters({ ...filters, ...diff }),
     [filters, setFilters]
@@ -116,7 +106,7 @@ const TeamsSection = observer(() => {
   };
 
   const confirmDelete = (team) => setTeamToDelete(team);
-  const cancelDelete = () => setTeamToDelete(null);
+  const cancelDelete  = () => setTeamToDelete(null);
 
   const doDelete = async () => {
     if (teamToDelete) {
@@ -126,24 +116,33 @@ const TeamsSection = observer(() => {
     }
   };
 
-  // ===== Логика создания (локально)
   const getDefaultTrackId = () =>
     filters.trackId ?? userTrackId ?? tracks[0]?.id ?? null;
 
   const handleCreateNewTeam = () => {
+    // гарантированно закрываем режим редактирования
+    clearCurrentTeam();
     setCreateDraftTrackId(getDefaultTrackId());
     setIsCreatingNew(true);
   };
 
-  // ===== Рендер
+  // удобный helper — закрыть всё
+  const closeAllModals = () => {
+    setIsCreatingNew(false);
+    setShowMembersModal(false);
+    setTeamToDelete(null);
+    clearCurrentTeam();
+  };
+
   if (loading) return <Loader />;
-  if (error)
+  if (error) {
     return (
       <ErrorModal
         message={error}
         onClose={() => teamStore.setError(null)}
       />
     );
+  }
 
   return (
     <>
@@ -171,9 +170,7 @@ const TeamsSection = observer(() => {
           >
             <option value="">Все</option>
             {tracks.map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.name}
-              </option>
+              <option key={t.id} value={t.id}>{t.name}</option>
             ))}
           </select>
         </div>
@@ -194,10 +191,7 @@ const TeamsSection = observer(() => {
             value={filters.isFull ?? ""}
             onChange={(e) =>
               updateFilter({
-                isFull:
-                  e.target.value === ""
-                    ? null
-                    : e.target.value === "true",
+                isFull: e.target.value === "" ? null : e.target.value === "true",
                 page: 0,
               })
             }
@@ -213,17 +207,12 @@ const TeamsSection = observer(() => {
           <select
             value={filters.projectType ?? ""}
             onChange={(e) =>
-              updateFilter({
-                projectType: e.target.value || null,
-                page: 0,
-              })
+              updateFilter({ projectType: e.target.value || null, page: 0 })
             }
           >
             <option value="">Все</option>
             {allFilters.projectTypes?.map((pt) => (
-              <option key={pt.id} value={pt.name}>
-                {pt.name}
-              </option>
+              <option key={pt.id} value={pt.name}>{pt.name}</option>
             ))}
           </select>
         </div>
@@ -238,103 +227,83 @@ const TeamsSection = observer(() => {
           </select>
         </div>
 
-        <button onClick={() => handleExport("csv")} className={styles.exportButton}>
-          📥 CSV
-        </button>
-        <button onClick={() => handleExport("xlsx")} className={styles.exportButton}>
-          📥 Excel
-        </button>
+        <button onClick={() => handleExport("csv")}  className={styles.exportButton}>📥 CSV</button>
+        <button onClick={() => handleExport("xlsx")} className={styles.exportButton}>📥 Excel</button>
       </div>
 
       {/* Таблица */}
       <DataTable
-  columns={[
-    { key: "id", title: "ID" },
-    { key: "name", title: "Название" },
-    {
-      key: "projectType",
-      title: "Тип проекта",
-      render: (_, t) => t.project_type?.name || "—",
-    },
-    {
-      key: "captain",
-      title: "Капитан",
-      render: (_, t) => t.captain?.user.fio || "—",
-    },
-    {
-      key: "technologies",
-      title: "Технологии",
-      render: (_, t) => {
-        const techs = t.technologies || [];
-        if (!techs.length) return "—";
-        const shown = techs.slice(0, 4);
-        const rest = techs.length - shown.length;
-        return (
-          <div className={styles.tagList}>
-            {shown.map((tech) => (
-              <span key={`tech-${tech.id}`} className={styles.tag}>
-                {tech.name}
-              </span>
-            ))}
-            {rest > 0 && (
-              <span className={styles.moreTag}>+{rest}</span>
-            )}
-          </div>
-        );
-      },
-    },
-    {
-      key: "projectDescription",
-      title: "Описание",
-      render: (_, t) => {
-        const text = t.project_description || "";
-        if (!text) return "—";
-        return (
-          <div
-            className={styles.descCell}
-            title={text}
-          >
-            {text}
-          </div>
-        );
-      },
-    },
-  ]}
-  rows={displayed}
-  renderRowActions={(t) => (
-    <>
-      <button
-        onClick={() => {
-          const m = (t.students || []).map((s) => ({
-            id: s.id,
-            userId: s.user?.id,
-            fio: s.user?.fio || "—",
-            course: s.course,
-            group: s.group_number,
-          }));
-          setMembers(m);
-          setShowMembersModal(true);
-        }}
-        title="Состав команды"
-      >
-        ℹ️
-      </button>
-      <button
-        onClick={() => {
-          setIsCreatingNew(false);
-          setCurrentTeam(t);
-        }}
-        title="Редактировать"
-      >
-        ✏️
-      </button>
-      <button onClick={() => confirmDelete(t)} title="Удалить">
-        🗑️
-      </button>
-    </>
-  )}
-/>
-
+        columns={[
+          { key: "id", title: "ID" },
+          { key: "name", title: "Название" },
+          { key: "projectType", title: "Тип проекта", render: (_, t) => t.project_type?.name || "—" },
+          { key: "captain", title: "Капитан", render: (_, t) => t.captain?.user.fio || "—" },
+          {
+            key: "technologies",
+            title: "Технологии",
+            render: (_, t) => {
+              const techs = t.technologies || [];
+              if (!techs.length) return "—";
+              const shown = techs.slice(0, 4);
+              const rest = techs.length - shown.length;
+              return (
+                <div className={styles.tagList}>
+                  {shown.map((tech) => (
+                    <span key={`tech-${tech.id}`} className={styles.tag}>
+                      {tech.name}
+                    </span>
+                  ))}
+                  {rest > 0 && <span className={styles.moreTag}>+{rest}</span>}
+                </div>
+              );
+            },
+          },
+          {
+            key: "projectDescription",
+            title: "Описание",
+            render: (_, t) => {
+              const text = t.project_description || "";
+              if (!text) return "—";
+              return (
+                <div className={styles.descCell} title={text}>
+                  {text}
+                </div>
+              );
+            },
+          },
+        ]}
+        rows={displayed}
+        renderRowActions={(t) => (
+          <>
+            <button
+              onClick={() => {
+                const m = (t.students || []).map((s) => ({
+                  id: s.id,
+                  userId: s.user?.id,
+                  fio: s.user?.fio || "—",
+                  course: s.course,
+                  group: s.group_number,
+                }));
+                setMembers(m);
+                setShowMembersModal(true);
+              }}
+              title="Состав команды"
+            >
+              ℹ️
+            </button>
+            <button
+              onClick={() => {
+                setIsCreatingNew(false); // на всякий случай
+                setCurrentTeam(t);
+              }}
+              title="Редактировать"
+            >
+              ✏️
+            </button>
+            <button onClick={() => confirmDelete(t)} title="Удалить">🗑️</button>
+          </>
+        )}
+      />
 
       {/* Пагинация */}
       <div className={styles.pagination}>
@@ -345,8 +314,7 @@ const TeamsSection = observer(() => {
           Назад
         </button>
         <span>
-          Стр. {filters.page + 1} из{" "}
-          {Math.max(1, Math.ceil(filters.total / filters.size))}
+          Стр. {filters.page + 1} из {Math.max(1, Math.ceil(filters.total / filters.size))}
         </span>
         <button
           onClick={() => updateFilter({ page: Math.max(0, filters.page + 1) })}
@@ -358,33 +326,18 @@ const TeamsSection = observer(() => {
 
       {/* Гард для экспорта */}
       {showTrackModal && (
-        <ErrorModal
-          message="Чтобы скачать отчёт, выберите трек"
-          onClose={() => setShowTrackModal(false)}
-        />
+        <ErrorModal message="Чтобы скачать отчёт, выберите трек" onClose={() => setShowTrackModal(false)} />
       )}
 
       {/* Модалка состава */}
-      <Modal
-        show={showMembersModal}
-        onClose={() => setShowMembersModal(false)}
-        title="Состав команды"
-      >
+      <Modal show={showMembersModal} onClose={() => setShowMembersModal(false)} title="Состав команды">
         <div className={styles.membersList}>
           {members.map((m) => (
             <div key={m.id} className={styles.memberCard}>
-              <img
-                src={`${API_BASE_URL}/users/${m.userId}/photo`}
-                alt={m.fio}
-                className={styles.memberAvatar}
-              />
+              <img src={`${API_BASE_URL}/users/${m.userId}/photo`} alt={m.fio} className={styles.memberAvatar} />
               <div className={styles.memberDetails}>
-                <Link to={`/students/${m.id}`} className={styles.memberName}>
-                  {m.fio}
-                </Link>
-                <p className={styles.memberMeta}>
-                  Курс {m.course || "—"} &bull; Группа {m.group || "—"}
-                </p>
+                <Link to={`/students/${m.id}`} className={styles.memberName}>{m.fio}</Link>
+                <p className={styles.memberMeta}>Курс {m.course || "—"} &bull; Группа {m.group || "—"}</p>
               </div>
             </div>
           ))}
@@ -401,17 +354,19 @@ const TeamsSection = observer(() => {
         />
       )}
 
-      {/* Модалка СОЗДАНИЯ: только по локальному флагу */}
+      {/* Модалка СОЗДАНИЯ */}
       {isCreatingNew && (
         <TeamCreateModalAdmin
           show
           onClose={() => setIsCreatingNew(false)}
           onSave={async (payload) => {
-            await createTeam(payload); // важно: не мержить с currentTeam
+            await createTeam(payload);
+            // <<< ключевой момент: гарантированно НЕ открываем модалку редактирования
+            clearCurrentTeam();
             setIsCreatingNew(false);
             showSuccessMessage("Команда успешно создана");
-            // при необходимости можно обновить список:
-            // teamStore.fetchTeams({ ...filters, searchTerm: search, sort });
+            // при желании можно рефетчнуть
+            // await teamStore.fetchTeams({ ...filters, searchTerm: search, sort });
           }}
           tracks={tracks}
           projectTypes={projectTypes || []}
@@ -420,7 +375,7 @@ const TeamsSection = observer(() => {
         />
       )}
 
-      {/* Модалка РЕДАКТИРОВАНИЯ: по стору */}
+      {/* Модалка РЕДАКТИРОВАНИЯ */}
       {currentTeam && !isCreatingNew && (
         <>
           <TeamEditModalAdmin
