@@ -75,7 +75,7 @@ export function useApplicationActions({ type, teamId, studentId }) {
         });
       }
 
-    if (app === null) {
+    if (app === null || app.possibleTransitions === undefined) {
       return { status, actions, loading, error };
     }
 
@@ -85,7 +85,7 @@ export function useApplicationActions({ type, teamId, studentId }) {
           key: 'send',
           text: 'Подать заявку',
           handler: () => doAction(
-            { team_id: teamId, student_id: studentId, status: 'sent', type },
+            { id: app.id, team_id: teamId, student_id: studentId, status: 'sent', type },
             'Заявка отправлена',
             'update'
           )
@@ -132,9 +132,9 @@ export function useApplicationActions({ type, teamId, studentId }) {
           key: 'sendInvite',
           text: 'Пригласить',
           handler: () => doAction(
-            { team_id: teamId, student_id: studentId, status: 'sent', type },
+            { id: app.id, team_id: teamId, student_id: studentId, status: 'sent', type },
             'Приглашение отправлено',
-            'create'
+            'update'
           )
         });
       }
