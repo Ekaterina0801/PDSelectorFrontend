@@ -32,10 +32,17 @@ const TracksSection = observer(() => {
   const [search, setSearch] = useState('');
   const [sort, setSort]     = useState('id,asc');
   const [creating, setCreating] = useState(false);
+  const [modalDeleteOpen, setModalDeleteOpen] = useState(false);
 
   useEffect(() => {
     fetchTracks();
   }, [fetchTracks]);
+
+  useEffect(() => {
+    if (error) {
+      setModalDeleteOpen(true); // Открываем модальное окно при ошибке
+    }
+  }, [error]);
 
   const displayed = useMemo(() => {
     let arr = tracks.slice();
@@ -90,10 +97,10 @@ const TracksSection = observer(() => {
   ];
 
   if (loading) return <Loader />;
-  if (!loading && error) return (
+  if (modalDeleteOpen) return (
     <ErrorModal
       message={error}
-      onClose={() => teamStore.setError(null)}
+      onClose={() => setModalDeleteOpen(false)}
     />
   );
 

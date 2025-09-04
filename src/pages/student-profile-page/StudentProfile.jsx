@@ -45,6 +45,9 @@ const StudentProfilePage = observer(() => {
   const [currentSection, setCurrentSection] = useState("Профиль");
   const [isEditing, setIsEditing] = useState(false);
   const [isCreatingTeam, setIsCreatingTeam] = useState(false);
+  const [modalErrorOpen, setModalErrorOpen] = useState(false);
+  const [errorText, setErrorText] = useState("");
+  const [errorTitle, setErrorTitle] = useState("");
 
   const { student, loading, error: studentError } = studentStore;
   const { successMessage, showSuccessMessage } = useSuccessMessage();
@@ -76,7 +79,7 @@ const groupTeamsByTrack = (teams) => {
     projectTypeStore.fetchProjectTypes();
     technologyStore.fetchTechnologies();
     trackStore.fetchTracks();
-  }, []); 
+  }, [studentId]); 
 
   const startEditing = useCallback(() => setIsEditing(true), []);
   const stopEditing  = useCallback(() => setIsEditing(false), []);
@@ -92,6 +95,7 @@ const groupTeamsByTrack = (teams) => {
 
   const renderProfile = () => {
     if (loading) return <Loader />;
+
     if (studentError) {
       return (
         <ErrorModal
@@ -320,7 +324,17 @@ const renderMyTeams = () => {
               onChange={handleTeamChange}
               onSubmit={async (e) => {
                 e.preventDefault();
-                await handleTeamSubmit(e);
+                try {
+                  await handleTeamSubmit(e);
+                  setModalErrorOpen(true);
+                  setErrorTitle("Внимание!");
+                  setErrorText("Команда успешно добавлена!");
+                } 
+                catch (err) {
+                  setModalErrorOpen(true);
+                  setErrorTitle("УПС");
+                  setErrorText(err.message);
+                }
                 setIsCreatingTeam(false);
                 toggleModal();
               }}
@@ -331,8 +345,15 @@ const renderMyTeams = () => {
               technologies={technologyStore.technologies}
               projectTypes={projectTypeStore.projectTypes}
               currentTrackId={authStore.trackId}
-            />
-          </Modal>
+            />         
+          </Modal>        
+        )}
+        {modalErrorOpen && (
+          <ErrorModal
+            title={errorTitle} 
+            message={errorText}
+            onClose={() => setModalErrorOpen(false)}
+          />
         )}
       </MainContent>
     </>

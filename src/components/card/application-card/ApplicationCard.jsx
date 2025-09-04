@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import baseStyles from '../BaseCard.module.scss';
 import styles from './ApplicationCard.module.scss';
 import { observer } from 'mobx-react';
@@ -10,12 +10,19 @@ export default observer(function ApplicationCard({ application }) {
   const teamId    = application.team.id;
   const studentId = application.student.id;
   const type      = application.type.toLowerCase();
+  const [modalDeleteOpen, setModalDeleteOpen] = useState(false);
 
   const { status, actions, loading, error } = useApplicationActions({
     type,
     teamId,
     studentId,
   });
+
+  useEffect(() => {
+    if (error) {
+      setModalDeleteOpen(true); // Открываем модальное окно при ошибке
+    }
+  }, [error]);
 
   const STATUS_LABELS = {
     sent:      type === 'request' ? 'Заявка отправлена'  : 'Приглашение отправлено',
@@ -26,8 +33,15 @@ export default observer(function ApplicationCard({ application }) {
   if (loading)
     return <Loader size="small" />;
   
-    if (error)
-      return <ErrorModal title="УПС" message={error} onClose={() => setError(null)} />;
+  if (modalDeleteOpen) {
+    return (
+      <ErrorModal
+        title="УПС" 
+        message={error}
+        onClose={() => setModalDeleteOpen(false)}
+      />
+    )
+  }
 
   return (
     <div className={styles.cardContainer}>

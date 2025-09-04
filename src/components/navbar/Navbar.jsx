@@ -89,6 +89,7 @@ const Navbar = observer(() => {
           <li>
             <NavLink
               to="/students"
+              end
               className={({ isActive }) =>
                 `${styles.link} ${isActive ? styles.isActive : ''}`
               }

@@ -77,6 +77,18 @@ export function useApplicationActions({ type, teamId, studentId }) {
         )
       });
     }
+    // Капитан может принять, если отказал ранее (rejected)
+    if (isCaptainView && status === 'rejected') {
+      actions.push({
+        key: 'acceptInvite',
+        text: 'Принять приглашение',
+        handler: () => doAction(
+          { id: app.id, status: 'accepted', team_id: teamId, student_id: studentId, type },
+          'Приглашение принято',
+          'update'
+        )
+      });
+    }
     if (isStudentView ) {
       if (!status) {
         actions.push({
@@ -168,6 +180,18 @@ export function useApplicationActions({ type, teamId, studentId }) {
         handler: () => doAction(
           { id: app.id, status: 'sent', team_id: teamId, student_id: studentId, type },
           'Приглашение отправлено',
+          'update'
+        )
+      });
+    }
+    // 5) Студент может принять, если отказал ранее (rejected)
+    if (isStudentView && status === 'rejected') {
+      actions.push({
+        key: 'acceptInvite',
+        text: 'Принять приглашение',
+        handler: () => doAction(
+          { id: app.id, status: 'accepted', team_id: teamId, student_id: studentId, type },
+          'Приглашение принято',
           'update'
         )
       });
