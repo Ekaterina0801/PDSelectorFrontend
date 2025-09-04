@@ -2,6 +2,8 @@ import { useState } from 'react';
 //import { createTeam } from '../api/apiTeamsController';
 import studentStore from '../stores/studentStore';
 import teamStore from '../stores/teamStore';
+import { extractErrorMessage } from "../utils/errorUtils";
+
 export const useNewTeam = (currentTrackId, studentId, technologies, projectTypes) => {
   const [newTeam, setNewTeam] = useState({
     name: "",
@@ -47,7 +49,7 @@ export const useNewTeam = (currentTrackId, studentId, technologies, projectTypes
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Submitting new team:", newTeam);
-    if (!newTeam.name || !newTeam.projectDescription || !newTeam.projectType || !newTeam.technologies.length) {
+    if (!newTeam.name || !newTeam.projectType) {
       alert("Заполните все обязательные поля.");
       return;
     }
@@ -64,12 +66,13 @@ export const useNewTeam = (currentTrackId, studentId, technologies, projectTypes
 
       await teamStore.createTeam(formattedTeam);
       await studentStore.fetchStudentById(studentId);
-      alert("Команда успешно добавлена!");
+      //alert("Команда успешно добавлена!");
 
       resetNewTeam();
     } catch (error) {
-      console.error("Ошибка при создании команды:", error);
-      alert("Не удалось создать команду.");
+      //console.error("Ошибка при создании команды:", error);
+      //alert("Не удалось создать команду.");
+      throw new Error(extractErrorMessage(error));
     }
   };
 

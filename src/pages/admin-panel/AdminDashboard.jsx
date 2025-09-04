@@ -20,6 +20,9 @@ import ApplicationsSection from "./ApplicationsSection";
 import TracksSection from "./TracksSection";
 import StatisticsSection from "./StatisticsSection";
 import TeamOptionsSection from "./TeamOptionsSection";
+import NotFound from "../not-found-page/NotFound";
+import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 const sidebarItems = [
   { name: 'Пользователи', icon: '👥' },
   { name: 'Команды', icon: '👤' },
@@ -29,17 +32,21 @@ const sidebarItems = [
   { name: 'Типы проектов и технологии', icon: '⚙️' },
 ];
 
-const AdminDashboard = observer(() => {
+const AdminDashboard = observer(function AdminDashboard() {
   const [section, setSection] = useState(sidebarItems[0].name);
+  const {isAdmin } = authStore;
+
+  if (!authStore.user) return <Loader fullPage />;
+  if (!isAdmin) return <NotFound />;
 
   const renderSection = () => {
     switch (section) {
-      case 'Пользователи': return <UsersSection />;
-      case 'Команды':      return <TeamsSection />;
-      case 'Заявки':       return <ApplicationsSection />;
-      case 'Треки':        return <TracksSection />;
-      case 'Статистика':   return <StatisticsSection />;
-      case 'Типы проектов и технологии': return <TeamOptionsSection/>;
+      case "Пользователи": return <UsersSection />;
+      case "Команды": return <TeamsSection />;
+      case "Заявки": return <ApplicationsSection />;
+      case "Треки": return <TracksSection />;
+      case "Статистика": return <StatisticsSection />;
+      case "Типы проектов и технологии": return <TeamOptionsSection />;
       default: return null;
     }
   };
@@ -48,37 +55,36 @@ const AdminDashboard = observer(() => {
     <>
       <Navbar />
       <MainContent>
-      
-      <main className={styles.container}>
-        {/* Sidebar for desktop */}
-        <aside className={styles.sidebarWrapper}>
-          <Sidebar
-            items={sidebarItems}
-            selected={section}
-            onItemClick={setSection}
-          />
-        </aside>
+        <main className={styles.container}>
+          {/* Sidebar (desktop) */}
+          <aside className={styles.sidebarWrapper}>
+            <Sidebar
+              items={sidebarItems}
+              selected={section}
+              onItemClick={setSection}
+            />
+          </aside>
 
-        {/* Main content */}
-        <section className={styles.content}>
-          <h2 className={styles.title}>{section}</h2>
-          {renderSection()}
-        </section>
+          {/* Content */}
+          <section className={styles.content}>
+            <h2 className={styles.title}>{section}</h2>
+            {renderSection()}
+          </section>
 
-        {/* Bottom nav for mobile/tablet */}
-        <nav className={styles.bottomNav}>
-          {sidebarItems.map(item => (
-            <button
-              key={item.name}
-              className={`${styles.navItem} ${section === item.name ? styles.active : ''}`}
-              onClick={() => setSection(item.name)}
-            >
-              <span className={styles.navIcon}>{item.icon}</span>
-              <span className={styles.navLabel}>{item.name}</span>
-            </button>
-          ))}
-        </nav>
-      </main>
+          {/* Bottom nav (mobile/tablet) */}
+          <nav className={styles.bottomNav}>
+            {sidebarItems.map((item) => (
+              <button
+                key={item.name}
+                className={`${styles.navItem} ${section === item.name ? styles.active : ""}`}
+                onClick={() => setSection(item.name)}
+              >
+                <span className={styles.navIcon}>{item.icon}</span>
+                <span className={styles.navLabel}>{item.name}</span>
+              </button>
+            ))}
+          </nav>
+        </main>
       </MainContent>
     </>
   );

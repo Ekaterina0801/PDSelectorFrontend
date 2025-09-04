@@ -35,6 +35,7 @@ const UsersSection = observer(() => {
   const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
+    authStore.setFilters({ ...filters, page: 0 });
     authStore.fetchUsers();
     teamStore.fetchTeams();
     trackStore.fetchTracks();

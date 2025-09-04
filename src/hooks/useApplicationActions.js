@@ -47,12 +47,50 @@ export function useApplicationActions({ type, teamId, studentId }) {
     }
     
     const actions = [];
+    const currentUserId = authStore.studentId
+    const isCaptainView = authStore.authStudent?.is_captain
+
+    const isStudentView = (currentUserId === studentId) && (teamId !== authStore.authStudent?.current_team?.id) && (!authStore.authStudent?.current_team) && (authStore.authStudent?.current_track?.id) && (authStore.authStudent?.current_track?.id === teamStore.team?.current_track)
+
+    if (type === 'request' && isStudentView && app === null) {
+      actions.push({
+        key: 'send',
+        text: 'Подать заявку',
+        handler: () => doAction(
+          { team_id: teamId, student_id: studentId, status: 'sent', type },
+          'Заявка отправлена',
+          'create'
+        )
+      });
+    }
+    if (type === 'invite' && isCaptainView && app === null) {
+        actions.push({
+          key: 'sendInvite',
+          text: 'Пригласить',
+          handler: () => doAction(
+            { team_id: teamId, student_id: studentId, status: 'sent', type },
+            'Приглашение отправлено',
+            'create'
+          )
+        });
+      }
+
     if (app === null) {
       return { status, actions, loading, error };
     }
 
-    if (type === 'request') {
-    
+    if (app?.type === 'REQUEST') {
+      if (app.possibleTransitions.includes('sent')) {
+        actions.push({
+          key: 'send',
+          text: 'Подать заявку',
+          handler: () => doAction(
+            { team_id: teamId, student_id: studentId, status: 'sent', type },
+            'Заявка отправлена',
+            'update'
+          )
+        });
+      }
       if (app.possibleTransitions.includes('accepted')) {
         actions.push({
           key: 'approve',
@@ -75,17 +113,6 @@ export function useApplicationActions({ type, teamId, studentId }) {
           )
         });
       }
-      if (app.possibleTransitions.includes('sent')) {
-        actions.push({
-          key: 'send',
-          text: 'Подать заявку',
-          handler: () => doAction(
-            { team_id: teamId, student_id: studentId, status: 'sent', type },
-            'Заявка отправлена',
-            'create'
-          )
-        });
-      }
       if (app.possibleTransitions.includes('cancelled')) {
         actions.push({
           key: 'cancel',
@@ -97,7 +124,7 @@ export function useApplicationActions({ type, teamId, studentId }) {
           )
         });
       }
-  } else /* type === 'invite' */ {
+    } else /* type === 'invite' */ {
     // === ПРИГЛАШЕНИЯ ===
     // 1) Первичное приглашение (если статус пуст)
       if (app.possibleTransitions.includes('sent')) {

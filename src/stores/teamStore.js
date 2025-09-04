@@ -159,8 +159,9 @@ class TeamStore {
       });
     } catch (err) {
       runInAction(() => {
-         this.error = extractErrorMessage(err) || "Ошибка при создании команды";
+        this.error = extractErrorMessage(err) || "Ошибка при создании команды";
       });
+      throw new Error(extractErrorMessage(err));
     } finally {
       runInAction(() => {
         this.loading = false;
