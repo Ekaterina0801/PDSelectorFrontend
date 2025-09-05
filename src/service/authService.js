@@ -14,8 +14,6 @@ export const AuthService = {
     trackId,
     isEnabled
   }) => {
-    console.log("page", page);
-    console.log("sort", sort);
     const queryParams = [];
     if (filterFio) queryParams.push(`fio=${encodeURIComponent(filterFio)}`);
     if (isEnabled!=null) queryParams.push(`isEnabled=${encodeURIComponent(isEnabled)}`);

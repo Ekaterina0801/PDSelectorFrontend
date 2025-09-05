@@ -27,15 +27,7 @@ export function useApplicationActions({ type, teamId, studentId }) {
   
 
     const status = app?.status?.toLowerCase() || ''
-  
-
-    const currentUserId  = authStore.studentId
-    const isCaptainView  = authStore.authStudent?.is_captain
-
-    const isStudentView  = (currentUserId === studentId) && (teamId!==authStore.authStudent?.current_team?.id) &&(!authStore.authStudent?.current_team) && (authStore.authStudent?.current_track?.id) && (authStore.authStudent?.current_track?.id === teamStore.team?.current_track)
     
-
-  
     // универсальный метод для create/update
     async function doAction(payload, successMsg, method) {
       try {
@@ -50,58 +42,78 @@ export function useApplicationActions({ type, teamId, studentId }) {
           applicationStore.applicationsByKey.set(key, updated)
         })
       } catch {
+        //
       }
     }
-  
+    
     const actions = [];
+    const currentUserId = authStore.studentId
+    const isCaptainView = authStore.authStudent?.is_captain
 
-  if (type === 'request') {
+    const isStudentView = (currentUserId === studentId) && (teamId !== authStore.authStudent?.current_team?.id) && (!authStore.authStudent?.current_team) && (authStore.authStudent?.current_track?.id) && (authStore.authStudent?.current_track?.id === teamStore.team?.current_track)
 
-    if (isCaptainView && status === 'sent') {
+    if (type === 'request' && isStudentView && app === null) {
       actions.push({
-        key: 'approve',
-        text: 'Принять заявку',
+        key: 'send',
+        text: 'Подать заявку',
         handler: () => doAction(
-          { id: app.id, status: 'accepted', team_id: teamId, student_id: studentId, type },
-          'Заявка принята',
-          'update'
-        )
-      });
-      actions.push({
-        key: 'reject',
-        text: 'Отклонить заявку',
-        handler: () => doAction(
-          { id: app.id, status: 'rejected', team_id: teamId, student_id: studentId, type },
-          'Заявка отклонена',
-          'update'
+          { team_id: teamId, student_id: studentId, status: 'sent', type },
+          'Заявка отправлена',
+          'create'
         )
       });
     }
-    // Капитан может принять, если отказал ранее (rejected)
-    if (isCaptainView && status === 'rejected') {
-      actions.push({
-        key: 'acceptInvite',
-        text: 'Принять приглашение',
-        handler: () => doAction(
-          { id: app.id, status: 'accepted', team_id: teamId, student_id: studentId, type },
-          'Приглашение принято',
-          'update'
-        )
-      });
-    }
-    if (isStudentView ) {
-      if (!status) {
+    if (type === 'invite' && isCaptainView && app === null) {
         actions.push({
-          key: 'send',
-          text: 'Подать заявку',
+          key: 'sendInvite',
+          text: 'Пригласить',
           handler: () => doAction(
             { team_id: teamId, student_id: studentId, status: 'sent', type },
-            'Заявка отправлена',
+            'Приглашение отправлено',
             'create'
           )
         });
       }
-      if (status === 'sent') {
+
+    if (app === null || app.possibleTransitions === undefined) {
+      return { status, actions, loading, error };
+    }
+
+    if (app?.type === 'REQUEST') {
+      if (app.possibleTransitions.includes('sent')) {
+        actions.push({
+          key: 'send',
+          text: 'Подать заявку',
+          handler: () => doAction(
+            { id: app.id, team_id: teamId, student_id: studentId, status: 'sent', type },
+            'Заявка отправлена',
+            'update'
+          )
+        });
+      }
+      if (app.possibleTransitions.includes('accepted')) {
+        actions.push({
+          key: 'approve',
+          text: 'Принять заявку',
+          handler: () => doAction(
+            { id: app.id, status: 'accepted', team_id: teamId, student_id: studentId, type },
+            'Заявка принята',
+            'update'
+          )
+        });
+      }
+      if (app.possibleTransitions.includes('rejected')) {
+        actions.push({
+          key: 'rejectRequest',
+          text: 'Отклонить заявку',
+          handler: () => doAction(
+            { id: app.id, status: 'rejected', team_id: teamId, student_id: studentId, type },
+            'Заявка отклонена',
+            'update'
+          )
+        });
+      }
+      if (app.possibleTransitions.includes('cancelled')) {
         actions.push({
           key: 'cancel',
           text: 'Отменить заявку',
@@ -112,35 +124,22 @@ export function useApplicationActions({ type, teamId, studentId }) {
           )
         });
       }
-      if (status === 'cancelled') {
+    } else /* type === 'invite' */ {
+    // === ПРИГЛАШЕНИЯ ===
+    // 1) Первичное приглашение (если статус пуст)
+      if (app.possibleTransitions.includes('sent')) {
         actions.push({
-          key: 'resend',
-          text: 'Подать снова',
+          key: 'sendInvite',
+          text: 'Пригласить',
           handler: () => doAction(
-            { id: app.id, status: 'sent', team_id: teamId, student_id: studentId, type },
-            'Заявка отправлена',
+            { id: app.id, team_id: teamId, student_id: studentId, status: 'sent', type },
+            'Приглашение отправлено',
             'update'
           )
         });
       }
-    }
-
-  } else /* type === 'invite' */ {
-    // === ПРИГЛАШЕНИЯ ===
-    // 1) Первичное приглашение (если статус пуст)
-    if (isCaptainView && !status) {
-      actions.push({
-        key: 'sendInvite',
-        text: 'Пригласить',
-        handler: () => doAction(
-          { team_id: teamId, student_id: studentId, status: 'sent', type },
-          'Приглашение отправлено',
-          'create'
-        )
-      });
-    }
-    // 2) Капитан может отменить, если sent
-    if (isCaptainView && status === 'sent') {
+      // 2) Капитан может отменить, если sent
+      if (app.possibleTransitions.includes('cancelled')) {
       actions.push({
         key: 'cancelInvite',
         text: 'Отменить приглашение',
@@ -152,7 +151,7 @@ export function useApplicationActions({ type, teamId, studentId }) {
       });
     }
     // 3) Студент может принять/отклонить, когда «sent»
-    if (isStudentView && status === 'sent') {
+    if (app.possibleTransitions.includes('accepted')) {
       actions.push({
         key: 'acceptInvite',
         text: 'Принять приглашение',
@@ -162,36 +161,14 @@ export function useApplicationActions({ type, teamId, studentId }) {
           'update'
         )
       });
+    }
+    if (app.possibleTransitions.includes('rejected')) {
       actions.push({
         key: 'declineInvite',
         text: 'Отклонить приглашение',
         handler: () => doAction(
           { id: app.id, status: 'rejected', team_id: teamId, student_id: studentId, type },
           'Приглашение отклонено',
-          'update'
-        )
-      });
-    }
-    // 4) Капитан может отправить снова, если cancelled
-    if (isCaptainView && status === 'cancelled') {
-      actions.push({
-        key: 'resendInvite',
-        text: 'Пригласить снова',
-        handler: () => doAction(
-          { id: app.id, status: 'sent', team_id: teamId, student_id: studentId, type },
-          'Приглашение отправлено',
-          'update'
-        )
-      });
-    }
-    // 5) Студент может принять, если отказал ранее (rejected)
-    if (isStudentView && status === 'rejected') {
-      actions.push({
-        key: 'acceptInvite',
-        text: 'Принять приглашение',
-        handler: () => doAction(
-          { id: app.id, status: 'accepted', team_id: teamId, student_id: studentId, type },
-          'Приглашение принято',
           'update'
         )
       });

@@ -78,14 +78,10 @@ class ApplicationStore {
       });
     } finally {
       runInAction(() => {
-        console.log('final')
         this.loading = false;
       });
     }
   }
-
-
-
 
   getApplication(teamId, studentId) {
     return this.applicationsByKey.get(this.makeKey(teamId, studentId)) || null
@@ -112,6 +108,11 @@ class ApplicationStore {
     this.errorByKey.set(key, null)
     try {
       const data = await ApplicationService.fetchApplicationByTeamIdAndStudentId(teamId, studentId)
+      if (data !== null) {
+        data.possibleTransitions = data.possibleTransitions.map(element =>
+          element.toLowerCase()
+        );
+      }
       runInAction(() => {
         this.applicationsByKey.set(key, data)
       })

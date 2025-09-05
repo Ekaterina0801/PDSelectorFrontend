@@ -74,13 +74,6 @@ const TeamProfileCard = observer(({
             <div className={styles.requestActions}>
               {loading && <Loader size="small" />}
 
-              {/*error && (
-                <span className={styles.error}>
-                  {error}
-                </span>
-              )*/}
-
-
               {status && (
                 <span className={`${styles.statusTag} ${styles[status] || ''}`}>
                   {STATUS_LABELS[status] || status}
