@@ -50,8 +50,8 @@ export const useNewTeam = (currentTrackId, studentId, technologies, projectTypes
     e.preventDefault();
     console.log("Submitting new team:", newTeam);
     if (!newTeam.name || !newTeam.projectType) {
-      alert("Заполните все обязательные поля.");
-      return;
+      //alert("Заполните все обязательные поля.");
+      throw new Error("Заполните все обязательные поля!");
     }
 
     try {
