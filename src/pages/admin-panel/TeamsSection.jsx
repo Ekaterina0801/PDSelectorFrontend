@@ -67,10 +67,10 @@ const TeamsSection = observer(() => {
   useEffect(() => {
     const load = async () => {
       await teamStore.fetchFilters(filters.trackId);
-      await teamStore.fetchTeams({ ...filters, searchTerm: search, sort });
+      await teamStore.fetchTeams({ ...filters, input: search, sort });
     };
     load();
-  }, [filters.trackId, filters.page, filters.size, sort, search]);
+  }, [filters.trackId, filters.page, filters.size, sort]);
 
   const displayed = useMemo(() => {
     let arr = teams.slice();

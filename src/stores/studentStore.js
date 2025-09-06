@@ -1,6 +1,7 @@
 import { makeAutoObservable, observable, action, runInAction, computed } from 'mobx';
 import StudentService from '../service/studentService';
 import { extractErrorMessage } from '../utils/errorUtils';
+import { sort } from 'd3';
 class StudentStore {
   students = [];
   student = null;
@@ -204,7 +205,8 @@ class StudentStore {
       ...(newFilters.hasTeam !== undefined && { hasTeam: newFilters.hasTeam }),
       ...(newFilters.course !== undefined && { course: newFilters.course }),
       ...(newFilters.isCaptain !== undefined && { isCaptain: newFilters.isCaptain }),
-      ...(newFilters.groups !== undefined && { groups: newFilters.groups })
+      ...(newFilters.groups !== undefined && { groups: newFilters.groups }),
+      ...(newFilters.sort !== undefined && { sort: newFilters.sort })
     };
     this.filters = parsedFilters;
     this.fetchStudents(this.filters);

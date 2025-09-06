@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { observer } from "mobx-react";
 import teamStore from "../../stores/teamStore";
 import Navbar from "../../components/navbar/Navbar";
@@ -24,6 +24,7 @@ export default observer(function TeamsPage() {
   const [sort, setSort] = useState(() => filters.sort ?? "name,asc");
   const [input, setInput] = useState(() => filters.input ?? "");
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const currentTrackId = useRef(authStore.trackId);
 
   const size = 10;
 
@@ -41,6 +42,16 @@ export default observer(function TeamsPage() {
   useEffect(() => {
     loadData();
   }, [loadData]);
+
+  useEffect(() => {
+    if (currentTrackId.current !== trackId) {
+      setSort("name,asc");
+      setPage(0);
+      setInput("");
+      teamStore.setFilters({isFull: null, projectType: null, technologies: [], trackId: trackId, page: 0, sort: "name,asc", input: "" });
+      currentTrackId.current = trackId;
+    }
+  }, [trackId]);
 
   const handlePageChange = (newPage) => {
     setPage(newPage);

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import Navbar from "../../components/navbar/Navbar";
 import SearchBar from "../../components/search-bar/SearchBar";
 import StudentCard from "../../components/card/student-card/StudentCard";
@@ -16,6 +16,7 @@ const StudentsPage = observer(() => {
   const { trackId, isLoading } = authStore;
   const { students, loading, error, filters } = studentStore;
   const initialInput = filters.input || ''
+  const currentTrackId = useRef(authStore.trackId);
   
   const [page, setPage]   = useState(filters.page ?? 0)
   const [sort, setSort]   = useState(filters.sort ?? 'name,asc')
@@ -31,16 +32,21 @@ const StudentsPage = observer(() => {
           sort,};
     await studentStore.fetchFilters(authStore.trackId);
     await studentStore.fetchStudents(params);
-  }, [trackId, page, size, sort]);
+  }, [page, size, sort]);
 
   useEffect(() => {
     loadData();
   }, [loadData]);
 
   useEffect(() => {
-      setPage(0)
-      studentStore.setFilters({ ...studentStore.filters, page: 0 })
-    }, [trackId])
+    if (currentTrackId.current !== trackId) {
+      setPage(0);
+      setSort('name,asc');
+      setInput('');
+      studentStore.setFilters({ groups: undefined, isCaptain: undefined, course: undefined, hasTeam: undefined, technologies: [], trackId: trackId, page: 0, sort: "name,asc", input: "" })
+      currentTrackId.current = trackId;
+    }
+  }, [trackId])
 
   const handleApplyFilters = useCallback(async (newFilters) => {
     const params = { ...studentStore.filters, ...newFilters, trackId, page: 0, size, sort };
@@ -51,11 +57,12 @@ const StudentsPage = observer(() => {
   }, [trackId, size, sort]);
 
   const handleSearch = useCallback((term) => {
+    setInput(term);
     handleApplyFilters({ ...filters, input: term });
   }, [filters, handleApplyFilters]);
 
-  const handleSortChange = e => { setSort(e.target.value); setPage(0); };
-  const handleSortReset = () => { setSort('name,asc'); setPage(0); };
+  const handleSortChange = e => { setSort(e.target.value); setPage(0); studentStore.setFilters({ ...studentStore.filters, sort: e.target.value  });};
+  const handleSortReset = () => { setSort('name,asc'); setPage(0); studentStore.setFilters({ ...studentStore.filters, sort: 'name,asc'  });};
   const handlePageChange = np => setPage(np);
 
   const renderStudents = () => {
