@@ -124,22 +124,24 @@ const TeamProfileCard = observer(({
         {/* Правая колонка: карточка капитана */}
         <div>
           <h3 className={styles.sectionTitle}>Капитан команды</h3>
-          <div className={styles.captainCard}>
-            <img
-              src ={`${API_BASE_URL}/users/${team.captain?.user.id}/photo`}
-              //src={team.captain?.avatarUrl || '/images/placeholder2.png'}
-              alt="Аватар капитана"
-              className={styles.captainAvatar}
-            />
-            <div className={styles.captainDetails}>
-              <span className={styles.captainName}>
-                {team.captain?.user.fio}
-              </span>
-              <span className={styles.captainRole}>
-                Капитан
-              </span>
+          <a href={`/students/${team.captain?.id}`}>
+            <div className={styles.captainCard} >
+              <img
+                src ={`${API_BASE_URL}/users/${team.captain?.user.id}/photo`}
+                //src={team.captain?.avatarUrl || '/images/placeholder2.png'}
+                alt="Аватар капитана"
+                className={styles.captainAvatar}
+              />
+              <div className={styles.captainDetails}>
+                <span className={styles.captainName}>
+                  {team.captain?.user.fio}
+                </span>
+                <span className={styles.captainRole}>
+                  Капитан
+                </span>
+              </div>
             </div>
-          </div>
+          </a>
         </div>
       </div>   
     </div>
