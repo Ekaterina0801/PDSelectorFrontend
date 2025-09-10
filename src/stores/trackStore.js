@@ -54,6 +54,25 @@ class TrackStore {
     }
   };
 
+  getTrackById = async (trackId) => {
+    this.loading = true;
+    this.error = null;
+
+    try {
+      const track = await TrackService.fetchTrackById(trackId);
+      return track;
+    } catch (err) {
+      runInAction(() => {
+        this.error = extractErrorMessage(err) || "Ошибка при загрузке трека";
+      });
+      throw new Error(extractErrorMessage(err));
+    } finally {
+      runInAction(() => {
+        this.loading = false;
+      });
+    }
+  };
+
   createTrack = async (trackData) => {
     this.loading = true;
     this.error = null;

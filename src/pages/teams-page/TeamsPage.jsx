@@ -142,6 +142,8 @@ export default observer(function TeamsPage() {
                     description={team.project_description}
                     technologies={team.technologies || []}
                     profileLink={`/teams/${team.id}`}
+                    trackId={team.current_track}
+                    quantityOfStudents={team.quantity_of_students}
                   />
                 ))}
               </div>

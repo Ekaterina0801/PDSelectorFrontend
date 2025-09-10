@@ -146,6 +146,8 @@ const groupTeamsByTrack = (teams) => {
                   description={t.project_description}
                   technologies={t.technologies}
                   profileLink={`/teams/${t.id}`}
+                  trackId={t.current_track}
+                  quantityOfStudents={t.quantity_of_students}
                 />
               ))}
             </div>
@@ -195,6 +197,8 @@ const renderMyTeams = () => {
             description={current.project_description}
             technologies={current.technologies}
             profileLink={`/teams/${current.id}`}
+            trackId={current.current_track}
+            quantityOfStudents={current.quantity_of_students}
           />
           
         </div>
@@ -219,6 +223,8 @@ const renderMyTeams = () => {
                   description={t.project_description}
                   technologies={t.technologies}
                   profileLink={`/teams/${t.id}`}
+                  trackId={t.current_track}
+                  quantityOfStudents={t.quantity_of_students}
                 />
               </div>
             );

@@ -18,6 +18,18 @@
   }
 }
 
+@mixin quantity-of-students {
+  margin-left:16px;
+  margin-right:16px;
+  display: block;
+  padding: ui.$spacing-xs ui.$spacing-sm;
+  text-align: center;
+  font-weight: 600;
+  border-radius: ui.$radius-sm;
+  margin-top: auto;  
+  margin-bottom: 3px;
+}
+
 .card {
   display: flex;
   flex-direction: column;
@@ -112,6 +124,12 @@
     @include action-button();
     width: 100%;
   }
+  .quantity-of-students {
+    @include quantity-of-students();
+  }
+  // статусы
+  .quantity-of-students.full      { background: ui.$color-warning; color: ui.$color-white; }
+  .quantity-of-students.notFull  { background: ui.$color-success; color: ui.$color-white; }
 }
 
 @media (min-width: 320px) {.card {min-width: 300px;}}
@@ -133,6 +151,10 @@
       font-size: 0.85rem;
       padding: ui.$spacing-xs;
     }
+    .quantity-of-students {
+      font-size: 0.85rem;
+      padding: ui.$spacing-xs;
+    }
   }
 }
 
@@ -143,6 +165,7 @@
     &-body     { padding: ui.$spacing-md; }
     &-resume   { -webkit-line-clamp: 3; }
     .action-button { font-size: 0.9rem; }
+    .quantity-of-students { font-size: 0.9rem; }
   } 
 }
 
@@ -195,6 +218,13 @@
 
     .action-button {
       padding: 12px 24px; // Крупная кнопка
+      font-size: ui.$font-size-2xl; // Увеличенный текст
+      border-radius: ui.$radius-md; // Согласованное скругление
+    }
+    .quantity-of-students {
+      margin-left: 24px;
+      margin-right: 24px;
+      margin-bottom: 7px;
       font-size: ui.$font-size-2xl; // Увеличенный текст
       border-radius: ui.$radius-md; // Согласованное скругление
     }
