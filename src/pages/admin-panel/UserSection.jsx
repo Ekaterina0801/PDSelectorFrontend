@@ -213,18 +213,21 @@ const UsersSection = observer(() => {
               ))}
             </select>
           </div>
-          <button
-            className={styles.exportButton}
-            onClick={() => handleExport("csv")}
-          >
-            📥 CSV
-          </button>
-          <button
-            className={styles.exportButton}
-            onClick={() => handleExport("xlsx")}
-          >
-            📥 Excel
-          </button>
+
+          <div className={styles.emptyDiv}></div>  
+
+            <button
+              className={styles.exportButton}
+              onClick={() => handleExport("csv")}
+            >
+              📥 CSV
+            </button>
+            <button
+              className={styles.exportButton}
+              onClick={() => handleExport("xlsx")}
+            >
+              📥 Excel
+            </button>
         </div>
 
         <div className={styles.tableContainer}>

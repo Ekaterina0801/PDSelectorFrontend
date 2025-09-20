@@ -3,7 +3,6 @@
   display: flex;
   justify-content: center;
   padding: ui.$spacing-lg;
-
   position: fixed;
   top: 0;
   left: 0;
@@ -25,6 +24,8 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   position: relative;
 
+  overflow-y: scroll;
+  height: 70%;
   h2 {
     margin-bottom: ui.$spacing-lg;
     font-size: 1.5rem;
@@ -184,6 +185,17 @@
 @include ui.respond-to(md) {
   .profileEditForm {
     padding: ui.$spacing-md;
+  }
+}
+
+@media (max-width: 480px) {
+  .profileEditForm {
+    .formButtons {
+      display: grid;
+      button{
+        width: 100%;
+      }
+    }
   }
 }
 

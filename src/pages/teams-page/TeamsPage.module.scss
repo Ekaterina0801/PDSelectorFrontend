@@ -37,7 +37,7 @@
 
   @include ui.respond-to (lg) {
     display: flex;
-    position: sticky;
+    //position: sticky;
     top: calc(ui.$spacing-md + 4rem);
     width: calc(100% - 2 * ui.$spacing-md);
     margin: ui.$spacing-md auto;

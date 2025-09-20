@@ -167,6 +167,26 @@
   }
 }
 
+@include ui.respond-to(xs) {
+  .detail {
+    display: inline-block;
+
+    .label {
+      text-align: center;
+    }
+  }
+}
+
+@include ui.respond-to(sm) {
+  .detail {
+    display: inline-block;
+
+    .label {
+      text-align: center;
+    }
+  }
+}
+
 .actionButton {
   width: 100%;
   padding: 10px;

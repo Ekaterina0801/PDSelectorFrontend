@@ -22,7 +22,7 @@
 /* ===== ВНУТРЕННИЙ КОНТЕЙНЕР ===== */
 .container {
   max-width: min(1320px, 100% - clamp(24px, 6vw, 64px));
-  margin: clamp(10px, 1.5vh, 18px) auto;
+  margin: 10px auto;
   padding: clamp(10px, 1.2vh, 16px) 0;
   display: grid;
   grid-template-columns: auto 1fr;
@@ -286,7 +286,7 @@
     position: fixed;
     left: clamp(10px, 3vw, 20px);
     right: clamp(10px, 3vw, 20px);
-    top: calc(var(--nav-top, 70px));
+    top: calc(var(--nav-top, 110px));
     padding: clamp(14px, 2vh, 20px);
     flex-direction: column;
     gap: clamp(12px, 2vh, 16px);

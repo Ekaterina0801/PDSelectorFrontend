@@ -7,6 +7,8 @@
 
   @include ui.respond-to("lg") {
     flex-direction: column;
+    display: contents;
+    padding: 0;
   }
 }
 
@@ -66,6 +68,10 @@
 
 .content {
   flex: 1;
+
+  @include ui.respond-to("lg") {
+    margin-bottom: 110px;
+  }
 }
 
 .title {
@@ -130,6 +136,22 @@
   &:active {
     transform: translateY(0);
   }
+}
+
+.emptyDiv {
+  display: none;
+
+  @include ui.respond-to("xs") {
+    display: block;
+    width: 100%;
+  }
+
+  @include ui.respond-to("sm") {
+    display: block;
+    width: 100%;
+  }
+
+ 
 }
 
 /* Пагинация */
@@ -323,5 +345,12 @@
   
   &:active {
     transform: translateY(0);
+  }
+
+  @include ui.respond-to("xs") {
+    width:100%;
+  }
+  @include ui.respond-to("sm") {
+    width:100%;
   }
 }

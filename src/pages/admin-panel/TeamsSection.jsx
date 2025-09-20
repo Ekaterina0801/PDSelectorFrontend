@@ -227,8 +227,11 @@ const TeamsSection = observer(() => {
           </select>
         </div>
 
-        <button onClick={() => handleExport("csv")}  className={styles.exportButton}>📥 CSV</button>
-        <button onClick={() => handleExport("xlsx")} className={styles.exportButton}>📥 Excel</button>
+        <div className={styles.emptyDiv}></div>  
+
+          <button onClick={() => handleExport("csv")}  className={styles.exportButton}>📥 CSV</button>
+          <button onClick={() => handleExport("xlsx")} className={styles.exportButton}>📥 Excel</button>
+        
       </div>
 
       {/* Таблица */}

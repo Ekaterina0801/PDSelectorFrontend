@@ -97,6 +97,7 @@ export default observer(function TeamsPage() {
         <button
           className={styles.mobileFiltersButton}
           onClick={() => setShowMobileFilters(true)}
+          aria-label="Открыть фильтры"
         >
           <FaFilter size={18} /> Фильтры
         </button>
@@ -168,7 +169,7 @@ export default observer(function TeamsPage() {
         </div>
 
         {showMobileFilters && (
-          <div className={styles.filtersModal}>
+          <div className={[styles.filtersModal, styles.filtersModalOpen].join(' ')}>
             <div className={styles.filtersModalContent}>
               <button
                 className={styles.filtersModalClose}
