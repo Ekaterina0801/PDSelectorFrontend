@@ -32,9 +32,7 @@ const ProfileCard = observer(function ProfileCard({
 
   const authStudent = authStore.authStudent;
   const currentUserId = authStudent?.id;
-  console.log('authStudent', authStudent)
   const team = studentData?.current_team;
-  console.log('Authteam', team)
   const isCaptain = authStore.authStudent?.is_captain;
   const teamId    = authStore.authStudent?.current_team?.id;
   const studentId = studentData.id;
@@ -50,12 +48,6 @@ const ProfileCard = observer(function ProfileCard({
     studentId !== currentUserId
     && !studentData.current_team
     && authStore.authStudent?.current_track?.id === studentData.current_track?.id;
-    console.log('STUD_DATA', studentData.current_track?.id)
-    console.log('authSTUDENT', authStore.authStudent?.current_track?.id)
-    console.log('shouldShowInvite', shouldShowInvite)
-    console.log('isCaptain', isCaptain)
-    console.log('teamId', teamId)
-    console.log('studentId', studentId)
 
   // Используем наши готовые кнопки из хука
   const { status, actions, loading, error } = useApplicationActions({

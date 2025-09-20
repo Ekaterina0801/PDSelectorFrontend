@@ -40,7 +40,6 @@ const StatisticsSection = observer(() => {
     }
   }, [selectedTrack]);
 
-console.log('students', students);
   const haveTeam = students.filter(s => s.has_team).length;
   const noTeam   = students.length - haveTeam;
 

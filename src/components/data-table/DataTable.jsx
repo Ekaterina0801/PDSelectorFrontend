@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './DataTable.module.scss';
 export function DataTable({ columns, rows, renderRowActions }) {
-  {console.log("rows: ",rows)}
   const statusText = {
     accepted: "Принята",
     sent: "Отправлена",

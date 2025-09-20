@@ -29,7 +29,6 @@ class StudentService {
     queryParams.push(`sort=${encodeURIComponent(sort)}`);
   
     const queryString = `?${queryParams.join('&')}`;
-    console.log('query', queryParams);
     return requests.get(`/students/search${queryString}`);
   }
   
@@ -65,7 +64,6 @@ class StudentService {
   }
 
   static async exportStudentsCsv(trackId) {
-    console.log('trackIdInService', trackId);
     const response = await requests.get(
       `/students/export/csv?trackId=${encodeURIComponent(trackId)}`,
       { 
@@ -73,7 +71,6 @@ class StudentService {
       }
     );
     // тут response — это объект axios-ответа
-    console.log('response', response);
     return response;  // data будет Blob
   }
 

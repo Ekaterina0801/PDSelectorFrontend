@@ -72,7 +72,6 @@ const groupTeamsByTrack = (teams) => {
       return track ? track.name : 'Без трека';
     });
   };
-  console.log('student', student);
 
   useEffect(() => {
     studentStore.fetchStudentById(studentId);

@@ -75,7 +75,6 @@ class TeamStore {
         size: params.size,
         sort: params.sort
       };
-      console.log('fetchTeams params', apiParams);
 
       const cleanedParams = Object.fromEntries(
         Object.entries(apiParams).filter(([_, v]) => v !== undefined)

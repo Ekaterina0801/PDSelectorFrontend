@@ -45,7 +45,6 @@ const UsersSection = observer(() => {
   useEffect(() => {
     setSearch(filters.fio || "");
   }, [filters.fio]);
-  console.log("selectedUser", selectedUser);
 
   const updateFiltersHandler = useCallback(
     (diff) => {
@@ -54,7 +53,6 @@ const UsersSection = observer(() => {
     [filters]
   );
 
-  console.log("users", users);
 
   const displayed = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -74,7 +72,6 @@ const UsersSection = observer(() => {
       return;
     }
     try {
-      console.log("handleExport", trackId, fmt);
       const svc =
         fmt === "csv"
           ? StudentService.exportStudentsCsv

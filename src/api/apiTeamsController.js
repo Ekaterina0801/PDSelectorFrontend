@@ -7,7 +7,6 @@ export const fetchTeams = async ({ input, trackId, isFull, projectType, technolo
     const queryParams = new URLSearchParams();
 
     if (input) queryParams.append("input", input);
-    console.log("input", input);
     if (trackId) queryParams.append("track_id", trackId);
     if (isFull !== undefined) queryParams.append("is_full", isFull);
     if (projectType) queryParams.append("projectType", projectType);
@@ -23,9 +22,7 @@ export const fetchTeams = async ({ input, trackId, isFull, projectType, technolo
     if (!response.ok) {
       throw new Error(`Ошибка HTTP: ${response.status}`);
     }
-    console.log('response', response);
     const data = await response.json();
-    console.log('data',data);
 
     return data;
   } catch (error) {
@@ -117,9 +114,6 @@ export const deleteTeam = async (teamId) => {
   // Создание новой команды
   export const updateTeam = async (teamData, teamId) => {
     try {
-     
-      console.log("Отправляемые данные команды:", teamData);
-  
       const response = await fetch(`${API_BASE_URL}/teams/${teamId}`, {
         method: 'PUT',
         headers: {

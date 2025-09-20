@@ -30,7 +30,6 @@ export const fetchStudents = async ({ input, course, groupNumber, hasTeam, techn
 
 
     const data = await response.json();
-    console.log(data);
     return data;
   } catch (error) {
     console.error("Error fetching students:", error);
@@ -68,8 +67,6 @@ export const fetchStudentById = async (studentId) => {
     });
    
     const data = await response.json(); 
-    console.log('data', data);
-    console.log(data);
     return data;
   } catch (error) {
     console.error("Ошибка при получении данных студента:", error);
@@ -80,9 +77,6 @@ export const fetchStudentById = async (studentId) => {
 // Обновление заявки
 export const updateStudent = async (studentData, studentId) => {
   try {
-   
-    console.log("Отправляемые данные студента:", studentData);
-
     const response = await fetch(`${API_BASE_URL}/students/${studentId}`, {
       method: 'PUT',
       headers: {

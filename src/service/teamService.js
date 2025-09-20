@@ -46,7 +46,6 @@ export const TeamService = {
   },
 
   updateTeam: (teamData, teamId) => {
-    console.log('teamData', teamData);
     return requests.put(`/teams/${teamId}`, teamData);
   },
 

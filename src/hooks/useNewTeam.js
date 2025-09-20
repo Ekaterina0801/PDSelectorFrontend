@@ -25,9 +25,7 @@ export const useNewTeam = (currentTrackId, studentId, technologies, projectTypes
   };
 
   const handleProjectTypeChange = (value) => {
-    console.log("Selected project type:", value);
     const selectedProjectType = projectTypes.find((type) => Number(type.id) === Number(value));
-    console.log("Selected project type object:", selectedProjectType);
     setNewTeam((prev) => ({
       ...prev,
       projectType: selectedProjectType || null,
@@ -48,7 +46,6 @@ export const useNewTeam = (currentTrackId, studentId, technologies, projectTypes
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting new team:", newTeam);
     if (!newTeam.name || !newTeam.projectType) {
       //alert("Заполните все обязательные поля.");
       throw new Error("Заполните все обязательные поля!");
