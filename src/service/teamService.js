@@ -3,9 +3,9 @@ import requests from "../agent";
 
 
 export const TeamService = {
-  fetchTeams: ({ input, trackId, isFull, projectType, technologies, sort }) => {
+  fetchTeams: ({ input, trackId, isFull, projectType, technologies, sort, page = 0, size = 10 }) => {
     const queryParams = [];
-  
+
     if (input) queryParams.push(`input=${encodeURIComponent(input)}`);
     if (trackId) queryParams.push(`track_id=${encodeURIComponent(trackId)}`);
     if (isFull !== undefined) queryParams.push(`is_full=${isFull}`);
@@ -14,7 +14,8 @@ export const TeamService = {
   }
 
     if (sort) queryParams.push(`sort=${encodeURIComponent(sort)}`);
-    
+    if (page) queryParams.push(`page=${encodeURIComponent(page)}`);
+    if (size) queryParams.push(`size=${encodeURIComponent(size)}`);
     if (technologies?.length) {
 
       const techIds = technologies.map(tech => tech.id || tech);
@@ -47,6 +48,7 @@ export const TeamService = {
 
   updateTeam: (teamData, teamId) => {
     return requests.put(`/teams/${teamId}`, teamData);
+
   },
 
   deleteTeam: (teamId) => {
