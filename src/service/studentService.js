@@ -24,9 +24,9 @@ class StudentService {
       technologies.forEach(tech => queryParams.push(`technologies=${encodeURIComponent(tech)}`));
     }
   
-    queryParams.push(`page=${encodeURIComponent(page)}`);
-    queryParams.push(`size=${encodeURIComponent(size)}`);
-    queryParams.push(`sort=${encodeURIComponent(sort)}`);
+    if (page) queryParams.push(`page=${encodeURIComponent(page)}`);
+    if (size) queryParams.push(`size=${encodeURIComponent(size)}`);
+    if (sort) queryParams.push(`sort=${encodeURIComponent(sort)}`);
   
     const queryString = `?${queryParams.join('&')}`;
     return requests.get(`/students/search${queryString}`);

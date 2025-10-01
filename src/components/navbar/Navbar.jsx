@@ -3,7 +3,8 @@ import { NavLink } from "react-router-dom";
 import { observer } from "mobx-react";
 import authStore from "../../stores/authStore";
 import trackStore from "../../stores/trackStore";
-import { FaChevronDown, FaUsers, FaUserGraduate, FaLayerGroup, FaTools, FaCheck } from "react-icons/fa";
+import { FaChevronDown, FaUsers, FaUserGraduate, FaLayerGroup, FaTools, FaCheck, FaSignOutAlt } from "react-icons/fa";
+import { API_BASE_URL } from '../../config/apiConfig';
 
 import styles from "./Navbar.module.scss";
 const Navbar = observer(() => {
@@ -170,6 +171,19 @@ const Navbar = observer(() => {
                 </ul>
               </div>
             </div>
+          </li>
+
+          <li>
+          <NavLink
+              to={`${API_BASE_URL}/auth/logout`}
+              end
+              className={({ isActive }) =>
+                `${styles.link} ${isActive ? styles.isActive : ''}`
+              }
+            >
+              <FaSignOutAlt aria-hidden className={styles.icon} />
+              <span>Выйти</span>
+            </NavLink>
           </li>
         </ul>
       </div>

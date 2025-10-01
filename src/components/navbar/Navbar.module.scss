@@ -21,7 +21,7 @@
 
 /* ===== ВНУТРЕННИЙ КОНТЕЙНЕР ===== */
 .container {
-  max-width: min(1320px, 100% - clamp(24px, 6vw, 64px));
+  max-width: min(1450px, 100% - clamp(24px, 6vw, 64px));
   margin: 10px auto;
   padding: clamp(10px, 1.2vh, 16px) 0;
   display: grid;

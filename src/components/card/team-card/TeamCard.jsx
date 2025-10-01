@@ -22,14 +22,17 @@ export default observer(function TeamCard({
 
   useEffect(() => {
     trackStore.getTrackById(trackId).then((result) => setTrackInfo (result))
+  }, [trackId]);
+
+  useEffect(() => {
     if (trackInfo.maxConstraint == quantityOfStudents) {
       setStatusQuantity("full");
     }
     else {
       setStatusQuantity("notFull");
     }
-  }, [trackId]);
-
+  }, [trackInfo]);
+  
   {
     return (
       <div className={base.card}>

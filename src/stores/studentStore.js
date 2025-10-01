@@ -66,7 +66,6 @@ class StudentStore {
     try {
       const data = await StudentService.fetchStudents(params);
       const filters = await StudentService.fetchFilterParamsByTrackId(params.trackId);
-
       runInAction(() => {
         this.students = data.content;
         this.allFilters = filters;
