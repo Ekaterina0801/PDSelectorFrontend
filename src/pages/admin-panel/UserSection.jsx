@@ -37,7 +37,7 @@ const UsersSection = observer(() => {
   useEffect(() => {
     authStore.setFilters({ ...filters, page: 0 });
     authStore.fetchUsers();
-    teamStore.fetchTeams();
+    teamStore.fetchTeams({size: 100000, trackId: trackStore.track });
     trackStore.fetchTracks();
     authStore.fetchRoles();
   }, [fetchUsers]);
@@ -296,8 +296,8 @@ const UsersSection = observer(() => {
           title="Редактировать пользователя"
           initialData={{
             fio: selectedUser.fio,
-            course: selectedUser.student?.course || "",//*
-            group: selectedUser.student?.group_number || "",//*
+            course: selectedUser.student?.course || "",
+            group: selectedUser.student?.group_number || "",
             email: selectedUser.email,
             role: selectedUser.role,
             teamId: selectedUser.student?.current_team_id || "",

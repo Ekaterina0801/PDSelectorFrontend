@@ -35,8 +35,8 @@ const StatisticsSection = observer(() => {
 
   useEffect(() => {
     if (selectedTrack) {
-      studentStore.fetchStudents({ trackId: selectedTrack });
-      teamStore.fetchTeams   ({ trackId: selectedTrack });
+      studentStore.fetchStudents({ trackId: selectedTrack, size: 10000 });
+      teamStore.fetchTeams   ({ trackId: selectedTrack, size: 10000 });
     }
   }, [selectedTrack]);
 
@@ -54,7 +54,6 @@ const StatisticsSection = observer(() => {
   ).length;
   const notFull = teams.length - fullTeams;
 
-  // 4) Проценты для донатов
   const pctStudents = students.length
     ? Math.round((haveTeam / students.length) * 100)
     : 0;
@@ -62,7 +61,6 @@ const StatisticsSection = observer(() => {
     ? Math.round((fullTeams / teams.length) * 100)
     : 0;
 
-  // 5) Данные для гистограммы
   const barData = useMemo(() => {
     const map = {};
     teams.forEach(t => {
@@ -72,7 +70,6 @@ const StatisticsSection = observer(() => {
     return Object.entries(map).map(([type, count]) => ({ type, count }));
   }, [teams]);
 
-  // 6) Автоматическая палитра через D3.schemeCategory10
   const typeColors = useMemo(() => {
     const types = barData.map(d => d.type);
     const scale = d3.scaleOrdinal(d3.schemeCategory10).domain(types);
