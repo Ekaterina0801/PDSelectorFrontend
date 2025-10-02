@@ -49,8 +49,7 @@ const StatisticsSection = observer(() => {
   };
   const { minConstraint, maxConstraint } = currentTrack;
   const fullTeams = teams.filter(
-    t => t.quantityOfStudents >= minConstraint &&
-         t.quantityOfStudents <= maxConstraint
+    t => t.is_full == true
   ).length;
   const notFull = teams.length - fullTeams;
 

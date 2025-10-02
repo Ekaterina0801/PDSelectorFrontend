@@ -13,11 +13,9 @@ function App() {
   const location = useLocation();
 
   useEffect(() => {
-    console.log('App mounted');
     commonStore.loadToken();  
 
     if (location.pathname !== '/login' && location.pathname !== '/registration' && location.pathname !== '/auth') {
-      console.log('checkAuth');
       authStore.checkAuth(); 
     }
   }, [location]);

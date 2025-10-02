@@ -4,7 +4,6 @@ export const TrackService = {
     fetchTracks: () => {
       return requests.get(`/tracks`)
         .then(data => {
-          console.log("API Response:", data);
           return data;
         })
         .catch(error => {
@@ -16,7 +15,6 @@ export const TrackService = {
     fetchTrackById: (trackId) => {
       return requests.get(`/tracks/${trackId}`)
         .then(data => {
-          console.log("API Response:", data);
           return data;
         })
         .catch(error => {
@@ -28,7 +26,6 @@ export const TrackService = {
     createTrack: (trackData) => {
       return requests.post(`/tracks`, trackData)
         .then(data => {
-          console.log("API Response:", data);
           return data;
         })
         .catch(error => {
@@ -40,7 +37,6 @@ export const TrackService = {
     updateTrack: (trackData, trackId) => {
       return requests.put(`/tracks/${trackId}`, trackData)
         .then(data => {
-          console.log("API Response:", data);
           return data;
         })
         .catch(error => {
@@ -52,7 +48,6 @@ export const TrackService = {
     deleteTrack: (trackId) => {
       return requests.delete(`/tracks/${trackId}`)
         .then(data => {
-          console.log("API Response:", data);
           return data;
         })
         .catch(error => {

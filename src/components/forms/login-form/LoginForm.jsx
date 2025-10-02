@@ -17,7 +17,6 @@ const LoginForm = () => {
       const val = getCookieValue(name);
       if (val) {
         localStorage.setItem(name, val);
-        console.log(`Moved cookie ${name}→localStorage: ${val}`);
       } else {
         console.warn(`Cookie ${name} not found`);
       }

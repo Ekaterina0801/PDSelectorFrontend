@@ -23,7 +23,6 @@ const Registration = () => {
   };
 
   const handleSkip = () => {
-    console.log("Пользователь продолжил без регистрации");
     navigate("/teams"); 
   };
 
