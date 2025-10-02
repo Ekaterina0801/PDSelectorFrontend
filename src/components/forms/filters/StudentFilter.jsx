@@ -26,7 +26,7 @@ export function StudentFilter({ availableFilters, currentFilters, onApply }) {
     [availableFilters]
   );
 
-  useEffect(() => {
+  useEffect(() => {    
     setFilters({
       course: Array.isArray(currentFilters.course) ? currentFilters.course : [],
       groups: Array.isArray(currentFilters.groups) ? currentFilters.groups : [],

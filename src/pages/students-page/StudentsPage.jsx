@@ -49,12 +49,29 @@ const StudentsPage = observer(() => {
   }, [trackId])
 
   const handleApplyFilters = useCallback(async (newFilters) => {
-    const params = { ...studentStore.filters, ...newFilters, trackId, page: 0, size, sort };
-    studentStore.setFilters(params);
-    setPage(0);
-    setShowMobileFilters(false);
-    await studentStore.fetchFilters(trackId);
-  }, [trackId, size, sort]);
+  const normalizedFilters = {
+    ...newFilters,
+    hasTeam:
+      newFilters.hasTeam?.length === 2 ? undefined : newFilters.hasTeam,
+    isCaptain:
+      newFilters.isCaptain?.length === 2 ? undefined : newFilters.isCaptain,
+  };
+
+  const params = { 
+    ...studentStore.filters, 
+    ...normalizedFilters, 
+    trackId, 
+    page: 0, 
+    size, 
+    sort 
+  };
+
+  studentStore.setFilters(params);
+  setPage(0);
+  setShowMobileFilters(false);
+  await studentStore.fetchFilters(trackId);
+}, [trackId, size, sort]);
+
 
   const handleSearch = useCallback((term) => {
     setInput(term);
