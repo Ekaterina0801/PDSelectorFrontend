@@ -16,7 +16,6 @@ const TeamEditForm = ({
     projectType: teamData.projectType || null,
   });
   const [showModal, setShowModal] = useState(false);
-  console.log("teamData", toJS(teamData));
   useEffect(() => {
     setFormData({
       ...teamData,
@@ -51,7 +50,6 @@ const TeamEditForm = ({
   const toggleModal = () => setShowModal((prev) => !prev);
 
   const handleSave = () => {
-    console.log('Saving payload', toJS(formData));
     onSave(formData);
   };
 

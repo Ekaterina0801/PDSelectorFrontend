@@ -19,18 +19,14 @@ class CommonStore {
 
   // Метод для загрузки токена из localStorage или проверки JSESSIONID в куки
   loadToken() {
-    console.log("loadToken");
     const jsessionId = this.getCookie("JSESSIONID");
     if (jsessionId) {
-      console.log("JSESSIONID cookie found:", jsessionId);
       this.token = jsessionId; 
       //localStorage.setItem("jwt", jsessionId);
     } else {
       this.token = localStorage.getItem("jwt");
       if (this.token) {
-        console.log("Token loaded from localStorage:", this.token);
       } else {
-        console.log("No token found in localStorage.");
       }
     }
   }
