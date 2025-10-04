@@ -1,6 +1,6 @@
 import React from 'react';
 import base from '@/components/card/BaseCard.module.scss'
-import {API_BASE_URL} from "../../../api/apiController"
+import { API_BASE_URL } from "../../../config/apiConfig"
 
 import styles from './StudentCard.module.scss';
 

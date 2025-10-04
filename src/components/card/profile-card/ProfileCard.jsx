@@ -10,7 +10,7 @@ import { useMemo, useEffect } from 'react';
 import studentStore from '../../../stores/studentStore';
 import { IoContractOutline } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
-import {API_BASE_URL} from "../../../api/apiController"
+import { API_BASE_URL } from "../../../config/apiConfig"
 const Detail = ({ label, value }) => (
   <div className={styles.detail}>
     <p className={styles.label}>{label}:</p>

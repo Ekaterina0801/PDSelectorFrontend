@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import styles from './LoginForm.module.scss';
+import { OAUTH_REDIRECT_URL } from '../../../config/apiConfig'
 
 const LoginForm = () => {
   const handleLogin = () => {
-    window.location.href = 'http://localhost:8080/oauth2/authorization/azure';
-    //window.location.href = 'https://titlecounter.ru:8080/oauth2/authorization/azure';
+    window.location.href = OAUTH_REDIRECT_URL;
   };
 
   const getCookieValue = name => {

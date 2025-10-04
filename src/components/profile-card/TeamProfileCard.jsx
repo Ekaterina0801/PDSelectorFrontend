@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import styles from './TeamProfileCard.module.scss';
 import { observer } from "mobx-react";
 import authStore from "../../stores/authStore";
 import { useApplicationActions } from "../../hooks/useApplicationActions";
-import applicationStore from "../../stores/applicationStore";
 import Loader from "../spinner/Loader";
-import {API_BASE_URL} from "../../api/apiController"
+import { API_BASE_URL } from "../../config/apiConfig"
 import ErrorModal from '../error-display/ErrorDisplay';
 
 const STATUS_LABELS = {

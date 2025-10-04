@@ -17,7 +17,7 @@ import projectTypeStore from "../../stores/projectTypeStore";
 import technologyStore from "../../stores/technologyStore";
 import SuccessMessage from '../../components/successMessage/SuccessMessage';
 import useSuccessMessage from '../../hooks/useSuccessMessage';
-import {API_BASE_URL} from "../../api/apiController"
+import {API_BASE_URL} from "../../config/apiConfig"
 import { saveAs } from "file-saver";
 import TeamCreateModalAdmin from "./TeamCreateModalAdmin";
 import { useNewTeam } from "../../hooks/useNewTeam";
